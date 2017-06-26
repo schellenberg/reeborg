@@ -40,9 +40,6 @@ RUR.reset_definitions_en = function () {
     window.done = RUR._done_;
     window.front_is_clear = RUR._front_is_clear_;
     window.is_facing_north = RUR._is_facing_north_;
-    /**@function move
-     * @desc Move forward, by one grid position.
-     */
     window.move = RUR._move_;
     window.new_robot_images = RUR._new_robot_images_;
     window.object_here = RUR._object_here_;
@@ -135,6 +132,9 @@ RUR.reset_definitions_en = function () {
     UsedRobot.prototype.wall_on_right = function () {
         RUR._UR.wall_on_right_(this.body);
     };
+
+    // make prototype available with known English name in RUR namespace
+    RUR.UsedRobot = UsedRobot;
 
     // English specific and only for compatibility with rur-ple
     // do not translate the following

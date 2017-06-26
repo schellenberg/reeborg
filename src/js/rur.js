@@ -1,9 +1,12 @@
-/** @namespace RUR 
+/** @namespace RUR
  * @desc The namespace reserved for all the core Reeborg World methods.
  *
  */
 window.RUR = RUR || {}; // RUR should be already defined in the html file;
                         // however, it might not when running tests.
+RUR.utils = {};
+RUR.world_utils = {};
+RUR.FuncTest = {};
 
 /* In order to make it easier to have a version of Reeborg's World
    installed on different servers, or from different location with
@@ -22,19 +25,6 @@ try {
     RUR._BASE_URL = '';
 }
 
-// Commenting for jsdoc:
-/** @namespace FuncTest 
- * @desc FuncTest is a namespace that can be used to hold global reference 
- * to functions that are useful to perform some functional tests only, but 
- * is mostly intended as a helper in creating documentation using jsdoc.
- *
- * <span class="reeborg-important">The "methods" listed below are not callable
- *  but simply convenient names used to document the unit tests using jsdoc.
- *  </span>
- */ 
-window.FuncTest = {};
-
-
 /* Reeborg's World can be in different states (running a program,
  * editing a world, etc.) and the behaviour of some features can be affected
  * (e.g. enabled or disabled) depending on that state.
@@ -45,6 +35,7 @@ RUR.state = {};
 
 RUR.state.code_evaluated = false;
 RUR.state.do_not_record = false;
+RUR.state.do_not_draw_info = false;
 RUR.state.editing_world = false;
 RUR.state.highlight = true;
 RUR.state.human_language = "en";
@@ -55,6 +46,7 @@ RUR.state.frame_insertion_called = false;
 RUR.state.programming_language = "python";
 RUR.state.playback = false;
 RUR.state.prevent_playback = false;
+RUR.state.running_program = false;
 RUR.state.session_initialized = false;
 RUR.state.sound_id = undefined;
 RUR.state.sound_on = false;
@@ -64,6 +56,7 @@ RUR.state.watch_vars = false;
 RUR.state.x = undefined;
 RUR.state.y = undefined;
 RUR.state.changed_cells = [];
+RUR.state.visible_grid = false;
 
 
 // TODO: see if worthwhile to create RUR.state.do_highlight()
@@ -95,11 +88,11 @@ RUR.DEFAULT_WIDTH = 625;
 // We use multiple canvases to facilitate the drawing of objects
 // without having to worry much about the order in which we draw
 // the various types of objects.
-// 
+//
 // The order in which the canvases are overlayed one on top of another
 // is set in the CSS file and should not be inferred from the
 // Javascript code below.
-// 
+//
 // Note that, when doing unit tests (not functional tests), we do not
 // have canvases defined; so we enclose these definitions in a function
 // that does ignores canvases when appropriate.
@@ -180,8 +173,8 @@ function set_canvases () {
 }
 set_canvases();
 
-RUR.WALL_LENGTH = 40;   // These can be adjusted
-RUR.WALL_THICKNESS = 4;  // elsewhere if RUR.CURRENT_WORLD.small_tiles become true.
+RUR.WALL_LENGTH = RUR.DEFAULT_WALL_LENGTH = 40;
+RUR.WALL_THICKNESS = RUR.DEFAULT_WALL_THICKNESS = 4;
 
 RUR.MAX_Y = Math.floor(RUR.HEIGHT / RUR.WALL_LENGTH) - 1;
 RUR.MAX_X = Math.floor(RUR.WIDTH / RUR.WALL_LENGTH) - 1;
@@ -196,14 +189,15 @@ RUR.MAX_X_DEFAULT = 14;
 RUR.MAX_Y_DEFAULT = 12;
 RUR.USE_SMALL_TILES = false;
 
-RUR.WALL_COLOR = "brown";   // changed (toggled) in world_editor.js
-RUR.SHADOW_WALL_COLOR= "#f0f0f0";    // changed (toggled) in world_editor.js
-RUR.GOAL_WALL_COLOR = "black";
+// RUR.WALL_COLOR = "brown";   // changed (toggled) in world_editor.js
+// RUR.SHADOW_WALL_COLOR= "#f0f0f0";    // changed (toggled) in world_editor.js
+// RUR.GOAL_WALL_COLOR = "black";
 RUR.COORDINATES_COLOR = "black";
 RUR.AXIS_LABEL_COLOR = "brown";
 
 RUR.MAX_STEPS = 1000;
 RUR.MIN_TIME_SOUND = 250;
+RUR.PLAYBACK_TIME_PER_FRAME = 300;
 
 RUR.DEFAULT_TRACE_COLOR = "seagreen";
 
@@ -226,15 +220,15 @@ RUR.configure_red_green = function (red, green) {
     RUR.GREEN = green;
     RUR.RED = red;
     localStorage.setItem("userchoice_red", red);
-    localStorage.setItem("userchoice_green", green);    
+    localStorage.setItem("userchoice_green", green);
 };
 
 //--------------------------------------------------------
 // We communicate information to the user using various
 // styled dialog windows; this generic function specifies
 // which dialog (html "element") to use and the content to
-// display to the user. 
-// 
+// display to the user.
+//
 RUR.show_feedback = function (element, content) {
     $(element).html(content).dialog("open");
 };

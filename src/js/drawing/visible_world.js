@@ -16,13 +16,13 @@ RUR.vis_world.compute_world_geometry = function (cols, rows) {
     "use strict";
     var height, width, canvas;
     if (RUR.get_world().small_tiles) {
-        RUR.WALL_LENGTH = 20;
-        RUR.WALL_THICKNESS = 2;
+        RUR.WALL_LENGTH = RUR.DEFAULT_WALL_LENGTH/2;
+        RUR.WALL_THICKNESS = RUR.DEFAULT_WALL_THICKNESS/2;
         RUR.SCALE = 0.5;
         RUR.BACKGROUND_CTX.font = "8px sans-serif";
     } else {
-        RUR.WALL_LENGTH = 40;
-        RUR.WALL_THICKNESS = 4;
+        RUR.WALL_LENGTH = RUR.DEFAULT_WALL_LENGTH;
+        RUR.WALL_THICKNESS = RUR.DEFAULT_WALL_THICKNESS;
         RUR.SCALE = 1;
         RUR.BACKGROUND_CTX.font = "bold 12px sans-serif";
     }
@@ -119,9 +119,9 @@ RUR.vis_world.refresh = function () {
         draw_animated_images();
     }
 
-    if (RUR.state.editing_world) {
+    if (RUR.state.editing_world || RUR.state.visible_grid) {
         // make them appear above background and tiles but below foreground walls.
-        draw_grid_walls(RUR.GOAL_CTX, true);
+        draw_grid_walls(RUR.GOAL_CTX, RUR.state.editing_world);
     }
 
     if (world.goal !== undefined){
@@ -300,8 +300,12 @@ function draw_tiles (tiles, ctx, goal){
             }
             for (t=0; t<tile_array.length; t++) {
                 tile = RUR.TILES[tile_array[t]];
-                if (tile === undefined) {
-                    colour = tiles[keys[key]];
+                if (tile === undefined || tile.color) {
+                    if (tile === undefined) {
+                        colour = tiles[keys[key]];
+                    } else {
+                        colour = tile.color;
+                    }
                     draw_coloured_tile(colour, i, j, ctx);
                     continue;
                 } else if (goal) {
@@ -590,6 +594,10 @@ function compile_partial_info (objects, information, type){
 function draw_info () {
     var i, j, coords, keys, key, info, ctx;
     var scale = RUR.WALL_LENGTH, Y = RUR.HEIGHT, text_width;
+
+    if (RUR.state.do_not_draw_info) {
+        return;
+    }
 
     compile_info();
     if (RUR.vis_world.information === undefined &&

@@ -1,4 +1,6 @@
-/* Initially, Reeborg's World only contained "objects", starting with a
+/* A bit of history ...
+
+  Initially, Reeborg's World only contained "objects", starting with a
   single one (beeper, which became token) and slowly increasing the number
   and characteristics (e.g. animated object).  The first objects were
   drawn on the canvas; eventually they were replaced by square images.
@@ -24,8 +26,7 @@ RUR.add_new_thing(tile);
 
 tile = {name: "ice",
     url: RUR._BASE_URL + '/src/images/ice.png',
-    message: "I'm slipping on ice!",
-    info: "Ice: Reeborg <b>cannot</b> detect this and will slide and move to the next location if it moves to this location."
+    info: "Ice: Reeborg <b>cannot</b> detect this and <em>might</em> slide and move to the next location if it moves to this location."
 };
 RUR.add_new_thing(tile);
 
@@ -138,20 +139,20 @@ RUR.TILES.east.y_offset = -2;
 RUR.TILES.north.x_offset = -2;
 RUR.TILES.north.y_offset = -2;
 
-function _add_static_wall(name, x_offset) {
+function _add_static_wall(name, x_offset, y_offset) {
     "use strict";
-    var url, y_offset=-2;
+    var url;
     url = RUR._BASE_URL + '/src/images/' + name + '.png';
     RUR.add_new_thing({"name": name, "url": url,
                      "x_offset": x_offset, "y_offset": y_offset});
 }
-_add_static_wall("east_border", 38);
-_add_static_wall("east_grid", 38);
-_add_static_wall("east_edit", 38);
+_add_static_wall("east_border", 38, -2);
+_add_static_wall("east_grid", 39, -2);
+_add_static_wall("east_edit", 38, -2);
 
-_add_static_wall("north_border", -2);
-_add_static_wall("north_grid", -2);
-_add_static_wall("north_edit", -2);
+_add_static_wall("north_border", -2, -2);
+_add_static_wall("north_grid", -2, -1);
+_add_static_wall("north_edit", -2, -2);
 
 _add_object_type("box");
 RUR.TILES.box.name = "box";

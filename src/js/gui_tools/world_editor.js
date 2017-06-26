@@ -124,8 +124,8 @@ RUR.we.select = function (choice) {
                 alert_1("Click on world to move robot.");
                 break;
             case "add":
+                RUR.add_robot(RUR.robot.create_robot(1, 1));
                 alert_1("Added robot.");
-                RUR.add_robot();
                 RUR.we.edit_world();
                 edit_robot_menu.toggle();
                 break;
@@ -233,8 +233,8 @@ RUR.we.toggle_editing_mode = function () {
 
         RUR.state.editing_world = false;
         RUR.state.code_evaluated = false;
-        RUR.WALL_COLOR = "brown";
-        RUR.SHADOW_WALL_COLOR = "#f0f0f0";
+        // RUR.WALL_COLOR = "brown";
+        // RUR.SHADOW_WALL_COLOR = "#f0f0f0";
         try {
             localStorage.setItem("editor", editor.getValue());
             localStorage.setItem("library", library.getValue());
@@ -247,8 +247,8 @@ RUR.we.toggle_editing_mode = function () {
         $("#onload-editor-tab").parent().show();
         edit_robot_menu.toggle();
         RUR.state.editing_world = true;
-        RUR.WALL_COLOR = "black";
-        RUR.SHADOW_WALL_COLOR = "#ccd";
+        // RUR.WALL_COLOR = "black";
+        // RUR.SHADOW_WALL_COLOR = "#ccd";
         $("#highlight").hide();
         $("#watch-variables-btn").hide();
     }
@@ -272,12 +272,8 @@ function place_robot () {
                 robot.possible_initial_positions = [[robot.x, robot.y]];
             }
         } else {
-            RUR.add_robot();
-            robot = world.robots[0];
-            robot.x = position[0];
-            robot.y = position[1];
-            robot._prev_x = robot.x;
-            robot._prev_y = robot.y;
+            robot = RUR.robot.create_robot(position[0], position[1]);
+            RUR.add_robot(robot);
             robot.possible_initial_positions = [[robot.x, robot.y]];
             return;
         }

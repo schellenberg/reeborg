@@ -46,8 +46,12 @@ function set_button (name, content_present) {
 }
 
 function _update_user_editor (world, name, ed) {
-    // For blockly, editor and library, the user is given the choice to
-    // update the content or to keep their own.
+    try {
+        test_utils; // global variable defined for functional testing
+        return;
+    } catch (e) {}
+    // For blockly, editor and library, when not running tests,
+    // the user is given the choice to update the content or to keep their own.
     if (world[name]) {
         set_button("name", true);
         $("#update-"+name+"-content").show();

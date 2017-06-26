@@ -1,9 +1,10 @@
 import sys
-from browser import window
+from browser import window, console
 try:
     from highlight import insert_highlight_info
 except Exception as e:
     print("problem in common.py")
+
 from preprocess import transform
 
 def _add_watch(expr):
@@ -23,9 +24,7 @@ def __write_err(data):
     window.RUR.output._write("<b style='color:red'>" + str(data) + "</b>")
 
 def html_escape(obj):
-    return str(obj).replace("&", "&amp"
-                  ).replace("<", "&lt;"   # NOQA
-                  ).replace(">", "&gt;")  # NOQA
+    return str(obj).replace("&", "&amp").replace("<", "&lt;").replace(">", "&gt;")
 
 
 old = "<span class='watch_name'>%s:</span> <span class='watch_value'>%s</span>"  # NOQA
@@ -130,7 +129,7 @@ def Help(obj=None):
         window.console.log("exception in Help", e.__name__)
 
     for attr in dir(obj):
-        if attr == "__class__":
+        if attr == "__class__" or attr.startswith("__"):
             continue
         try:
             if hasattr(getattr(obj, attr), "__doc__"):
@@ -166,7 +165,7 @@ def dir_py(obj, exclude=None):
     window.print_html(html_escape("\n".join(out)).replace("\n", "<br>"), True)
 
 
-def generic_translate_python(src, highlight, var_watch, pre_code='',
+def generic_translate_python(src, highlight=False, var_watch=False, pre_code='',
                              post_code=''):
     ''' RUR.translate Python code into Javascript and execute
 
@@ -196,6 +195,13 @@ def generic_translate_python(src, highlight, var_watch, pre_code='',
     globals_['previous_watch_values'] = {}
 
     src = transform(src)
+    # sometimes, when copying from documentation displayed in the browsers
+    # some nonbreaking spaces are inserted instead of regular spaces.
+    # We make the assumption that nonbreaking spaces should never appear
+    # in source code - which is not necessarily valid...
+    if '\xa0' in src:
+        src = src.replace('\xa0', ' ')
+        window.console.warn("Some nonbreaking spaces were replaced in the Python code.")
     exec(lang_import, globals_)
     # globals_['system_default_vars'] = set([key for key in globals_])
 

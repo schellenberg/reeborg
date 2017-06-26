@@ -27,12 +27,13 @@ RUR.runner = {};
 RUR.runner.run = function (playback) {
     "use strict";
     var fatal_error_found = false, xml, xml_text;
-    if (RUR.state.editing_world && !RUR.state.code_evaluated) {
-        RUR._SAVED_WORLD = clone_world(RUR.CURRENT_WORLD);
-    }
     if (!RUR.state.code_evaluated) {
-        RUR.CURRENT_WORLD = clone_world(RUR._SAVED_WORLD);
-        RUR.world_init.set();
+        if (RUR.state.editing_world) {
+        // TODO: check that this is ok
+        RUR.WORLD_AFTER_ONLOAD = clone_world(RUR.CURRENT_WORLD);
+        }
+        RUR.CURRENT_WORLD = clone_world(RUR.WORLD_AFTER_ONLOAD);
+        RUR.world_init();
 
         if (!(RUR.state.programming_language === "python" && RUR.state.highlight) ) {
             RUR.record_frame();  // record the starting state as first frame;
@@ -72,7 +73,7 @@ RUR.runner.run = function (playback) {
 
 /* RUR.runner.eval returns true if a fatal error is found, false otherwise */
 RUR.runner.eval = function(src) {  // jshint ignore:line
-    var error_name, message, response, other_info, from_python, error;
+    var message, response, other_info, from_python, error;
     other_info = '';
 
     /* At some point around version 3.2.0, Brython changed the way it
@@ -117,11 +118,11 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
             response = RUR.runner.simplify_python_traceback(e);
             message = response.message;
             other_info = response.other_info;
-            error_name = response.error_name;
-            error.message = "<h3>" + error_name + "</h3><h4>" +
+            error.name = response.error_name;
+            error.message = "<h3>" + error.name + "</h3><h4>" +
                                     message + "</h4><p>" + other_info + '</p>';
         } else {
-            error_name = e.name;
+            error.name = e.name;
             message = e.message;
             other_info = '';
             if (e.reeborg_shouts !== undefined) {
@@ -134,7 +135,7 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
             RUR.record_frame("error", error);
         } else {
             RUR.show_feedback("#Reeborg-shouts",
-                                    "<h3>" + error_name + "</h3><h4>" +
+                                    "<h3>" + error.name + "</h3><h4>" +
                                     message + "</h4><p>" + other_info + '</p>');
             return true;
         }

@@ -6,13 +6,14 @@ require("./../programming_api/exceptions.js");
 require("./../editors/create.js");
 require("./create_empty_world.js");
 require("./../world_api/animated_images.js");
-require("./world_utils_namespace.js");
+
 var edit_robot_menu = require("./../ui/edit_robot_menu.js");
 var clone_world = require("./clone_world.js").clone_world;
 
 RUR.world_utils.import_world = function (json_string) {
     "use strict";
     var body, editor_content, library_content, i, keys, more_keys, coord, index, obstacles;
+
     if (json_string === undefined){
         console.log("Problem: no argument passed to RUR.world_utils.import_world");
         return {};
@@ -33,19 +34,22 @@ RUR.world_utils.import_world = function (json_string) {
     }
 
     if (RUR.CURRENT_WORLD.robots !== undefined) {
-        if (RUR.CURRENT_WORLD.robots[0] !== undefined) {
+        if (RUR.CURRENT_WORLD.robots[0]) {
             RUR.robot.modernize(RUR.CURRENT_WORLD.robots[0]);
             body = RUR.CURRENT_WORLD.robots[0];
             body._prev_x = body.x;
             body._prev_y = body.y;
             body._prev_orientation = body._orientation;
+        } else {
+            // protect against robots[0] == (undefined or null)
+            RUR.CURRENT_WORLD.robots = [];
         }
     }
 
     //TODO: put the conversion into new function
 
     // Backward compatibility following change done on Jan 5, 2016
-    // top_tiles has been renamed obstacles (and prior to that [or after?], 
+    // top_tiles has been renamed obstacles (and prior to that [or after?],
     // they were known as solid_objects); to ensure compatibility of
     // worlds created before, we change the old name
     // following http://stackoverflow.com/a/14592469/558799
@@ -61,7 +65,7 @@ RUR.world_utils.import_world = function (json_string) {
         delete RUR.CURRENT_WORLD.solid_objects;
     }
 
-    // Backward compatibility change done on December 29, 2016. 
+    // Backward compatibility change done on December 29, 2016.
     // tiles were written as e.g. "water"; need to be written as ["water"]
     if (RUR.CURRENT_WORLD.tiles !== undefined) {
         keys = Object.keys(RUR.CURRENT_WORLD.tiles);
@@ -94,7 +98,7 @@ RUR.world_utils.import_world = function (json_string) {
                 index = obstacles.indexOf("fence6");
                 if (index !== -1) {
                     obstacles[index] = "fence_double";
-                }                
+                }
                 index = obstacles.indexOf("fence7");
                 if (index !== -1) {
                     obstacles[index] = "fence_vertical";
@@ -138,27 +142,60 @@ RUR.world_utils.import_world = function (json_string) {
     if (RUR.state.editing_world) {
         edit_robot_menu.toggle();
     }
-
-    if (RUR.CURRENT_WORLD.onload !== undefined) {
-        eval_onload();
-    }
-    RUR._SAVED_WORLD = clone_world();
-
+    start_process_onload();
 };
 
-eval_onload = function () {
-    RUR.state.evaluating_onload = true;
-    try {
-        eval(RUR.CURRENT_WORLD.onload);  // jshint ignore:line
-    } catch (e) {
-        RUR.show_feedback("#Reeborg-shouts",
-            RUR.translate("Problem with onload code.") + "<br><pre>" +
-            RUR.CURRENT_WORLD.onload + "</pre>");
-        console.log("error in onload:", e);
+function start_process_onload() {
+    if (window.translate_python == undefined) {
+        console.log("startup delay: translate_python not available; will try again in 200ms.");
+        window.setTimeout(start_process_onload, 200);
     }
-    RUR.state.evaluating_onload = false;
+    else {
+        process_onload();
+    }
+}
+
+function show_onload_feedback (e) {
+    RUR.show_feedback("#Reeborg-shouts", e.message + "<br>" +
+        RUR.translate("Problem with onload code.") + "<pre>" +
+        RUR.CURRENT_WORLD.onload + "</pre>");
+    console.log("error in onload:", e);
+}
+
+process_onload = function () {
+    // TODO: review everything that needs to be reset and puts it here
+    // or put in reset_world.js and make sure to call it.
+    RUR.state.visible_grid = false;
+    RUR.state.do_not_draw_info = false;
+    //
+    RUR.WORLD_BEFORE_ONLOAD = clone_world();
+    if (RUR.CURRENT_WORLD.onload !== undefined && !RUR.state.editing_world) {
+        RUR.state.evaluating_onload = true; // affects the way errors are treated
+        if (RUR.CURRENT_WORLD.onload[0]=="#") {
+            try {
+               window.translate_python(RUR.CURRENT_WORLD.onload);
+            } catch (e) {
+                show_onload_feedback(e);
+            }
+        } else {
+            try {
+                eval(RUR.CURRENT_WORLD.onload);  // jshint ignore:line
+            } catch (e) {
+                show_onload_feedback(e);
+            }
+        }
+
+        RUR.state.evaluating_onload = false;
+        // remove any frames created by onload
+        RUR.frames = [];
+        RUR.nb_frames = 0;
+        RUR.current_frame_no = 0;
+    }
+    RUR.WORLD_AFTER_ONLOAD = clone_world();
     RUR.vis_world.draw_all();
+
 };
+RUR.world_utils.process_onload = process_onload;
 
 function convert_old_worlds () {
     // TODO: add code here

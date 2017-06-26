@@ -70,6 +70,7 @@ qunit_scripts = """
 <script type="text/javascript" src="js/test_world_creation.js" defer></script>
 <script type="text/javascript" src="js/all_qunit_tests.js" defer></script>
 <script type="text/javascript" src="vincent_maille/maille_qunit.js" defer></script>
+<script type="text/javascript" src="jsdoc/advanced_world_creation.js" defer></script>
 <script type="text/javascript" src="js/world_api/walls.tests.js" defer></script>
 </body>
 """
@@ -79,7 +80,7 @@ def make_qunit_version(infile, outfile):
     with open(infile, 'r') as f:
         lines = f.readlines()
 
-    with open("tests/functional_tests/" + outfile, 'w') as f:
+    with open("tests/integration_tests/" + outfile, 'w') as f:
         for line in lines:
             if '</head>' in line:
                 line = qunit_css

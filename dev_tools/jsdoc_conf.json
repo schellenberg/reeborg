@@ -4,7 +4,8 @@
         "dictionaries": ["jsdoc", "closure"]
     },
     "source": {
-        "include": [ "src/js", "tests", "src/lang"]
+        "include": [ "src/js", "tests", "src/lang"],
+        "exclude": ["tests/integration_tests/qunit-2.3.2.js"]
     },
     "plugins": ["plugins/markdown"],
     "markdown": {
@@ -24,6 +25,7 @@
         }
       },
       "theme": "reeborg",
+      "linenums": true,
       "outputSourceFiles": true,
       "search": false,
       "dateFormat": "dddd, MMMM Do YYYY",

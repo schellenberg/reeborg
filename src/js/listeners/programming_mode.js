@@ -7,20 +7,70 @@ var update_url = require("./../utils/parseuri.js").update_url;
 
 record_id("programming-mode");
 
+/** @function onload_set_programming_language
+ * @memberof RUR
+ * @instance
+ * @summary This function must ONLY be called from the Onload editor. It is
+ * used to set which of two programming languages are allowed. If the
+ * programming mode is compatible with that language, then it is not changed;
+ * otherwise, it is change to the default mode (with Code editor) for
+ * that language.
+ *
+ * **This should only be required if the world contains some content to
+ * be run** (either in the editor, or in the pre- or post- code editors.)
+ * Otherwise, do not use so that the world can be used using either programming
+ * language.
+ *
+ * @param {string} language  Either `"python"` or `"javascript"`. If the language
+ * is not recognized, it is set to `"python"`.
+ *
+ * @see RUR#onload_set_programming_mode
+ * @see {@tutorial custom_goals} for more details about the example mentioned below.
+ *
+ * @example {@lang python}
+ * # Execute the following and, after the world has loaded,
+ * # click on **World Info** to see how this code is used.
+ * World("worlds/examples/simple_path_explain.json")
+ */
+
+RUR.onload_set_programming_language = function(language) {
+    if (!RUR.state.evaluating_onload) {
+        alert("RUR.onload_set_programming_language should only be called from the 'Onload' editor.");
+        return;
+    }
+    language = language.toLowerCase();  // make it more user-friendly
+    if (language == "python") {
+        if (!(RUR.state.input_method == "py-repl" ||
+            RUR.state.input_method == "python" ||
+            RUR.state.input_method == "blockly-py")) {
+            RUR.onload_set_programming_mode("python");
+        }
+    } else if (language == "javascript") {
+        if (!(RUR.state.input_method == "javascript" ||
+            RUR.state.input_method == "blockly-js")) {
+            RUR.onload_set_programming_mode("javascript");
+        }
+    } else {
+        RUR.onload_set_programming_mode("python");
+    }
+}
+
+
 /** @function onload_set_programming_mode
  * @memberof RUR
  * @instance
- * @summary This function must ONLY be called from an onload editor. It is used
- *          to specify which of three mode must be used for a given world.
- *          This should only be required if the world contains some content to
- *          be run (either as blocks, in the editor, or in the pre- or post- code stage.)
+ * @summary This function must ONLY be called from the Onload editor. It is used
+ * to specify which of five modes must be used for a given world.
  *
+ * **This should only be required if the world contains some content to
+ * be run** (either as blocks, in the editor, or in the pre- or post- code editors)
+ * which does require a specific mode.
+ * Otherwise, do not use so that the world can be used using all possible
+ * programming modes.
  *
- * @param {string} mode  One of "python", "javascript", or "blockly" 
+ * @param {string} mode  One of `["python", "javascript", "py-repl", "blockly-js", "blockly-py"]`.
+ *   If the mode is not a recognized value, it will be set to `"python"`.
  *
- * @todo: see if we should not distinguish between blockly-js and blockly-py
- * @todo: see if we should not add py-repl as an option
- * 
  * @example
  * // shows how to switch mode to Blockly, where some blocks are already placed.
  * World("/worlds/examples/square_blockly.json", "Square")
@@ -28,26 +78,12 @@ record_id("programming-mode");
 
 RUR.onload_set_programming_mode = function(mode) {
     if (!RUR.state.evaluating_onload) {
-        alert("RUR.onload_set_programming_mode should only be called from the 'onload' World component.");
+        alert("RUR.onload_set_programming_mode should only be called from the 'Onload' editor.");
         return;
     }
-    /* First determine if any change is needed */
-    switch (mode) {
-        case "python":
-        case "javascript":
-            if (RUR.state.input_method == mode) {
-                return;
-            }
-            break;
-        case "blockly":
-            if (RUR.state.input_method == "blockly-js" ||
-                RUR.state.input_method == "blockly-py") {
-                return;
-            }
-            break;
-        default:
-            alert(mode + " is not allowed; only 'python', 'javascript' and 'blockly' are allowed.");
-            return;
+    mode = mode.toLowerCase(); // make it more user-friendly
+    if (RUR.state.input_method == mode) {
+        return;
     }
 
     /* When a world is imported from a program using World() or Monde(),
@@ -57,23 +93,11 @@ RUR.onload_set_programming_mode = function(mode) {
        used to run the original program.
      */
     setTimeout( function() {
-        switch (mode) {
-            case "python":
-            case "javascript":
-                break;
-            case "blockly":
-                if (RUR.state.programming_language === "javascript") {
-                    mode = "blockly-js";
-                } else {
-                    mode = "blockly-py";
-                }
-                break;
-            default:
-                alert("Unrecognized mode in RUR.set_programming_mode" + mode);
-        }
         $("#programming-mode").val(mode);
+        // the following will ensure that "python" is used as default if
+        // the mode is not recognized as a valid one.
         $("#programming-mode").change();
-    }, 300);
+    }, 600);
 };
 
 $("#programming-mode").change(function() {
@@ -123,16 +147,17 @@ $("#programming-mode").change(function() {
         case "py-repl":
             RUR.state.programming_language = "python";
             editor.setOption("readOnly", true);
-            editor.setOption("theme", "reeborg-readonly");            
+            editor.setOption("theme", "reeborg-readonly");
             show_console();
             break;
         default:
             RUR.state.programming_language = "python";
+            RUR.state.input_method = "python";
             $("#editor-tab").html(RUR.translate("Python Code"));
             show_editor("python");
             editor.setOption("readOnly", false);
             editor.setOption("theme", "reeborg-dark");
-            console.log("Problem? Default value used in programming-mode select.");
+            console.warn(" Default value used in programming-mode select.");
     }
     RUR.kbd.set_programming_language(RUR.state.programming_language);
     update_url();
@@ -266,6 +291,8 @@ function show_console() {
     $("#reload").hide();
     $("#reload2").show();
     $("#reload2").removeAttr("disabled");
+    $("#frame-selector").hide();
+    $("#frame-id").hide();
     _start_repl();
 }
 
@@ -273,14 +300,15 @@ function _start_repl() {
     try {
         restart_repl();
     } catch (e) {
-        console.log("_start_repl: failure", e);
-        console.log("Will try again in 500ms.");
-        window.setTimeout(_start_repl, 500);
+        console.log("_start_repl: failure; Will try again in 200ms.");
+        window.setTimeout(_start_repl, 200);
     }
 }
 
 function hide_console() {
     $("#py-console").hide();
+    $("#frame-selector").show();
+    $("#frame-id").show();
     $("#stop").show();
     $("#pause").show();
     $("#run").show();
