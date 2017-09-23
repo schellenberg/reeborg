@@ -1,0 +1,38 @@
+{
+  "robots": [
+    {
+      "x": 1,
+      "y": 1,
+      "_prev_x": 1,
+      "_prev_y": 1,
+      "_prev_orientation": 0,
+      "objects": {},
+      "_orientation": 0,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 21,
+      "model": "classic",
+      "possible_initial_positions": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "description": "Use a repeat 20: loop to walk around the edge of the garden, turning left whenever you find a tulip.",
+  "small_tiles": false,
+  "rows": 8,
+  "cols": 4,
+  "pre": "import random\nwidth_options = [4, 5, 6, 7, 8]\nwidth = random.choice(width_options)\nheight = 11 - (width-1)\nthink(0)\nRUR.set_world_size(width, height)\nRUR.fill_background(\"grass\")\n#RUR.add_final_position(\"house\", 1, 1)\n\nRUR.add_object(\"tulip\", width, 1)\nRUR.add_object(\"tulip\", width, height)\nRUR.add_object(\"tulip\", 1, height)\n\nthink(500)\n",
+  "goal": {
+    "objects": {
+      "1,1": {
+        "tulip": 3
+      }
+    }
+  }
+}
