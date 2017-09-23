@@ -1,5 +1,8 @@
 from browser import window
 from preprocess import transform
-from reeborg_fr import *
+from common import __import_fr
+
+__import_fr(globals())
+
 src = transform(window.library.getValue())
 exec(src)

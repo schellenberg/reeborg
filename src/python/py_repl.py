@@ -3,10 +3,13 @@
 
 import sys
 from browser import document, window
+from common import __import_en, __import_fr, print_dir
 RUR = window['RUR']
 
-def print_exc():
-    exc = __BRYTHON__.current_exception  # NOQA
+
+def print_exc(exc=None):
+    if exc is None:
+        exc = __BRYTHON__.current_exception  # NOQA
     if isinstance(exc, SyntaxError):
         print('\n module %s line %s' % (exc.args[1], exc.args[2]))
         offset = exc.args[3]
@@ -143,8 +146,10 @@ py_console.textarea.bind('click', myMouseClick)
 class Interpreter():
 
     def __init__(self):
+        self.initialized = False
         try:
             self.restart()
+            self.initialized = True
         except:
             py_console.append("Problem in attempting to (re)start Interpreter")
 
@@ -165,22 +170,24 @@ class Interpreter():
         except:
             lang = 'en'
         if lang == 'en':
-            exec("from reeborg_en import *", self.namespace)
+            __import_en(self.namespace)
             self.namespace["done"] = self.done
             # in case "done" gets reassigned in the "pre" code of a world,
             # we keep another version available.
             self.namespace["Done"] = self.done
             self.namespace["World"] = self.world
         elif lang == 'fr':
-            exec("from reeborg_fr import *", self.namespace)
+            __import_fr(self.namespace)
             self.namespace["termine"] = self.done
             self.namespace["Termine"] = self.done
             self.namespace["Monde"] = self.world
-        self.namespace["Help"] = window["Help"]
+        self.namespace["__help"] = window["__help"]
         self.namespace["init"] = window.RUR.world_init
+        self.namespace["print_dir"] = print_dir
         # Ensure my help replaces Brython's builtin
-        exec("__BRYTHON__.builtins.help = Help", self.namespace)
-        self.run_pre()
+        exec("__BRYTHON__.builtins.help = __help", self.namespace)
+        if self.initialized:
+            self.run_pre()
 
     def run_pre(self):
         if hasattr(RUR.CURRENT_WORLD, "pre"):
@@ -264,6 +271,14 @@ class Interpreter():
             self.status = "block"
         except SyntaxError as msg:
             self.handle_syntax_error(msg)
+        except NameError as e:
+            py_console.append("NameError: %s\n" % e.args[0])
+            py_console.prompt()
+            self.status = "main"
+        except AttributeError as e:
+            py_console.append("AttributeError: %s\n" % e.args[0])
+            py_console.prompt()
+            self.status = "main"
         except Exception as e:
             exc = __BRYTHON__.current_exception  # NOQA
             if hasattr(e, 'reeborg_shouts'):
@@ -271,10 +286,11 @@ class Interpreter():
                 message = message.replace('<code>', '').replace('</code>', '')
                 py_console.append("{}: {}".format(e.__name__, message))  # NOQA
             elif hasattr(e, 'reeborg_concludes'):
+                window.console.log("yes, it has attribute reeborg_concludes")
                 message = RUR.translate(getattr(e, 'reeborg_concludes'))
                 py_console.append("{}: {}".format(e.__name__, message)) # NOQA
             else:
-                 print_exc()
+                 print_exc(exc)
             py_console.append("\n")
             py_console.prompt()
             self.status = "main"

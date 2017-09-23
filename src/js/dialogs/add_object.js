@@ -46,5 +46,5 @@ function set_nb_object () {
 
 add_object_form = dialog_add_object.find("form").on("submit", function( event ) {
     event.preventDefault();
-    add_object();
+    set_nb_object();
 });

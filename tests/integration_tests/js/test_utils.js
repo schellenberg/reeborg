@@ -11,13 +11,13 @@ test_utils.set_human_language = function (lang) {
 };
 
 test_utils.reset = function () {
-    RUR.CURRENT_WORLD = RUR.world_utils.clone_world(test_utils.empty_world);
-    RUR._reset();
+    RUR.CURRENT_WORLD = RUR.clone_world(test_utils.empty_world);
     RUR.state.code_evaluated = false;
     RUR.state.highlight = false;
     RUR.state.prevent_playback = false;
     test_utils.feedback_element = undefined;
     test_utils.content = undefined;
+    RUR.reset_world();
     test_utils.set_mocks();
 };
 
@@ -88,6 +88,9 @@ test_utils.eval_program = function(world_url, program_url, language) {
     }
     RUR.runner.eval(test_utils.program);
     last_frame = RUR.frames[RUR.frames.length - 1];
+    if (last_frame.error !== undefined) {
+        return false;
+    }
     try {
         return RUR.rec.check_goal(last_frame);
     } catch(e) {
@@ -112,8 +115,6 @@ test_utils.run_world = function(world_url, language) {
     RUR.runner.eval(test_utils.program);
     return RUR.frames[RUR.frames.length - 1]; // last frame
 };
-
-
 
 
 test_utils.run_javascript = function (world_url, program_url) {
@@ -145,7 +146,7 @@ test_utils.playback = function() {
     return true;
 };
 
-test_utils.initial_world = RUR.world_utils.create_empty_world();
+test_utils.initial_world = RUR.create_empty_world();
 test_utils.empty_world = {robots: [],
         objects: {},
         walls: {},

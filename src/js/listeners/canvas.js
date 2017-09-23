@@ -1,11 +1,11 @@
 require("./../rur.js");
 
-$("#robot-canvas").mousemove(function (evt) {
+$("#robot-anim-canvas").mousemove(function (evt) {
     RUR.mouse_x = evt.pageX;
     RUR.mouse_y = evt.pageY;
     handleMouseMove(evt);
 });
-$("#robot-canvas").on("click", function (evt) {
+$("#robot-anim-canvas").on("click", function (evt) {
     RUR.mouse_x = evt.pageX;
     RUR.mouse_y = evt.pageY;
 }); // mouse clicks also requested in world_editor.js (at bottom)
@@ -19,9 +19,9 @@ function handleMouseMove(evt) {
     var x, y, hit, position, world, robot, mouse_above_robot, image, nb_obj;
     var size = 40, objects_carried;
 
-    world = RUR.CURRENT_WORLD;
-    x = evt.pageX - $("#robot-canvas").offset().left;
-    y = evt.pageY - $("#robot-canvas").offset().top;
+    world = RUR.get_current_world();
+    x = evt.pageX - $("#robot-anim-canvas").offset().left;
+    y = evt.pageY - $("#robot-anim-canvas").offset().top;
     position = RUR.calculate_grid_position();
     tooltip.canvas.style.left = "-200px";
     if (!tooltip.mouse_contained) {
@@ -63,9 +63,9 @@ function handleMouseMove(evt) {
         tooltip.canvas.style.top = y + "px";
         tooltip.ctx.clearRect(0, 0, tooltip.canvas.width, tooltip.canvas.height);
         for (i=0; i < objects_carried.length; i++){
-            image = RUR.TILES[objects_carried[i]].image;
+            image = RUR.THINGS[objects_carried[i]].image;
             if (image === undefined) {
-                image = RUR.TILES[objects_carried[i]]["image0"];
+                image = RUR.THINGS[objects_carried[i]]["image0"];
             }
             nb_obj = robot.objects[objects_carried[i]];
             if (nb_obj == "infinite" || nb_obj == Infinity) {
@@ -79,8 +79,8 @@ function handleMouseMove(evt) {
 
 RUR.calculate_grid_position = function () {
     var ctx, x, y;
-    x = RUR.mouse_x - $("#robot-canvas").offset().left;
-    y = RUR.mouse_y - $("#robot-canvas").offset().top;
+    x = RUR.mouse_x - $("#robot-anim-canvas").offset().left;
+    y = RUR.mouse_y - $("#robot-anim-canvas").offset().top;
 
     x /= RUR.WALL_LENGTH;
     x = Math.floor(x);

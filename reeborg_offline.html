@@ -36,22 +36,6 @@
 
 </head>
 <body>
-  <div id="splash-screen">
-    <div class="sk-fading-circle">
-      <div class="sk-circle1 sk-circle"></div>
-      <div class="sk-circle2 sk-circle"></div>
-      <div class="sk-circle3 sk-circle"></div>
-      <div class="sk-circle4 sk-circle"></div>
-      <div class="sk-circle5 sk-circle"></div>
-      <div class="sk-circle6 sk-circle"></div>
-      <div class="sk-circle7 sk-circle"></div>
-      <div class="sk-circle8 sk-circle"></div>
-      <div class="sk-circle9 sk-circle"></div>
-      <div class="sk-circle10 sk-circle"></div>
-      <div class="sk-circle11 sk-circle"></div>
-      <div class="sk-circle12 sk-circle"></div>
-    </div>
-  </div>
   <header class="blue-gradient green-border">
     <a id="logo" href="index_en.html" class="fake_button">
       <img src="src/images/robot_e.png" alt="logo">
@@ -83,24 +67,6 @@
       </select>
     </div>
   </header>
-  <div id="url-input" style="display:none">
-    <p>
-      <button class="blue-gradient" id="copy-permalink"></button>
-      <span id="copy-permalink-text"></span>
-      <br>
-      <br>
-      <button id="save-permalink" class="blue-gradient"></button>
-      <span id="save-permalink-text"></span>
-    </p>
-    <textarea id="url-input-textarea" cols="60" rows="10"></textarea>
-    <p>
-      <button class="blue-gradient" id="replace-permalink"></button>
-      <span id="replace-permalink-text"></span>
-      <br>
-      <br>
-      <button class="blue-gradient" id="cancel-permalink"></button>
-    </p>
-  </div>
   <div id="blockly-wrapper">
     <p id="move-handle">&nbsp;</p>
     <div id="blocklyDiv"></div>
@@ -148,7 +114,6 @@
         <block type="_token_"></block>
         <block type="_apple_"></block>
         <block type="_banana_"></block>
-        <block type="_orange_"></block>
         <block type="_strawberry_"></block>
         <block type="_triangle_"></block>
         <block type="_square_"></block>
@@ -157,6 +122,7 @@
         <block type="_dandelion_"></block>
         <block type="_tulip_"></block>
         <block type="_leaf_"></block>
+        <block type="_beeper_"></block>
       </category>
       <category id="blockly-conditions-var" name="Conditions" colour="240">
         <block type="_carries_object_or_here_"></block>
@@ -217,6 +183,7 @@
       <canvas id="pushables-canvas-anim" width="625" height="550"></canvas> <!-- 17 -->
       <canvas id="wall-canvas" width="625" height="550"></canvas> <!-- 18 -->
       <canvas id="robot-canvas" width="625" height="550"></canvas> <!-- 19 -->
+      <canvas id="robot-anim-canvas" width="625" height="550"></canvas> <!-- 20 -->
       <canvas id="tooltip" width=40 height=40></canvas>
     </div>
     <div id="Reeborg-concludes" class="reeborg-print" title="Reeborg says: I'm done!" style="display:none"></div>
@@ -253,6 +220,9 @@
           <a id="library-tab" href="#library"></a>
         </li>
         <li>
+          <a id="extra-tab" href="#extra"></a>
+        </li>
+        <li>
           <a id="pre-code-tab" href="#pre-code-div"></a>
         </li>
         <li>
@@ -276,6 +246,9 @@
       </div>
       <div id="library">
         <textarea id="library-code" name="library-code"></textarea>
+      </div>
+      <div id="extra">
+        <textarea id="extra-code" name="extra-code"></textarea>
       </div>
       <div id="pre-code-div">
         <textarea id="pre-code" name="pre-code"></textarea>
@@ -372,9 +345,6 @@
           <a href="javascript:RUR.we.select('object-banana');"><img src="src/images/banana.png" alt="banana"></a>
         </li>
         <li>
-          <a href="javascript:RUR.we.select('object-orange');"><img src="src/images/orange.png" alt="orange"></a>
-        </li>
-        <li>
           <a href="javascript:RUR.we.select('object-apple');"><img src="src/images/apple.png" alt="apple"></a>
         </li>
         <li>
@@ -391,6 +361,9 @@
         </li>
         <li>
           <a href="javascript:RUR.we.select('object-daisy');"><img src="src/images/daisy.png" alt="daisy"></a>
+        </li>
+        <li>
+          <a href="javascript:RUR.we.select('object-beeper');"><img src="src/images/beeper2.png" alt="beeper"></a>
         </li>
       </ul>
       <ul class="edit-world-canvas" id="edit-tile" style="display:none">
@@ -440,7 +413,7 @@
         </li>
         <li>
           <a href="javascript:RUR.we.select('fill-ice');"><img src="src/images/ice.png" alt="ice tile"></a>
-        </li>        
+        </li>
         <li>
           <a href="javascript:RUR.we.select('fill-colour');"><img src="src/images/tile_colour.png" alt="colored tile"></a>
         </li>
@@ -482,9 +455,6 @@
           <a href="javascript:RUR.we.select('goal-banana');"><img src="src/images/banana_goal.png" alt="banana"></a>
         </li>
         <li>
-          <a href="javascript:RUR.we.select('goal-orange');"><img src="src/images/orange_goal.png" alt="orange"></a>
-        </li>
-        <li>
           <a href="javascript:RUR.we.select('goal-apple');"><img src="src/images/apple_goal.png" alt="apple"></a>
         </li>
         <li>
@@ -501,6 +471,9 @@
         </li>
         <li>
           <a href="javascript:RUR.we.select('goal-daisy');"><img src="src/images/daisy_goal.png" alt="daisy"></a>
+        </li>
+        <li>
+          <a href="javascript:RUR.we.select('goal-beeper');"><img src="src/images/beeper_goal.png" alt="beeper"></a>
         </li>
       </ul>
       <ul class="edit-goal-canvas" id="edit-goal-position" style="display:none">
@@ -649,9 +622,6 @@
       <button class="blue-gradient" id="load-world"></button>
       <span id="load-world-text"></span>
     </p>
-    <p>
-      <button id="permalink" class="blue-gradient"></button>
-    </p>
     <div id="delete-world" style="display:none;">
       <h3 id="delete-world-text"></h3>
     </div>
@@ -686,7 +656,7 @@
       <span id="load-blockly-text"></span>
     </p>
     <hr>
-    
+
     <!--online<p><button id="togetherjs" class="blue-gradient" onclick="TogetherJS(this); return false;"></button>/online-->
     <!--online<span id="togetherjs-text"></span></p><hr>/online-->
     <!--offline--> Offline version: TogetherJS disabled. <!--/offline-->
@@ -703,8 +673,11 @@
         <button class="blue-gradient" id="load-library-btn"></button>
         <span id="load-library-text"></span>
       </p>
+      <button onclick="RUR.reveal_extra()" class="blue-gradient">Update extra</button></br>
+      <div id="extra-styled"></div>
     </div>
   </div>
+
   <audio id="put-sound" preload>
     <source src="src/sounds/toc.wav" type="audio/x-wav">
   </audio>
@@ -817,12 +790,6 @@
   </div>
 
   <div id="dialog-update-editors-from-world" title="Update editors content" style="display:none;">
-    <p id="update-editor-content"> <span id="update-editor-content-text"></span><br>
-      <button class="blue-gradient" id="update-editor-content-btn"></button>
-    </p>
-    <p id="update-library-content"> <span id="update-library-content-text"></span><br>
-      <button class="blue-gradient" id="update-library-content-btn"></button>
-    </p>
     <p id="update-blockly-content"> <span id="update-blockly-content-text"></span><br>
       <button class="blue-gradient" id="update-blockly-content-btn"></button>
     </p>
@@ -958,12 +925,12 @@
         <li id="kbd-daisy"><img src="src/images/daisy.png"></li>
         <li id="kbd-dandelion"><img src="src/images/dandelion.png"></li>
         <li id="kbd-leaf"><img src="src/images/leaf.png"></li>
-        <li id="kbd-orange"><img src="src/images/orange.png"></li>
         <li id="kbd-square"><img src="src/images/square.png"></li>
         <li id="kbd-star"><img src="src/images/star.png"></li>
         <li id="kbd-strawberry"><img src="src/images/strawberry.png"></li>
         <li id="kbd-triangle"><img src="src/images/triangle.png"></li>
         <li id="kbd-tulip"><img src="src/images/tulip.png"></li>
+        <li id="kbd-beeper"><img src="src/images/beeper2.png"></li>
       </ul>
       <ul class="kbd-special">
         <li id="kbd-colon">&nbsp;&nbsp;:&nbsp;&nbsp;</li>
@@ -988,7 +955,6 @@
     </div>
   </div>
 
-<div id="extra" style="display: none;"></div>
   <!--online
   <a style="display:none" href="http://clicky.com/100788691"><img alt="Real Time Analytics" src="//static.getclicky.com/media/links/badge.gif" /></a>
   <script type="text/javascript">

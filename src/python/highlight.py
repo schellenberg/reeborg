@@ -1,7 +1,6 @@
 # Inspired from https://code.google.com/p/pseudo-pdb/ by Jurgis Pralgauskis
 # However, bearing very little resemblance to the above
 #
-# MIT license like the rest of Reeborg's World code.
 # André Roberge
 
 try:
@@ -10,7 +9,7 @@ try:
 except:
     pass
 
-_watch = False
+_watching = False
 _highlight = True
 
 def extract_first_word(mystr, separators):
@@ -23,19 +22,18 @@ def extract_first_word(mystr, separators):
     return mystr, ''
 
 
-def tracing_line(indent, current_group, last_line=False):
+def tracing_line(indent, current_group, last_line=False, skip_watch=False):
     '''Construct the tracing line'''
-    global _watch, _highlight
     tracecall_name = 'RUR.set_lineno_highlight'
-    watch_string = "_watch_(system_default_vars, loc=locals(), gl=globals())\n"
-    if _watch:
+    watch_string = "__watch(system_default_vars, loc=locals(), gl=globals())\n"
+    if _watching and not skip_watch:
         watch_info = indent + watch_string
     else:
         watch_info = ''
     if last_line:
         return watch_info
     if _highlight:
-            trace = indent + tracecall_name + '(%s)' % current_group
+        trace = indent + tracecall_name + '(%s)' % current_group
     else:
         trace = ''
     return watch_info + trace
@@ -81,11 +79,12 @@ def check_balanced_brackets(src):
     curly_count = 0
     triple_double = 0
     triple_single = 0
+    in_decorator = False
     for nb, line in enumerate(lines):
         if line.endswith("\\"):
             return "Continuation line with backslash"  # we do not handle this
         if (paren_count == square_count == curly_count ==
-                triple_double == triple_single == 0):
+                triple_double == triple_single == 0) and not in_decorator:
             new_group = []
         paren_count += line.count('(') - line.count(')')
         square_count += line.count('[') - line.count(']')
@@ -94,21 +93,57 @@ def check_balanced_brackets(src):
         triple_single %= 2
         triple_double += line.count('"""')
         triple_double %= 2
+
+        # we want to treat lines like
+        # @decorator_1
+        #  ...
+        # @decorator_n
+        # def ...
+        #
+        # as a single group, to avoid instructions being inserted between
+        # these lines
+
+        if in_decorator:
+            if line.strip().startswith("def "):
+                in_decorator = False
+        elif line.strip().startswith("@"):
+            in_decorator = True
         new_group.append(nb)
         if (paren_count == square_count == curly_count ==
-                triple_double == triple_single == 0):
+                triple_double == triple_single == 0) and not in_decorator:
             line_info.append(new_group)
 
     if (paren_count == square_count == curly_count ==
-            triple_double == triple_single == 0):
+            triple_double == triple_single == 0) and not in_decorator:
         return line_info
     else:
         return False
 
 
+def is_assignment(line):
+    '''assume only one assignment symbol in line'''
+    assignments = ["+=", "-=", "*=", "@=", "/=", "//=", "%=", "**=",
+                   ">>=", "<<=", "&=", "^=", "|="]
+    for assignment in assignments:
+        if assignment in line:
+            found = assignment
+            break
+    else:
+        return False
+
+    parts = line.split(found)
+    lhs = parts[0].strip()
+    try:
+        return lhs.isidentifier()  # Brython can raise an error for some reason
+    except:
+        return False
+
+
 def insert_highlight_info(src, highlight=True, var_watch=False):
-    global _watch, _highlight
-    _watch = var_watch
+    global _watching, _highlight
+    if not src:
+        return '\n', False
+    _watching = var_watch
     _highlight = highlight
     line_info = check_balanced_brackets(src)
     if not line_info:
@@ -117,10 +152,9 @@ def insert_highlight_info(src, highlight=True, var_watch=False):
         return src, line_info
     src = src.replace('\t', '    ')
     lines = src.split("\n")
-    new_lines = [tracing_line('', [0])]
+    new_lines = []
     use_next_indent = False
     saved_lineno_group = None
-    skip_docstring = 0
 
     line_info.reverse()
     current_group = line_info.pop()
@@ -136,16 +170,18 @@ def insert_highlight_info(src, highlight=True, var_watch=False):
         indent = line[:-len(line_wo_indent)]
         first_word, remaining = extract_first_word(line_wo_indent, ' #=([{:\'"\\')
         if use_next_indent:
-            if saved_lineno_group[-1] >= lineno:
+            if saved_lineno_group[-1] >= lineno:  # pylint: disable=E1136
                 new_lines.append(line)
                 continue
             new_lines.append(tracing_line(indent, saved_lineno_group))
             use_next_indent = False
 
         if first_word in 'def class'.split():
+            if lineno <= current_group[-1]:  # likely inside a decorator group
+                new_lines.append(line)
+                continue
             new_lines.append(tracing_line(indent, current_group))
             new_lines.append(line)
-            skip_docstring = 2
         elif first_word in '''pass continue break if from import
                             del return raise try with yield'''.split():
             new_lines.append(tracing_line(indent, current_group))
@@ -161,21 +197,20 @@ def insert_highlight_info(src, highlight=True, var_watch=False):
             saved_lineno_group = current_group
         elif first_word == 'elif':
             new_lines.append(indent + first_word +
-                             tracing_line(' ', current_group) +
+                             tracing_line(' ', current_group, skip_watch=True) +
                              ' and' + remaining)
-        elif '=' in line_wo_indent:
+        elif is_assignment(line_wo_indent):
             new_lines.append(tracing_line(indent, current_group))
             new_lines.append(line)
         elif not first_word and remaining[0] == "#":
             new_lines.append(line)
         else:
-            if lineno == current_group[0] and skip_docstring <= 0:
+            if lineno == current_group[0]:
                 new_lines.append(tracing_line(indent, current_group))
             new_lines.append(line)
 
-        skip_docstring -= 1
 
-    new_lines.append(tracing_line(indent, '', last_line=True))
+    new_lines.append(tracing_line('', '', last_line=True))
     return '\n'.join(new_lines), False
 
 if __name__ == '__main__':

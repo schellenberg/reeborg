@@ -313,12 +313,12 @@ add_onclick_insert_object("kbd-carrot", "carrot");
 add_onclick_insert_object("kbd-daisy", "daisy");
 add_onclick_insert_object("kbd-dandelion", "dandelion");
 add_onclick_insert_object("kbd-leaf", "leaf");
-add_onclick_insert_object("kbd-orange", "orange");
 add_onclick_insert_object("kbd-square", "square");
 add_onclick_insert_object("kbd-star", "star");
 add_onclick_insert_object("kbd-strawberry", "strawberry");
 add_onclick_insert_object("kbd-triangle", "triangle");
 add_onclick_insert_object("kbd-tulip", "tulip");
+add_onclick_insert_object("kbd-beeper", "beeper");
 
 add_onclick_insert_untranslated_statement("kbd-js-var", "var ");
 add_onclick_insert_untranslated("kbd-js-function", "function ? { \n\n}");

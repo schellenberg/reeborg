@@ -3,6 +3,7 @@
 
    Creates two other versions used to run some automated tests using QUnit.
 '''
+import time
 
 
 def make_offline():
@@ -64,11 +65,15 @@ qunit_scripts = """
 </div>
 <script>
     var test_utils = {};
+    window.localStorage.clear();
 </script>
 <script type="text/javascript" src="qunit-2.3.2.js"></script>
+<script>QUnit.config.hidepassed = true;
+QUnit.config.collapse = false;</script>
 <script type="text/javascript" src="js/test_utils.js" defer></script>
 <script type="text/javascript" src="js/test_world_creation.js" defer></script>
 <script type="text/javascript" src="js/all_qunit_tests.js" defer></script>
+<script type="text/javascript" src="js/api_tests.js" defer></script>
 <script type="text/javascript" src="vincent_maille/maille_qunit.js" defer></script>
 <script type="text/javascript" src="jsdoc/advanced_world_creation.js" defer></script>
 <script type="text/javascript" src="js/world_api/walls.tests.js" defer></script>
@@ -89,7 +94,7 @@ def make_qunit_version(infile, outfile):
             elif "src/" in line and not "brython" in line:
                 line = line.replace("src/", "../../src/")
             elif "build/" in line:
-                line = line.replace("build/", "../../build/")
+                line = line.replace("build/reeborg.js", "../../build/reeborg.js?v=%s" % time.time())
             elif "offline/" in line:
                 line = line.replace("offline/", "../../offline/")
             elif '</body>' in line:

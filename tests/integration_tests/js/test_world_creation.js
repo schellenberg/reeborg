@@ -13,13 +13,6 @@ QUnit.module("World creation, loading, and format consistency", {
     test_utils.reset();
   }
 });
-QUnit.test( "Empty worlds", function(assert) {
-    assert.deepEqual(test_utils.initial_world, test_utils.empty_world, "Empty world initially created." );
-    RUR.world_utils.create_empty_world();
-    assert.deepEqual(remove_robot_id(RUR.CURRENT_WORLD), test_utils.empty_world, "Empty world explicitly created.");
-    assert.ok(RUR.FuncTest.object_identical(remove_robot_id(RUR.CURRENT_WORLD), test_utils.empty_world),
-        "Empty world explictly created; compare with my own object-comparison method." );
-});
 QUnit.test("import_world", function(assert) {
     RUR.world_utils.import_world(test_utils.empty_world);
     assert.deepEqual(remove_robot_id(RUR.CURRENT_WORLD), test_utils.empty_world, "Empty world created by importing empty world as object." );
@@ -43,6 +36,7 @@ QUnit.test("Load world", function(assert) {
                   "_trace_color": "seagreen",
                   "_trace_history": [],
                   "_trace_style": "default",
+                  "model": "classic",
                   "objects": {}
                 }
             ],
@@ -75,6 +69,7 @@ QUnit.test("Load world from url-permalink", function(assert) {
                   "_trace_color": "seagreen",
                   "_trace_history": [],
                   "_trace_style": "default",
+                  "model": "classic",
                   "objects": {}
                 }
             ],
@@ -90,19 +85,18 @@ QUnit.test("Load world from url-permalink", function(assert) {
     done();
 });
 
-
 QUnit.test("Load world without running program", function(assert) {
     var contents, done = assert.async();
     test_utils.set_human_language("en"); // language needed for comparison with error message
     contents = [["/src/worlds/tutorial_en/home1.json", "Home 1"],
                 ["/src/worlds/tutorial_en/home2.json", "Home 2"]];
     RUR.custom_world_select.make(contents);
-    assert.throws(function() {RUR.file_io.load_world_from_program('Home 2');},
+    assert.throws(function() {RUR._load_world_from_program('Home 2');},
                  "Raised expected 'error' from successfully loading Home 2.");
     // the previous error is not caught by a running program and no feedback element
     // is shown.
 
-    assert.equal(RUR.file_io.load_world_from_program('Home 2'), "no world change",
+    assert.equal(RUR._load_world_from_program('Home 2'), "no world change",
           "Loading world twice does not generate an error.");
     /* World files that are not found result in the following message in the
        console:
@@ -111,12 +105,13 @@ QUnit.test("Load world without running program", function(assert) {
     We add our own console message so that no one should be surprised by this.
     */
     console.log("404 (File not found) expected for 'Alone'.")
-    assert.throws(function() {RUR.file_io.load_world_from_program('Alone');},
+    assert.throws(function() {RUR._load_world_from_program('Alone');},
                  "Raised expected error from loading non-existent world.");
     assert.equal(test_utils.feedback_element, "#Reeborg-shouts", "Feedback element ok.");
     assert.equal(test_utils.content, "Could not find link: Alone", "Feedback content ok.");
     done();
 });
+
 QUnit.test("Load world by running Python programs", function(assert) {
     "use strict";
     var frames, last_frame, contents;

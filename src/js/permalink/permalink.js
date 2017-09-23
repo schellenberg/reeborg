@@ -6,59 +6,12 @@ require("./../translator.js");
 require("./../listeners/programming_mode.js");
 require("./../utils/parseuri.js");
 require("./../editors/create.js");
+// depends on filesaver.js loaded in main html page
 
-var export_world = require("./../world_utils/export_world.js").export_world;
 var record_id = require("./../../lang/msg.js").record_id;
 
-record_id("save-permalink", "Save");
-record_id("save-permalink-text", "Save permalink explanation");
-$("#save-permalink").on("click", function (evt) {
-    var blob = new Blob([RUR.permalink.__create()], {
-        type: "text/javascript;charset=utf-8"
-    });
-    saveAs(blob, "filename"); // saveAs defined in src/libraries/filesaver.js
-});
-
-/* IMPORTANT: we attempt to maintain compatibility with the old permalinks
-   format below.
- */
 
 RUR.permalink = {};
-
-RUR.permalink.__create = function () {
-    "use strict";
-    var proglang, world, _editor, _library, url_query, permalink;
-    url_query = parseUri(window.location.href);
-
-    permalink = url_query.protocol + "://" + url_query.host;
-    if (url_query.port){
-        permalink += ":" + url_query.port;
-    }
-    permalink += url_query.path;
-    proglang = RUR.state.programming_language + "-" + RUR.state.human_language;
-    world = encodeURIComponent(export_world());
-    _editor = encodeURIComponent(editor.getValue());
-    if (RUR.state.programming_language == "python") {
-        _library = encodeURIComponent(library.getValue());
-        permalink += "?proglang=" + proglang + "&world=" + world + "&editor=" + _editor + "&library=" + _library;
-    } else {
-        permalink += "?proglang=" + proglang + "&world=" + world + "&editor=" + _editor;
-    }
-    return permalink;
-};
-
-
-record_id("permalink", "PERMALINK");
-$("#permalink").on("click", function (evt) {
-    RUR.permalink.create();
-});
-RUR.permalink.create = function () {
-    var permalink = RUR.permalink.__create();
-
-    $("#url-input-textarea").val(permalink);
-    $("#url-input").toggle();
-    return false;
-};
 
 RUR.permalink.set_mode = function (url_query) {
     "use strict";
@@ -104,11 +57,11 @@ RUR.permalink.from_url = function(url_query) {
     } else {
         try { // see comment above
             if (url && name) {
-                RUR.file_io.load_world_from_program(url, name);
+                RUR._load_world_from_program(url, name);
             } else if (url) {
-                RUR.file_io.load_world_from_program(url);
+                RUR._load_world_from_program(url);
             } else {
-                RUR.file_io.load_world_from_program(name);
+                RUR._load_world_from_program(name);
             }
         } catch (e) {
             if (e.reeborg_concludes) {
@@ -124,17 +77,9 @@ RUR.permalink.from_url = function(url_query) {
     }
 };
 
-/* IMPORTANT : keep version of copy to clipboard. */
-// copy to clipboard
-record_id("copy-permalink", "COPY");
-record_id("copy-permalink-text", "COPY PERMALINK EXPLAIN");
-$("#copy-permalink").on("click", function (evt) {
-    document.querySelector('#url-input-textarea').select();
-    document.execCommand('copy');
-});
-
 // for embedding in iframe
-addEventListener("message", receiveMessage, false);
-function receiveMessage(event){
-    RUR.permalink.update(event.data);
-}
+// update() missing so this raises an error.
+// addEventListener("message", receiveMessage, false);
+// function receiveMessage(event){
+//     RUR.permalink.update(event.data);
+// }

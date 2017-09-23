@@ -8,9 +8,6 @@ require("./../recorder/recorder.js");
 require("./world_init.js");
 require("./../editors/create.js");
 require("./../utils/supplant.js");
-var clone_world = require("./../world_utils/clone_world.js").clone_world;
-
-//TODO: refactor this
 
 RUR.runner = {};
 
@@ -30,9 +27,9 @@ RUR.runner.run = function (playback) {
     if (!RUR.state.code_evaluated) {
         if (RUR.state.editing_world) {
         // TODO: check that this is ok
-        RUR.WORLD_AFTER_ONLOAD = clone_world(RUR.CURRENT_WORLD);
+        RUR.WORLD_AFTER_ONLOAD = RUR.clone_world(RUR.get_current_world());
         }
-        RUR.CURRENT_WORLD = clone_world(RUR.WORLD_AFTER_ONLOAD);
+        RUR.set_current_world(RUR.clone_world(RUR.WORLD_AFTER_ONLOAD));
         RUR.world_init();
 
         if (!(RUR.state.programming_language === "python" && RUR.state.highlight) ) {
@@ -158,7 +155,7 @@ RUR.runner.eval_javascript = function (src) {
 
 RUR.runner.eval_python = function (src) {
     // do not  "use strict"
-    var pre_code, post_code, highlight;
+    var pre_code, post_code;
     RUR.reset_definitions();
     pre_code = pre_code_editor.getValue();
     post_code = post_code_editor.getValue();
@@ -176,25 +173,39 @@ RUR.runner.simplify_python_traceback = function(e) {
         switch (error_name) {
             case "SyntaxError":
                 try {
-                    other_info = RUR.runner.find_line_number(e.args[1][3]);
-                    if (RUR.runner.check_colons(e.args[1][3])) {
+                    other_info = RUR.runner.find_line_number(e.args[4]);
+                    if (RUR.runner.check_colons(e.args[4])) {
                         other_info += RUR.translate("<br>Perhaps a missing colon is the cause.");
-                    } else if (RUR.runner.check_func_parentheses(e.args[1][3])){
+                    } else if (RUR.runner.check_func_parentheses(e.args[4])){
                         other_info += RUR.translate("<br>Perhaps you forgot to add parentheses ().");
+                    } else {
+                        console.log(e.args);
+                        try {
+                            other_info += e.args[4];
+                        } catch (e) {
+                            console.log("error in simplifying traceback: ", e);
+                        }
                     }
                 } catch (e) { // jshint ignore:line
                     other_info = "I could not analyze this error; you might want to contact my programmer with a description of this problem.";
+                    console.log("error in simplifying traceback: ", e);
                 }
                 break;
             case "IndentationError":
                 message = RUR.translate("The code is not indented correctly.");
                 try {
-                    other_info = RUR.runner.find_line_number(e.args[1][3]);
-                    if (e.args[1][3].indexOf("RUR.set_lineno_highlight([") == -1){
-                        other_info += "<br><code>" + e.args[1][3] + "</code>";
+                    other_info = RUR.runner.find_line_number(e.args[4]);
+                    if (e.args[4].indexOf("RUR.set_lineno_highlight([") == -1){
+                        other_info += "<br><code>" + e.args[4] + "</code>";
+                    } else if (RUR.state.highlight) {
+                        other_info += "Try turning off syntax highlighting; if this fixes the problem, please file a bug.";
                     }
                 } catch (e) {  // jshint ignore:line
-                    other_info = "I could not analyze this error; you might want to contact my programmer with a description of this problem.";
+                    if (RUR.state.highlight) {
+                        other_info += "Try turning off syntax highlighting; if this fixes the problem, please file a bug.";
+                    } else {
+                        other_info = "I could not analyze this error; you might want to contact my programmer with a description of this problem.";
+                    }
                 }
                 break;
             case "NameError":
@@ -207,7 +218,7 @@ RUR.runner.simplify_python_traceback = function(e) {
                 break;
             case "Internal Javascript error: SyntaxError":
             case "Internal Javascript error: TypeError":
-                error_name = "Invalid Python Code";
+                error_name = "Invalid Python Code - " + error_name;
                 message = '';
                 other_info = RUR.translate("I cannot help you with this problem.");
                 break;

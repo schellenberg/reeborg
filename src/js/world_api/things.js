@@ -2,6 +2,7 @@ require("./../rur.js");
 require("./../translator.js");
 require("./animated_images.js");
 require("./../programming_api/exceptions.js");
+require("./../utils/supplant.js");
 
 /** @function add_new_thing
  * @memberof RUR
@@ -88,48 +89,25 @@ require("./../programming_api/exceptions.js");
  * number of pixel equal to `y_offset`. This is only valid for images - not for
  * colors.
  *
+ * @param {object} [thing.transform] See the book
+ * **Reeborg's World: a Teacher's guide** for an explanation.
+ *
  * @throws Will throw an error if `name` attribute is not specified.
  * @throws Will throw an error if no image is supplied (either via the `url`
  *         or the `images` attribute) and `color` does not evaluate to true.
- *
- * @see Unit tests are found in {@link UnitTest#test_add_new_thing}
- * @example
- * // This first example shows how to set various "things";
- * // the mode will be set to Python and the highlighting
- * // will be turned off
- * World("/worlds/examples/thing1.json", "Example 1")
- *
- * // A second example shows how one can change "things" behaviour.
- * World("/worlds/examples/thing2.json", "Example 2")
  */
-RUR.TILES = {};
 
 RUR.add_new_thing = function (thing) {
     "use strict";
-    var i, key, keys, name, original_arg;
+    var name;
     name = thing.name;
 
     if (name === undefined){
         throw new RUR.ReeborgError("RUR.add_new_thing(thing): thing.name attribute missing.");
     }
 
-    // avoid modifying the original object
-    original_arg = JSON.stringify(thing);  // for comparison below
-    thing = JSON.parse(original_arg);  // clone of original
-
-    if (RUR.KNOWN_TILES.indexOf(name) != -1) {
-        if (original_arg == RUR.TILES[name].original_arg) {
-            // use concatenation in log and warn, for comparison with unit tests.
-            console.log(name + " is already known; no need to recreate.");
-            return;
-        }
-        console.warn("Warning: redefining " + name);
-    } else {
-        RUR.KNOWN_TILES.push(name);
-    }
-
-    thing.original_arg = original_arg;
-    RUR.TILES[name] = thing;
+    RUR.KNOWN_THINGS.push(name);
+    RUR.THINGS[name] = thing;
     if (thing.color) {
         return;
     }
@@ -145,7 +123,7 @@ function create_images(obj) {
     if (obj.url) {
         obj.image = new Image();
         obj.image.src = obj.url;
-        RUR.images_onload(obj.image);
+        obj.image.onload = RUR.onload_new_image;
     } else if (obj.images) {
         RUR.animate_images(obj);
     } else {
@@ -167,57 +145,71 @@ function create_images(obj) {
  * be used as an object to be picked up by Reeborg.
  *
  * @param {string} [property] If this argument is provided, only "things" for
- * which this property is defined will be shown.
+ * which this property/attribute is defined will be shown,
+ * and the value of the attribute will be shown as well.
  *
  * @example
  * RUR.show_all_things()
  * RUR.show_all_things("fatal")
  */
 RUR.show_all_things = function (property) {
-    var i, j, info, images, name, url;
+    var i, j, info, images, name, url, begin, end, prop_str;
     if (property !== undefined) {
         info = "<h3>Things with property <code>" + property + "</code></h3>";
+        prop_str = "<th>" + property + "</th>";
     } else {
         info = '';
+        prop_str = '';
     }
+    begin = "<table border='1'><tr><th>name</th>";
+    end = "<th>image(s)</th><th>goal?</th></tr>";
     if (RUR.state.human_language != 'en') {
-            info += "<table border='1'><tr><th>name</th><th>translation</th><th>image(s)</th><th>goal?</th></tr>";
+            info += begin + "<th>translation</th>" + prop_str + end;
         } else {
-            info += "<table border='1'><tr><th>name</th><th>image(s)</th><th>goal?</th></tr>";
+            info += begin + prop_str + end;
         }
-    for (i=0; i< RUR.KNOWN_TILES.length; i++) {
-        name = RUR.KNOWN_TILES[i];
+    for (i=0; i< RUR.KNOWN_THINGS.length; i++) {
+        name = RUR.KNOWN_THINGS[i];
         if (property !== undefined) {
-            if (RUR.TILES[name][property] === undefined) {
+            if (RUR.THINGS[name][property] === undefined) {
                 continue;
             }
         }
-        if (RUR.TILES[name].color) {
+        if (RUR.THINGS[name].color) {
             continue;
         }
-        url = RUR.TILES[name].url;
-        images = RUR.TILES[name].images;
+        url = RUR.THINGS[name].url;
+        images = RUR.THINGS[name].images;
         info += "<tr><td>" +  name + "</td><td>";
         if (RUR.state.human_language != 'en') {
             info += RUR.translate(name) + "</td><td>";
         }
+        if (property !== undefined) {
+            info +=  RUR.THINGS[name][property] + "</td><td>";
+        }
         if (url !== undefined) {
-            info += "<img src = '" + RUR.TILES[name].url + "'></td><td>";
+            info += "<img src = '" + RUR.THINGS[name].url + "'><br>" +
+                   RUR.THINGS[name].url + "</td><td>";
         } else if (images !== undefined) {
             for(j=0; j<images.length; j++) {
-                info += "<img src = '" + images[j] + "'> - ";
+                info += "<img src = '" + images[j] + "'> &nbsp; ";
+            }
+            for(j=0; j<images.length; j++) {
+                info += "<br>" + images[j];
             }
             info += "</td><td>";
         } else {
             info += "Missing image</td><td>";
         }
-        if (RUR.TILES[name].goal !== undefined) {
-            info += "<img src = '" + RUR.TILES[name].goal.url + "'>";
+        if (RUR.THINGS[name].goal !== undefined) {
+            info += "<img src = '" + RUR.THINGS[name].goal.url + "'><br>"
+                    + RUR.THINGS[name].goal.url;
         }
         info += "</td></tr>";
     }
     info += "</table>";
     RUR._print_html_(info, true); // true will replace existing content
+    return null; // for the python repl
 };
 
 /** @function has_property
@@ -240,10 +232,11 @@ RUR.show_all_things = function (property) {
  * write(RUR.has_property("water", "fatal"))
  */
 RUR.has_property = function (name, property) {
-    if (RUR.TILES[name] === undefined) {
+    name = RUR.translate_to_english(name);
+    if (RUR.THINGS[name] === undefined) {
         throw new RUR.ReeborgError(RUR.translate("Unknown object").supplant({obj:name}));
     }
-    if (RUR.TILES[name][property] === undefined) {
+    if (RUR.THINGS[name][property] === undefined) {
         return false;
     } else {
         return true;
@@ -255,13 +248,17 @@ RUR.has_property = function (name, property) {
  * @instance
  *
  * @summary This method returns the value of a given property for a "thing".
- * **Important:** the value shown will be the English default even if a
+ * **Important:** the returned value will be the English default even if a
  * translation exists and might appear in other contexts, like the
  * "World Info".
  *
+ * If the property is undefined, `null` will be returned (which will be
+ * converted to `None` if Python is used).
+ *
  * @param {string} name The name of the "thing".
  *
- * @param {string} property
+ * @param {string} property See the examples
+ *
  *
  * @example {@lang python}
  * print(RUR.get_property("water", "info"))  # Python
@@ -270,30 +267,37 @@ RUR.has_property = function (name, property) {
  * write(RUR.get_property("water", "fatal"))  // Javascript
  */
 RUR.get_property = function (name, property) {
-    if (RUR.TILES[name] === undefined) {
+    var property;
+
+    name = RUR.translate_to_english(name);
+
+    if (RUR.THINGS[name] === undefined) {
         throw new RUR.ReeborgError(RUR.translate("Unknown object").supplant({obj:name}));
     }
-    return RUR.TILES[name][property];
+
+    property = RUR.THINGS[name][property];
+    if (property === undefined) {
+        return null;
+    } else {
+        return property;
+    }
 };
+
+// Internal function used with name already translated into English;
+// we undo the translation to avoid having a warning for a missing
+// translation logged in the browser console.
+RUR._get_property = function (name, property) {
+    return RUR.get_property(RUR.translate(name), property);
+}
 
 
 /*=============================
 /
-/   Deprecated methods below
+/   Deprecated methods below; likely used in Vincent Maille's book
 /
 /===========================*/
 
-/** @function add_new_object_type
- * @memberof RUR
- * @instance
- * @deprecated Use {@link RUR#add_new_thing} instead.
- */
 RUR.add_new_object_type = function (name, url, url_goal) {
     RUR.add_new_thing({"name": name, "url": url, "goal": {"url": url_goal}});
 };
-/** @function add_object_image
- * @memberof RUR
- * @instance
- * @deprecated Use {@link RUR#add_new_thing} instead.
- */
-RUR.add_object_image = RUR.add_new_object_type; // Vincent Maille's book.
+RUR.add_object_image = RUR.add_new_object_type;

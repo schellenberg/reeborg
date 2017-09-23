@@ -1,40 +1,39 @@
 require("./../rur.js");
+require("./../translator.js");
 require("./../utils/key_exist.js");
 require("./../utils/validator.js");
 require("./../recorder/record_frame.js");
 require("./artefact.js");
-require("./../world_utils/get_world.js");
 
 /** @function add_decorative_object
  * @memberof RUR
  * @instance
- * @summary This function sets a named tile as background at a location.
+ * @summary This function adds a decorative object at a specified location.
  *
- * @param {string} name The name of a tile **or** a colour recognized by JS/HTML.
- *    No check is performed to ensure that the value given is valid; it the
- *    tile name is not recognized, it is assumed to be a colour. If a new tile
- *    is set at that location, it replaces the pre-existing one.
+ * @param {string} name The name of an object **or** a colour recognized by JS/HTML.
+ * No check is performed to ensure that the value given is valid; it the
+ * name is not recognized, it is assumed to be a colour.  There can be more
+ * than one type of decorative object at a given location.  If a decorative
+ * object with name "A" is already at a given location and this function is called
+ * to add another, a message is logged to the console and nothing further is
+ * done.
  *
- * @param {string} name Name of the tile
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  *
- * @throws Will throw an error if `(x, y)` is not a valid location..
- *
- * @todo add test
- * @todo add better examples
- * @todo deal with translation
- * @example
- * // shows how to set various tiles;
- * // the mode will be set to Python and the highlighting
- * // will be turned off
- * World("/worlds/examples/tile1.json", "Example 1")
+ * @throws Will throw an error if `(x, y)` is not a valid location.
  *
  */
 RUR.add_decorative_object = function (name, x, y) {
     "use strict";
-    var args = {name: name, x:x, y:y, type:"decorative_objects"};
-    RUR.add_artefact(args);
+    var args;
+    if (RUR.is_decorative_object(name, x, y)) {
+        console.log(name + " is already there as a decorative object.");
+        return;
+    }
+    name = RUR.translate_to_english(name);
+    args = {name: name, x:x, y:y, type:"decorative_objects"};
+    RUR._add_artefact(args);
     RUR.record_frame("RUR.add_decorative_object", args);
 };
 
@@ -42,29 +41,26 @@ RUR.add_decorative_object = function (name, x, y) {
 /** @function remove_decorative_object
  * @memberof RUR
  * @instance
- * @summary This function removes a background tile at a location.
+ * @summary This function removes a decorative object at a location.
  *
- * @param {string} name Name of the tile
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {string} name Name of the object
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  *
  * @throws Will throw an error if `(x, y)` is not a valid location.
- * @throws Will throw an error if there is no background tile to remove
+ * @throws Will throw an error if there is no such decorative object to remove
  *        at that location
- *        
- * @todo add test
- * @todo add examples
- * @todo deal with translation
  */
 RUR.remove_decorative_object = function (name, x, y) {
     "use strict";
     var args;
+    name = RUR.translate_to_english(name);
     args= {x:x, y:y, type:"decorative_objects", name:name};
     try {
-        RUR.remove_artefact(args);
+        RUR._remove_artefact(args);
     } catch (e) {
         if (e.message == "No artefact to remove") {
-            throw new ReeborgError("No tile to remove here.");
+            throw new RUR.ReeborgError("No decorative object to remove here.");
         } else {
             throw e;
         }
@@ -73,50 +69,54 @@ RUR.remove_decorative_object = function (name, x, y) {
 };
 
 
-/** @function get_decorative_object
+/** @function get_decorative_objects
  * @memberof RUR
  * @instance
- * @summary This function gets the tile name found at given location. Note that
- *    this could be an HTML colour.  If nothing is found at that location,
- *    `null` is returned (which is converted to `None` in Python programs.)
+ * @summary This function returns a list/array of the decorative objects found
+ * at a given position. If nothing is found at that location,
+ *  an empty array is returned.
  *
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  *
- * @throws Will throw an error if `(x, y)` is not a valid location..
- *
- * @todo add test
- * @todo add proper examples
- * @todo deal with translation
- * @example
- * // shows how to set various tiles;
- * // the mode will be set to Python and the highlighting
- * // will be turned off
- * World("/worlds/examples/tile1.json", "Example 1")
+ * @throws Will throw an error if `(x, y)` is not a valid location.
+ * @returns An array containing the name of the decorative objects found at that location
  *
  */
 
-RUR.get_decorative_object = function (x, y) {
+RUR.get_decorative_objects = function (x, y) {
     "use strict";
-    var tile, args = {x:x, y:y, type:"decorative_objects"};
-    tile = RUR.get_artefacts(args);
-    if (tile === null) {
-        return null;
-    } else {
-        return RUR.TILES[tile[0]];
+    var i, result, objects, args = {x:x, y:y, type:"decorative_objects"};
+    objects = RUR._get_artefacts(args);
+    if (objects == null) {
+        return [];
     }
+    result = [];
+    for (i=0; i < objects.length; i++){
+        result.push(RUR.translate(objects[i]));
+    }
+    return result;
 };
+
+/** @function is_decorative_object
+ * @memberof RUR
+ * @instance
+ * @summary This function returns `true/True` if a named decorative object
+ * is found at that location, `false/False` otherwise.
+ *
+ * @param {string} name Name of the object
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
+ *
+ * @throws Will throw an error if `(x, y)` is not a valid location.
+ *
+ */
 
 RUR.is_decorative_object = function (name, x, y) {
     "use strict";
-    var tile, args = {x:x, y:y, type:"decorative_objects"};
-    tile = RUR.get_artefacts(args);
-    if (tile === null) {
-        return false;
-    } else if (tile[0] == name){
-        return true;
-    } else {
-        return false;
-    }
+    var args;
+    name = RUR.translate_to_english(name);
+    args = {name: name, x:x, y:y, type:"decorative_objects"};
+    return RUR._get_nb_artefact(args) == 1;
 };
 

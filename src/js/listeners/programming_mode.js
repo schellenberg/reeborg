@@ -30,7 +30,7 @@ record_id("programming-mode");
  * @example {@lang python}
  * # Execute the following and, after the world has loaded,
  * # click on **World Info** to see how this code is used.
- * World("worlds/examples/simple_path_explain.json")
+ * World("worlds/examples/simple_path_explained.json")
  */
 
 RUR.onload_set_programming_language = function(language) {
@@ -88,7 +88,7 @@ RUR.onload_set_programming_mode = function(mode) {
 
     /* When a world is imported from a program using World() or Monde(),
        and the onload editor contains a call to RUR.set_programming_mode,
-       it is useful to delay its execution so that any error thrown
+       it might be useful to delay its execution so that any error thrown
        (e.g. info about changed world) be handled properly by the language
        used to run the original program.
      */
@@ -97,7 +97,7 @@ RUR.onload_set_programming_mode = function(mode) {
         // the following will ensure that "python" is used as default if
         // the mode is not recognized as a valid one.
         $("#programming-mode").change();
-    }, 600);
+    }, 100);
 };
 
 $("#programming-mode").change(function() {
@@ -189,6 +189,7 @@ function hide_everything () {
     $("#special-keyboard-button").hide();
     $("#python-additional-menu p button").attr("disabled", "true");
     $("#library-tab").parent().hide();
+    $("#extra-tab").parent().hide();
     $("#highlight").hide();
     $("#watch-variables-btn").hide();
     $("#Reeborg-watches").dialog("close");
@@ -241,22 +242,28 @@ function show_editor(lang) {
         $("#post-code-tab").parent().show();
         $("#description-tab").parent().show();
         $("#onload-editor-tab").parent().show();
+        $("#extra-tab").parent().hide();
     }
 }
 
 function show_javascript_editor () {
     editor.setOption("mode", "javascript");
+    onload_editor.setOption("mode", "javascript"); // could be changed in import_world
     pre_code_editor.setOption("mode", "javascript");
     post_code_editor.setOption("mode", "javascript");
 }
 
 function show_python_editor () {
     editor.setOption("mode", {name: "python", version: 3});
+    onload_editor.setOption("mode", {name: "python", version: 3}); // could be changed in import_world
     pre_code_editor.setOption("mode", {name: "python", version: 3});
     post_code_editor.setOption("mode", {name: "python", version: 3});
 
     RUR.state.highlight = RUR.state.highlight || RUR.state._saved_highlight_value;
     $("#library-tab").parent().show();
+    if (RUR.state.extra_code_visible) {
+        $("#extra-tab").parent().show();
+    }
     $("#highlight").show();
     $("#watch-variables-btn").show();
     $("#python-additional-menu p button").removeAttr("disabled");
@@ -317,9 +324,3 @@ function hide_console() {
     $("#reload").show();
     $("#reload2").hide();
 }
-
-/* Ensure that CodeMirror editors are set up properly
-   even if not to be used initially
-*/
-show_editor("python");
-// see start_session.js for initialization.

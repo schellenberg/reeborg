@@ -7,12 +7,17 @@ require("./../rur.js");
 
 RUR.ReeborgError = function (message) {
     if (RUR.state.input_method == "py-repl" ||
-        (RUR.state.programming_language == "python" && !RUR.state.evaluating_onload)){
+            (!RUR.state.evaluating_onload && RUR.state.programming_language == "python") ||
+            (RUR.state.evaluating_onload && RUR.state.onload_programming_language == "python")
+        ){
         try { // see comment above
-            return ReeborgError(message);
+            if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
+                return ReeborgError_en(message);
+            } else {
+                return ReeborgError_fr(message);
+            }
         } catch (e) {}
     }
-
     this.name = "ReeborgError";
     this.message = message;
     this.reeborg_shouts = message;
@@ -21,19 +26,28 @@ RUR.ReeborgError = function (message) {
 
 RUR.ReeborgOK = function (message) {
     if (RUR.state.programming_language == "python"){
-        try {
-            return ReeborgOK(message);
+        try { // see comment above
+            if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
+                return ReeborgOK_en(message);
+            } else {
+                return ReeborgOK_fr(message);
+            }
         } catch (e) {}
     }
     this.name = "ReeborgOK";
     this.reeborg_concludes = message;
     this.message = message;
 };
+RUR.ReeborgOk = RUR.ReeborgOK; // preventing an annoying typo...
 
 
 RUR.WallCollisionError = function (message) {
     if (RUR.state.programming_language == "python"){
-        return WallCollisionError(message);
+        if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
+            return WallCollisionError_en(message);
+        } else {
+            return WallCollisionError_fr(message);
+        }
     }
     this.name = "WallCollisionError";
     this.message = message;
@@ -43,7 +57,11 @@ RUR.WallCollisionError = function (message) {
 
 RUR.MissingObjectError = function (message) {
     if (RUR.state.programming_language == "python"){
-        return MissingObjectError(message);
+        if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
+            return MissingObjectError_en(message);
+        } else {
+            return MissingObjectError_fr(message);
+        }
     }
     this.name = "MissingObjectError";
     this.message = message;

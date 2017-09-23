@@ -1,5 +1,5 @@
 // the following is used in a few places below
-var mac_user_save_files_ko = ' <b>Mac users:</b> please see <a href="https://github.com/aroberge/reeborg/blob/master/known_problems.md" target="_blank" rel="noopener">Known problems</a>.';
+var mac_user_save_files_ko = ' <b>Mac users:</b> please see <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Known problems</a>.';
 
 exports.ui_ko = ui_ko = {};
 exports.ko_to_en = ko_to_en = {};
@@ -30,8 +30,6 @@ ui_ko["dandelion"] = "민들레";
 ko_to_en["민들레"] = "dandelion";
 ui_ko["leaf"] = "잎";
 ko_to_en["잎"] = "leaf";
-ui_ko["orange"] = "귤";
-ko_to_en["귤"] = "orange";
 ui_ko.square = "사각형";
 ko_to_en["사각형"] = "square";
 ui_ko.star = "별";
@@ -39,15 +37,49 @@ ko_to_en["별"] = "star";
 ui_ko["strawberry"] = "딸기";
 ko_to_en["딸기"] = "strawberry";
 ui_ko.token = "토큰";
+ui_ko["tokens are Reeborg's favourite thing."] = "토큰 are Reeborg's favourite thing.";
 ko_to_en["토큰"] = "token";
 ui_ko.triangle = "삼각형";
 ko_to_en["삼각형"] = "triangle";
 ui_ko["tulip"] = "튤립";
 ko_to_en["튤립"] = "tulip";
+ui_ko["bucket"] = "물통"; // bucket of water; translated using google
+ko_to_en["물통"] = "bucket";
 
-ui_ko["Problem with onload code."] = "유효하지 않은 자바스크립트 onload 코드입니다; 이 월드의 제작자에게 연락하세요.";
+ui_ko["mud"] = "진흙";
+ko_to_en["진흙"] = "mud";
+ui_ko["soil"] = "흙"; // translated using google
+ko_to_en["흙"] = "soil";
+ui_ko["water"] = "물";
+ko_to_en["물"] = "water";
+ui_ko["grass"] = "잔디";
+ko_to_en["잔디"] = "grass";
+ui_ko["gravel"] = "자갈";
+ko_to_en["자갈"] = "gravel";
+ui_ko["ice"] = "얼음";
+ko_to_en["얼음"] = "ice";
+ui_ko["fire"] = "불";
+ko_to_en["불"] = "fire"; // translated using google
+// the following need translations; I do not trust google based
+// on its recommendation for the French translation.
+ui_ko["bulb"] = "tulip bulb";
+ko_to_en["tulip bulb"] = "bulb";
+ui_ko["Tulip bulb: might grow into a nice tulip with some water from a bucket."] = "Tulip bulb: might grow into a nice tulip with some water from a bucket.";
 
-ui_ko["Too many steps:"] = "너무 많은 steps: {max_steps}";
+// more translations needed
+ui_ko["fence_right"] = "울타리 right";
+ko_to_en["울타리 right"] = "fence_right";
+ui_ko["fence_left"] = "울타리";
+ko_to_en["울타리 left"] = "fence_left";
+ui_ko["fence_double"] = "울타리";
+ko_to_en["울타리 double"] = "fence_double";
+ui_ko["fence_vertical"] = "울타리";
+ko_to_en["울타리 vertical"] = "fence_vertical";
+
+ui_ko["Invalid Javascript code in Onload editor"] = "유효하지 않은 자바스크립트 onload 코드입니다; 이 월드의 제작자에게 연락하세요.";
+ui_ko["Invalid Python code in Onload editor"] = "유효하지 않은 파이썬 onload 코드입니다; 이 월드의 제작자에게 연락하세요.";
+
+ui_ko["Too many steps:"] = "너무 많은 steps: {max_steps}<br>Use <code>set_max_nb_steps(nb)</code> to increase the limit.";
 ui_ko["<li class='success'>Reeborg is at the correct x position.</li>"] = "<li class='success'>리보그는 올바른 x 위치에 있습니다. </li>";
 ui_ko["<li class='failure'>Reeborg is at the wrong x position.</li>"] = "<li class='failure'>리보그는 잘못된 x 위치에 있습니다. </li>";
 ui_ko["<li class='success'>Reeborg is at the correct y position.</li>"] = "<li class='success'>리보그는 올바른 y 위치에 있습니다. </li>";
@@ -64,7 +96,7 @@ ui_ko["No object found here"] = "여기서 <code>{obj}</code> 를 찾을 수 없
 ui_ko["object"] = "객체";
 ui_ko["I don't have any object to put down!"] = "나는 집어넣을 <code>{obj}</code> 가 없어요!";
 ui_ko["There is already a wall here!"] = "벽이 여기에 이미 있어요!";
-ui_en["There is no wall to remove!"] = "There is no wall to remove!";
+ui_ko["There is no wall to remove!"] = "There is no wall to remove!";
 ui_ko["Ouch! I hit a wall!"] = "아으, 아파요! 저는 벽을 부딪혔어요!";
 ui_ko["Done!"] = "끝!";
 ui_ko["There is no position as a goal in this world!"] = "위치에 대한 목표가 없어요!";
@@ -76,10 +108,14 @@ ui_ko.east = "동쪽";
 ui_ko.north = "북쪽";
 ui_ko.west = "서쪽";
 ui_ko.south = "남쪽";
+ko_to_en["동쪽"] = "east";
+ko_to_en["북쪽"] = "north";
+ko_to_en["서쪽"] = "west";
+ko_to_en["남쪽"] = "south";
 ui_ko["Unknown orientation for robot."] = "로봇의 방향을 알 수 없습니다.";
 
-ui_en["Invalid position."] = "{pos} is an invalid position.";
-ui_en["Invalid orientation."] = "'{orient}' is an unknown orientation.";
+ui_ko["Invalid position."] = "{pos} is an invalid position.";
+ui_ko["Invalid orientation."] = "'{orient}' is an unknown orientation.";
 
 ui_ko["World selected"] = "월드 {world} 가 선택되었습니다";
 ui_ko["Could not find world"] = "월드를 찾을 수 없습니다. {world}";
@@ -112,11 +148,7 @@ ui_ko["Enter number of objects to give to robot."] = "로봇에게 주기 위해
 ui_ko["Special information about this location:"] = "이 위치에 대한 특별한 정보:";
 ui_ko["Click on world to toggle tile."] = "<code>{obj}</code> 타일을 달기 위해 월드를 클릭하세요.";
 ui_ko["Click on desired tile below."] = "아래에서 원하는 타일을 클릭합니다. (or color selector)";
-ui_ko["mud"] = "진흙";
-ui_ko["water"] = "물";
-ui_ko["grass"] = "잔디";
-ui_ko["gravel"] = "자갈";
-ui_ko["ice"] = "얼음";
+
 ui_ko["A wall must be built east of this location."] = "벽은 이 위치의 동쪽에 지어져야 합니다.";
 ui_ko["A wall must be built north of this location."] = "벽은 이 위치의 북쪽에 지어져야 합니다.";
 ui_ko["A wall must be built west of this location."] = "벽은 이 위치의 서쪽에 지어져야 합니다.";
@@ -144,6 +176,7 @@ ui_ko["I cannot help you with this problem."] = "I cannot help you with this pro
 
 ui_ko["I'm stuck in mud."] = "난 진흙에 걸렸어요.";
 ui_ko["Mud: Reeborg <b>cannot</b> detect this and will get stuck if it moves to this location."] = "진흙: 리보그는 이것을 탐지 <b>하지 못하고<b> 이 위치로 이동하게 되면 걸리게 됩니다.";
+ui_ko["Soil: usually safe, but looks identical to mud."] = "Soil: usually safe, but looks identical to mud.";
 ui_ko["I'm slipping on ice!"] = "저는 얼음에 미끄러지고 있어요!";
 ui_ko["Ice: Reeborg <b>cannot</b> detect this and <em>might</em> slide and move to the next location if it moves to this location."] = "얼음: 리보그는 이것을 탐지 <b>하지 못하고</b> 만약 이 위치로 이동하게 되면 미끄러지고 다음 위치로 이동하게 됩니다.";
 ui_ko["Grass: usually safe."] = "잔디: 보통 안전함.";
@@ -156,6 +189,8 @@ ui_ko["brick wall: Reeborg <b>can</b> detect this but will hurt himself if he at
 ui_ko["I hit a fence!"] = "I hit a fence!";
 ui_ko["Fence: Reeborg <b>can</b> detect this but will be stopped by it."] = "울타리: 리보그는 이것을  <b>can</b> 탐지 할 수 있지만 그것에 의해 중지됩니다.";
 ui_ko["Bridge:Reeborg <b>can</b> detect this and will know that it allows safe passage over water."] = "리보그는 이것을 탐지 할 수 <b>있으며</b> 이 물 위에서 안전한 통행을 허용하는것을 알게 될 것입니다.";
+ui_ko["My joints are melting!"] = "내 관절이 녹고있어."; // translated using google
+ui_ko["A bucket full of water."] = "A bucket full of water.";
 
 ui_ko["Something is blocking the way!"] = "뭔가가 길을 막고 있어요!";
 ui_ko["Reeborg <b>can</b> detect this tile using at_goal()."] = "리보그는 at_goal() 를 사용해서 탐지 할 수 <b>있어요</b>.";
@@ -163,11 +198,6 @@ ui_ko["green home tile:"] = "초록색 홈 타일:";
 ui_ko["home:"] = "홈:";
 ui_ko["racing flag:"] = "레이싱 깃발:";
 ui_ko["house:"] = "집:";
-
-ui_ko["fence_right"] = "울타리";
-ui_ko["fence_left"] = "울타리";
-ui_ko["fence_double"] = "울타리";
-ui_ko["fence_vertical"] = "울타리";
 
 ui_ko["Local variables"] = "지역 변수";
 ui_ko["Global variables"] = "전역 변수";
@@ -233,6 +263,7 @@ ui_ko["OBJECTS"] = "객체들";
 ui_ko["Python Code"] = "파이썬 코드";
 ui_ko["Javascript Code"] = "자바스크립트 코드";
 ui_ko["LIBRARY"] = "라이브러리";
+ui_ko["EXTRA"] = "extra";
 ui_ko["PRE"] = "전에";
 ui_ko["POST"] = "후";
 ui_ko["DESCRIPTION"] = "월드 정보";
@@ -240,15 +271,6 @@ ui_ko["ONLOAD"] = "Onload";
 
 ui_ko["HIGHLIGHT IMPOSSIBLE"] = "구문 강조를 꺼서 문제가 발생했습니다.";
 ui_ko["COMMAND RESULT"] = "아래 메뉴에서 수행할 작업을 선택합니다.";
-
-ui_ko["PERMALINK"] = "퍼머링크";
-ui_ko["COPY"] = "복사";
-ui_ko["COPY PERMALINK EXPLAIN"] = "퍼머링크를 클립보드로 복사하기.";
-ui_ko["Save"] = "저장";
-ui_ko["Save permalink explanation"] = "퍼머링크의 복사본을 파일로 저장합니다.";
-ui_ko["REPLACE PERMALINK"] = "되돌리기";
-ui_ko["REPLACE PERMALINK EXPLAIN"] = "위의 내용을 퍼머링크로 교체하고 교체를 클릭합니다.";
-ui_ko["CANCEL"] = "취소";
 
 ui_ko["DELETE WORLD TEXT"] = "버튼을 클릭하면 브라우져의 메모리에 저장된 월드를 제거합니다:";
 ui_ko["PYTHON ONLY"] = "파이썬 전용";
@@ -346,10 +368,6 @@ ui_ko["Unlimited:"] = "Unlimited:";
 ui_ko["Give object to robot"] = "Give object to robot";
 ui_ko["GIVE OBJECT EXPLAIN"] = "로봇이 운반 할 객체의 수를 고르세요. 더 많은 수를 원한다면 체크박스를 클릭하세요.";
 
-ui_ko["UPDATE EDITOR CONTENT"] = "This world has some default content for the editor. To replace the current content of your editor, click on the button";
-ui_ko["UPDATE EDITOR BUTTON"] = "Replace editor content";
-ui_ko["UPDATE LIBRARY CONTENT"] = "This world has some default content for the library. To replace the current content of your library, click on the button";
-ui_ko["UPDATE LIBRARY BUTTON"] = "Replace library content";
 ui_ko["UPDATE BLOCKLY CONTENT"] = "This world has some default content for the blocks workspace. To replace the current blocks content, click on the button";
 ui_ko["UPDATE BLOCKLY BUTTON"] = "Replace existing blocks";
 ui_ko["Contents from World"] = "Contents from World";

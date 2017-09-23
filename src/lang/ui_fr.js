@@ -1,5 +1,5 @@
 // the following is used in a few places below
-var mac_user_save_files_fr = ' <b>Utilisateurs Mac:</b> consultez <a href="https://github.com/aroberge/reeborg/blob/master/known_problems.md" target="_blank" rel="noopener">Problèmes connus</a>.';
+var mac_user_save_files_fr = ' <b>Utilisateurs Mac:</b> consultez <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Problèmes connus</a>.';
 
 exports.ui_fr = ui_fr = {};
 exports.fr_to_en = fr_to_en = {};
@@ -29,8 +29,6 @@ ui_fr["dandelion"] = "pissenlit";
 fr_to_en["pissenlit"] = "dandelion";
 ui_fr["leaf"] = "feuille";
 fr_to_en["feuille"] = "leaf";
-ui_fr["orange"] = "orange";
-fr_to_en["orange"] = "orange";
 ui_fr.square = "carré";
 fr_to_en["carré"] = "square";
 ui_fr.star = "étoile";
@@ -38,15 +36,46 @@ fr_to_en["étoile"] = "star";
 ui_fr["strawberry"] = "fraise";
 fr_to_en["fraise"] = "strawberry";
 ui_fr.token = "jeton";
+ui_fr["tokens are Reeborg's favourite thing."] = "Les jetons sont les objets favoris de Reeborg.";
 fr_to_en["jeton"] = "token";
 ui_fr.triangle = "triangle";
 fr_to_en["triangle"] = "triangle";
 ui_fr["tulip"] = "tulipe";
 fr_to_en["tulipe"] = "tulip";
+ui_fr["bucket"] = "seau d'eau";
+fr_to_en["seau d'eau"] = "bucket";
+ui_fr["bulb"] = "bulbe de tulipe";
+fr_to_en["bulbe de tulipe"] = "bulb";
+ui_fr["Tulip bulb: might grow into a nice tulip with some water from a bucket."] = "Bulbe de tulipe : pourrait devenir une belle tulipe avec un seau d'eau.";
 
-ui_fr["Problem with onload code."] = "Code Javascript 'onload' non valide; veuillez contacter le créateur de ce monde.";
+ui_fr["mud"] = "boue";
+fr_to_en["boue"] = "mud";
+ui_fr["soil"] = "sol";
+fr_to_en["sol"] = "soil";
+ui_fr["water"] = "eau";
+fr_to_en["eau"] = "water";
+ui_fr["grass"] = "gazon";
+fr_to_en["gazon"] = "grass";
+ui_fr["gravel"] = "gravier";
+fr_to_en["gravier"] = "gravel";
+ui_fr["ice"] = "glace";
+fr_to_en["glace"] = "ice";
+ui_fr["fire"] = "feu";
+fr_to_en["feu"] = "fire";
 
-ui_fr["Too many steps:"] = "Trop d'instructions: {max_steps}";
+ui_fr["fence_right"] = "clôture_droite";
+fr_to_en["clôture_droite"] = "fence_right";
+ui_fr["fence_left"] = "clôture_gauche";
+fr_to_en["clôture_gauche"] = "fence_left";
+ui_fr["fence_double"] = "clôture_double";
+fr_to_en["clôture_double"] = "fence_double";
+ui_fr["fence_vertical"] = "clôture_verticale";
+fr_to_en["clôture_verticale"] = "fence_vertical";
+
+ui_fr["Invalid Javascript code in Onload editor"] = "Code Javascript 'onload' non valide; veuillez contacter le créateur de ce monde.";
+ui_fr["Invalid Python code in Onload editor"] = "Code Python 'onload' non valide; veuillez contacter le créateur de ce monde.";
+
+ui_fr["Too many steps:"] = "Trop d'instructions: {max_steps}<br>Utilisez <code>max_nb_instructions(nb)</code> pour augmenter la limite.";
 ui_fr["<li class='success'>Reeborg is at the correct x position.</li>"] = "<li class='success'>Reeborg est à la bonne coordonnée x.</li>";
 ui_fr["<li class='failure'>Reeborg is at the wrong x position.</li>"] = "<li class='failure'>Reeborg est à la mauvaise coordonnée x.</li>";
 ui_fr["<li class='success'>Reeborg is at the correct y position.</li>"] = "<li class='success'>Reeborg est à la bonne coordonnée y.</li>";
@@ -75,10 +104,14 @@ ui_fr.east = "est";
 ui_fr.north = "nord";
 ui_fr.west = "ouest";
 ui_fr.south = "sud";
+fr_to_en["est"] = "east";
+fr_to_en["nord"] = "north";
+fr_to_en["ouest"] = "west";
+fr_to_en["sud"] = "south";
 ui_fr["Unknown orientation for robot."] = "Orientation inconnue.";
 
-ui_en["Invalid position."] = "{pos} n'est pas une position valide.";
-ui_en["Invalid orientation."] = "'{orient}' est une orientation inconnue.";
+ui_fr["Invalid position."] = "{pos} n'est pas une position valide.";
+ui_fr["Invalid orientation."] = "'{orient}' est une orientation inconnue.";
 
 ui_fr["World selected"] = "Monde {world} choisi";
 ui_fr["Could not find world"] = "Je ne peux pas trouver {world}";
@@ -110,11 +143,7 @@ ui_fr["Enter number of objects to give to robot."] = "Quel nombre de <code>{obj}
 ui_fr["Special information about this location:"] = "Information particulière au sujet de cet endroit:";
 ui_fr["Click on world to toggle tile."] = "Cliquez sur le monde pour ajouter/supprimer l'image: <code>{obj}</code>.";
 ui_fr["Click on desired tile below."] = "Cliquez sur l'image désirée ci-dessous ou sur le sélecteur de couleur.";
-ui_fr["mud"] = "boue";
-ui_fr["water"] = "eau";
-ui_fr["grass"] = "gazon";
-ui_fr["gravel"] = "gravier";
-ui_fr["ice"] = "glace";
+
 ui_fr["A wall must be built east of this location."] = "Un mur doit être construit à l'est de cet endroit.";
 ui_fr["A wall must be built north of this location."] = "Un mur doit être construit au nord de cet endroit.";
 ui_fr["A wall must be built west of this location."] = "Un mur doit être construit à l'ouest de cet endroit.";
@@ -143,6 +172,7 @@ ui_fr["I cannot help you with this problem."] = "Je ne peux pas vous aider avec 
 
 ui_fr["I'm stuck in mud."] = "Je suis immobilisé dans la boue.";
 ui_fr["Mud: Reeborg <b>cannot</b> detect this and will get stuck if it moves to this location."] = "Boue: Reeborg <b>ne peut pas</b> détecter ceci et y sera immobilisé s'il va à cet endroit.";
+ui_fr["Soil: usually safe, but looks identical to mud."] = "Sol: habituellement sans problèmes, mais ressemble visuellement à la boue.";
 ui_fr["I'm slipping on ice!"] = "Je glisse sur la glace!";
 ui_fr["Ice: Reeborg <b>cannot</b> detect this and <em>might</em> slide and move to the next location if it moves to this location."] = "Glace: Reeborg <b>ne peut pas</b> détecter ceci et pourrait glisser à la prochaine case.";
 ui_fr["Grass: usually safe."] = "Gazon: habituellement sans problèmes.";
@@ -155,19 +185,17 @@ ui_fr["brick wall: Reeborg <b>can</b> detect this but will hurt himself if he at
 ui_fr["I hit a fence!"] = "J'ai frappé une clôture!";
 ui_fr["Fence: Reeborg <b>can</b> detect this but will be stopped by it."] = "Clôture: Reeborg <b>peut</b> détecter ceci mais il ne peut pas passer au travers.";
 ui_fr["Bridge:Reeborg <b>can</b> detect this and will know that it allows safe passage over water."] = "Pont: Reeborg <b>peut</b> détecter ceci et sait que cela lui permettra de traverser l'eau en sureté.";
+ui_fr["My joints are melting!"] = "Mes articulations fondent !";
+ui_fr["A bucket full of water"] = "Un seau rempli d'eau."
+
 
 fr_to_en["pont"] = "bridge";
 ui_fr["Something is blocking the way!"] = "Quelque chose bloque le chemin!";
 ui_fr["Reeborg <b>can</b> detect this tile using at_goal()."] = "Reeborg <b>peut</b> détecter ceci avec au_but().";
-ui_fr["green home tile:"] = "tuile verte pour l'arrivée:";
-ui_fr["home:"] = "la maison:";
-ui_fr["racing flag:"] = "drapeau d'arrivée:";
-ui_fr["house:"] = "maison:";
-
-ui_fr["fence_right"] = "clôture";
-ui_fr["fence_left"] = "clôture";
-ui_fr["fence_double"] = "clôture";
-ui_fr["fence_vertical"] = "clôture";
+ui_fr["green home tile:"] = "tuile verte pour l'arrivée :";
+ui_fr["home:"] = "la maison :";
+ui_fr["racing flag:"] = "drapeau d'arrivée :";
+ui_fr["house:"] = "maison :";
 
 ui_fr["Local variables"] = "Variables locales";
 ui_fr["Global variables"] = "Variables globales";
@@ -233,6 +261,7 @@ ui_fr["OBJECTS"] = "Objets";
 ui_fr["Python Code"] = "Code Python";
 ui_fr["Javascript Code"] = "Code Javascript";
 ui_fr["LIBRARY"] = "biblio";
+ui_fr["EXTRA"] = "extra";
 ui_fr["PRE"] = "Pre";
 ui_fr["POST"] = "Post";
 ui_fr["DESCRIPTION"] = "Desc.";
@@ -240,15 +269,6 @@ ui_fr["ONLOAD"] = "Onload";
 
 ui_fr["HIGHLIGHT IMPOSSIBLE"] = "Un problème non-identifié avec votre code a fait en sorte que j'ai arrêté le surlignage du code dans l'éditeur.";
 ui_fr["COMMAND RESULT"] = "Sélectionnez l'action à performer dans le menu ci-dessous.";
-
-ui_fr["PERMALINK"] = "Permalien";
-ui_fr["COPY"] = "Copier";
-ui_fr["COPY PERMALINK EXPLAIN"] = "Copie le permalien dans le presse-papier.";
-ui_fr["Save"] = "Sauvegarder";
-ui_fr["Save permalink explanation"] = "Sauvegarde une copie du permalien dans un fichier.";
-ui_fr["REPLACE PERMALINK"] = "Remplacer";
-ui_fr["REPLACE PERMALINK EXPLAIN"] = "Remplacez le contenu ci-dessus par un nouveau permalien puis cliquez sur Remplacer.";
-ui_fr["CANCEL"] = "Annuler";
 
 ui_fr["DELETE WORLD TEXT"] = "En cliquant sur un bouton, éliminez un monde connu de la mémoire de votre nagivageur.";
 ui_fr["PYTHON ONLY"] = "Python seulement";
@@ -346,10 +366,6 @@ ui_fr["Unlimited:"] = "Nombre illimité ";
 ui_fr["Give object to robot"] = "Donner des objets à Reeborg";
 ui_fr["GIVE OBJECT EXPLAIN"] = "Choisissez un nombre d'objects que Reeborg aura en sa possession au début du programme. Cliquez sur la case à cocher si vous voulez un nombre illimité.";
 
-ui_fr["UPDATE EDITOR CONTENT"] = "Ce monde inclus un contenu pour l'éditeur qui est différent de celui qui s'y trouve présentement. Pour remplacer le contenu de l'éditeur par celui défini par le monde, cliquez sur le bouton.";
-ui_fr["UPDATE EDITOR BUTTON"] = "Remplacer le contenu de l'éditeur";
-ui_fr["UPDATE LIBRARY CONTENT"] = "Ce monde inclus un contenu pour la bibliothèque qui est différent de celui qui s'y trouve présentement. Pour remplacer le contenu de la bibliothèque par celui défini par le monde, cliquez sur le bouton.";
-ui_fr["UPDATE LIBRARY BUTTON"] = "Remplacer le contenu de la bibliothèque";
 ui_fr["UPDATE BLOCKLY CONTENT"] = "Ce monde inclus des blocs différents de ceux qui s'y trouvent présentement. Pour remplacer les blocs présents par ceux définis par le monde, cliquez sur le bouton.";
 ui_fr["UPDATE BLOCKLY BUTTON"] = "Remplacer les blocs";
 ui_fr["Contents from World"] = "Remplacement de contenus";

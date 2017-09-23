@@ -36,19 +36,31 @@ QUnit.module("Failing Python programs", {
   beforeEach: function() {
     test_utils.reset();  }
 });
-QUnit.test("Centre 1", function(assert) {
+QUnit.test("Centre 1 - failing English", function(assert) {
     var world_url = "/src/worlds/tutorial_en/center1.json";
     var done = assert.async();
     test_utils.set_human_language("en");
     assert.notOk(test_utils.eval_python(world_url, "/tests/integration_tests/programs/test_center1_fail.py").success, "Failing program recognized as such.");
+    done();
+});
+QUnit.test("failing English program - syntax error", function(assert) {
+    var world_url = "/src/worlds/tutorial_en/center1.json";
+    var done = assert.async();
+    test_utils.set_human_language("en");
     assert.notOk(test_utils.eval_python(world_url, "/tests/integration_tests/programs/test_syntax_fail.py").success, "Failing program (syntax error) recognized as such.");
     done();
 });
-QUnit.test("Centre 1", function(assert) {
+QUnit.test("Centre 1 - failing French", function(assert) {
     var world_url = "/src/worlds/tutorial_en/center1.json";
     var done = assert.async();
     test_utils.set_human_language("fr");
     assert.notOk(test_utils.eval_python(world_url, "/tests/integration_tests/programs/test_center1_fail_fr.py").success, "Failing program recognized as such.");
+    done();
+});
+QUnit.test("Failing French program - syntax error", function(assert) {
+    var world_url = "/src/worlds/tutorial_en/center1.json";
+    var done = assert.async();
+    test_utils.set_human_language("fr");
     assert.notOk(test_utils.eval_python(world_url, "/tests/integration_tests/programs/test_syntax_fail_fr.py").success, "Failing program (syntax error) recognized as such.");
     done();
 });
@@ -69,10 +81,10 @@ QUnit.test("Around 1, 2, 3, 4", function(assert) {
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/around_en.py");
     assert.equal(frames.length, 41, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 1, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['1,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 1, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['1,1'].token, 1, "Token put down.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -83,28 +95,28 @@ QUnit.test("Around 1, 2, 3, 4", function(assert) {
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/around_en.py");
     assert.equal(frames.length, 45, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 1, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['1,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 1, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['1,1'].token, 1, "Token put down.");
 
     world_file = "around3.json";
     frames = test_utils.run_python(base_url + world_file);
     assert.equal(frames.length, 56, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 2, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['2,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 2, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['2,1'].token, 1, "Token put down.");
 
     world_file = "around4.json";
     frames = test_utils.run_python(base_url + world_file);
     assert.equal(frames.length, 62, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 2, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['2,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 2, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['2,1'].token, 1, "Token put down.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -195,7 +207,7 @@ QUnit.test("Harvests", function(assert) {
                                       world_file + " run successfully.");
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.equal(last_frame.world.robots[0].objects.carrot, "infinite", "Nb of carrots carried.");
+    assert.equal(last_frame.world_map.robots[0].objects.carrot, "infinite", "Nb of carrots carried.");
 
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
@@ -237,7 +249,7 @@ QUnit.test("Tokens", function(assert) {
                                       world_file + " run successfully.");
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "No objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "No objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -298,7 +310,7 @@ QUnit.test("Newspaper", function(assert) {
                                       world_file + " run successfully.");
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {"token": 5}, "5 tokens carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {"token": 5}, "5 tokens carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -311,7 +323,7 @@ QUnit.test("Newspaper", function(assert) {
     assert.ok(test_utils.eval_python(base_url + world_file).success,
                                       world_file + " run successfully.");
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {"token": 3}, "3 tokens carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {"token": 3}, "3 tokens carried.");
     done();
 });
 QUnit.test("Storm 1", function(assert) {
@@ -326,7 +338,7 @@ QUnit.test("Storm 1", function(assert) {
     // random values set.
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm1_en.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm1: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm1: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -352,7 +364,7 @@ QUnit.test("Storm 2; also tests library", function(assert) {
     // random values set.
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm2_en.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm2: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm2: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -377,7 +389,7 @@ QUnit.test("Storm 3; also tests library", function(assert) {
     // random values set.
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm3_en.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm3: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm3: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -405,10 +417,10 @@ QUnit.test("Around 1, 2, 3, 4", function(assert) {
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/around_fr.py");
     assert.equal(frames.length, 41, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 1, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['1,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 1, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['1,1'].token, 1, "Token put down.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -419,28 +431,28 @@ QUnit.test("Around 1, 2, 3, 4", function(assert) {
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/around_fr.py");
     assert.equal(frames.length, 45, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 1, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['1,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 1, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['1,1'].token, 1, "Token put down.");
 
     world_file = "around3.json";
     frames = test_utils.run_python(base_url + world_file);
     assert.equal(frames.length, 56, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 2, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['2,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 2, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['2,1'].token, 1, "Token put down.");
 
     world_file = "around4.json";
     frames = test_utils.run_python(base_url + world_file);
     assert.equal(frames.length, 62, "Nb of frames for solution for world " + world_file);
     last_frame = frames[frames.length-1];
-    assert.equal(last_frame.world.robots[0].x, 2, "x-position of robot.");
-    assert.equal(last_frame.world.robots[0].y, 1, "y-position of robot.");
-    assert.equal(last_frame.world.robots[0].objects.token, "infinite", "Nb of tokens carried.");
-    assert.equal(last_frame.world.objects['2,1'].token, 1, "Token put down.");
+    assert.equal(last_frame.world_map.robots[0].x, 2, "x-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].y, 1, "y-position of robot.");
+    assert.equal(last_frame.world_map.robots[0].objects.token, "infinite", "Nb of tokens carried.");
+    assert.equal(last_frame.world_map.objects['2,1'].token, 1, "Token put down.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -530,7 +542,7 @@ QUnit.test("Harvests", function(assert) {
                                       world_file + " run successfully.");
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.equal(last_frame.world.robots[0].objects.carrot, "infinite", "Nb of carrots carried.");
+    assert.equal(last_frame.world_map.robots[0].objects.carrot, "infinite", "Nb of carrots carried.");
 
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
@@ -573,7 +585,7 @@ QUnit.test("Tokens", function(assert) {
     // Note: the program tokens1234_fr.py also test some translation
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "No objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "No objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -638,7 +650,7 @@ QUnit.test("Newspaper", function(assert) {
                                       world_file + " run successfully.");
 
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {"token": 5}, "5 tokens carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {"token": 5}, "5 tokens carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -651,7 +663,7 @@ QUnit.test("Newspaper", function(assert) {
     assert.ok(test_utils.eval_python(base_url + world_file).success,
                                       world_file + " run successfully.");
     last_frame = RUR.frames[RUR.frames.length - 1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {"token": 3}, "3 tokens carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {"token": 3}, "3 tokens carried.");
     done();
 });
 QUnit.test("Storm 1", function(assert) {
@@ -666,7 +678,7 @@ QUnit.test("Storm 1", function(assert) {
     // random values set.
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm1_fr.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm1: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm1: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -693,7 +705,7 @@ QUnit.test("Storm 2; also tests library", function(assert) {
     // random values set.
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm2_fr.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm2: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm2: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -721,7 +733,7 @@ QUnit.test("Storm 3; also tests library", function(assert) {
 
     frames = test_utils.run_python(base_url + world_file, "/tests/integration_tests/programs/storm3_fr.py");
     last_frame = frames[frames.length-1];
-    assert.deepEqual(last_frame.world.robots[0].objects, {}, "Testing storm3: no objects carried.");
+    assert.deepEqual(last_frame.world_map.robots[0].objects, {}, "Testing storm3: no objects carried.");
     RUR.rec.conclude();
     assert.equal(test_utils.feedback_element, "#Reeborg-concludes", "Feedback element ok.");
     assert.equal(test_utils.content,
@@ -730,5 +742,80 @@ QUnit.test("Storm 3; also tests library", function(assert) {
         "<li class='success'>Tous les objets sont aux bons endroits.</li>" +
         "<li class='success'>Tous les murs ont été construits correctement.</li></ul>",
         "Feedback text ok.");
+    done();
+});
+
+QUnit.module("Advanced world creation API", {
+  beforeEach: function() {
+    test_utils.reset();
+    test_utils.set_human_language("en");
+    test_utils.base_url = "/worlds/examples/";
+    RUR.state.programming_language = "python";
+  }
+});
+
+QUnit.test("API: Testing add/remove/is/get",
+           function(assert) {
+    "use strict";
+    var last_frame, done = assert.async();
+    test_utils.load_world_file(test_utils.base_url + "add_remove_is_get.json");
+    // The code we wish to test is in the Pre editor; we
+    // run a simple program as a test.
+    RUR.runner.eval("done()");
+    // 10 frames below is a lower bound; we chose this number as a sign
+    // that the test has run correctly, but without making this test
+    // "brittle", having to update it for something inconsequential
+    // every time we make changes.
+    assert.ok(RUR.frames.length > 10, "Pre has been executed.")
+    last_frame = RUR.frames[RUR.frames.length - 1];
+    assert.equal(last_frame.error.reeborg_shouts, "Done!", "Task run correctly.");
+    done();
+});
+
+QUnit.test("API: Protection given by bridges",
+           function(assert) {
+    "use strict";
+    var last_frame, done = assert.async();
+    test_utils.load_world_file(test_utils.base_url + "protection_bridge.json");
+    // The code we wish to test is in the Pre editor; we
+    // run a simple program as a test.
+    RUR.runner.eval("done()");
+    // 10 frames below is a lower bound; we chose this number as a sign
+    // that the test has run correctly, but without making this test
+    // "brittle", having to update it for something inconsequential
+    // every time we make changes.
+    assert.ok(RUR.frames.length > 10, "Pre has been executed.")
+    last_frame = RUR.frames[RUR.frames.length - 1];
+    assert.equal(last_frame.error.reeborg_shouts, "Done!", "Task run correctly.");
+    done();
+});
+
+QUnit.test("API: Protection given by carried objects",
+           function(assert) {
+    "use strict";
+    var last_frame, done = assert.async();
+    test_utils.load_world_file(test_utils.base_url + "protection_objects.json");
+    // The code we wish to test is in the Pre editor; we
+    // run a simple program as a test.
+    RUR.runner.eval("example()");
+    // 5 frames below is a lower bound; we chose this number as a sign
+    // that the test has run correctly, but without making this test
+    // "brittle", having to update it for something inconsequential
+    // every time we make changes.
+    assert.ok(RUR.frames.length > 10, "Pre has been executed.")
+    last_frame = RUR.frames[RUR.frames.length - 1];
+    assert.equal(last_frame.error.reeborg_shouts, "The wicked witch got me.", "Task run correctly.");
+    done();
+});
+
+QUnit.test("API: Protection given by carried objects - second test function",
+           function(assert) {
+    "use strict";
+    var last_frame, done = assert.async();
+    test_utils.load_world_file(test_utils.base_url + "protection_objects.json");
+    RUR.runner.eval("test_front_is_clear()");
+    assert.ok(RUR.frames.length > 10, "Pre has been executed.")
+    last_frame = RUR.frames[RUR.frames.length - 1];
+    assert.equal(last_frame.error.reeborg_shouts, "The wicked witch got me.", "Task run correctly.");
     done();
 });

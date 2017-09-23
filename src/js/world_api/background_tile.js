@@ -1,10 +1,28 @@
 require("./../rur.js");
+require("./../translator.js");
 require("./../utils/key_exist.js");
 require("./../utils/validator.js");
 require("./../recorder/record_frame.js");
 require("./artefact.js");
-require("./../world_utils/get_world.js");
 
+/** @function set_background
+ * @memberof RUR
+ * @instance
+ *
+ * @desc Uses a single image to fill the background. If the image is smaller
+ * than the world, it is stretched to fill the entire world.
+ * If it is larger than the world, it is cropped, with its bottom left corner
+ * coinciding with the bottom left corner of the world.
+ *
+ * @param {string} url The url where the image is located.
+ *
+ */
+RUR.set_background = function (url) {
+    RUR.get_current_world().background_image = url;
+    RUR.BACKGROUND_IMAGE.src = url;
+    RUR.record_frame("RUR.set_background", url);
+
+}
 
 /** @function fill_background
  * @memberof RUR
@@ -16,17 +34,18 @@ require("./../world_utils/get_world.js");
  *    tile name is not recognized, it is assumed to be a colour. If a new tile
  *    is set at that location, it replaces the pre-existing one.
  *
- *
- * @todo add test
- * @todo add examples
- * @todo deal with translation
  */
 
 RUR.fill_background = function(name) {
-    var recording_state = RUR._recording_(false);
+    var add, recording_state = RUR._recording_(false);
+    if(RUR.KNOWN_THINGS.indexOf(RUR.translate_to_english(name)) === -1){
+        add = RUR.add_colored_tile;
+    } else {
+        add = RUR.add_background_tile;
+    }
     for (x = 1; x <= RUR.MAX_X; x++) {
         for (y = 1; y <= RUR.MAX_Y; y++) {
-            RUR.add_background_tile(name, x, y);
+            add(name, x, y);
         }
     }
     RUR._recording_(recording_state);
@@ -34,80 +53,93 @@ RUR.fill_background = function(name) {
 };
 
 
-
 /** @function add_background_tile
  * @memberof RUR
  * @instance
  * @summary This function sets a named tile as background at a location.
  *
- * @param {string} name The name of a tile **or** a colour recognized by JS/HTML.
- *    No check is performed to ensure that the value given is valid; it the
- *    tile name is not recognized, it is assumed to be a colour. If a new tile
- *    is set at that location, it replaces the pre-existing one.
+ * @param {string} name The name of a tile.
+ * Any pre-existing tile or color at that location will be replaced by the new value.
  *
- * @param {string} name Name of the tile
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  *
- * @throws Will throw an error if `(x, y)` is not a valid location..
+ * @throws Will throw an error if `(x, y)` is not a valid location.
+ * @throws Will throw an error if `name` is not a known thing.
  *
+ */
+RUR.add_background_tile = function (name, x, y) {
+    "use strict";
+    var args;
+    name = RUR.translate_to_english(name);
+    args = {name: name, x:x, y:y, type:"tiles", single:true, valid_names: RUR.KNOWN_THINGS};
+    RUR._add_artefact(args);
+    RUR.record_frame("RUR.add_background_tile", args);
+};
+
+/** @function add_colored_tile
+ * @memberof RUR
+ * @instance
+ * @summary This function sets a uniform color as background at a location.
+ * Any pre-existing tile or color at that location will be replaced by the new value.
+ *
+ * @param {string} color A colour recognized by JS/HTML.
+ * No check is performed to ensure that the value given is a valid color
+ * recognized by JS/HTML (see example below), **except** that the `color` specified
+ * cannot be a known "thing", which is the opposite of
+ * `RUR.add_background_tile`.
+ *
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
+ *
+ * @throws Will throw an error if `(x, y)` is not a valid location.
  *
  * @example
  *
  * // Show how to set a color
  * World("Alone")
- * RUR.add_background_tile("blue", 1, 8)
- * RUR.add_background_tile("#00ff00", 3, 8)
- * RUR.add_background_tile("rgb(255, 0, 0)", 5, 8)
- * RUR.add_background_tile("rgba(255, 0, 0, 0.1)", 7, 8)
- * RUR.add_background_tile("hsl(24, 71%, 77%)", 9, 8)
- *
- * @example
- * // shows how to set various tiles;
- * // the mode will be set to Python
- * World("/worlds/examples/background1.json", "Background 1")
- *
- * @example
- * // Like Background 1 above, except that all the tiles
- * // are added in the Onload editor.  Click on World Info
- * // to see the code.
- * World("/worlds/examples/background2.json", "Background 2")
+ * RUR.add_colored_tile("blue", 1, 8)
+ * RUR.add_colored_tile("#00ff00", 3, 8)
+ * RUR.add_colored_tile("rgb(255, 0, 0)", 5, 8)
+ * RUR.add_colored_tile("rgba(255, 0, 0, 0.1)", 7, 8)
+ * RUR.add_colored_tile("hsl(24, 71%, 77%)", 9, 8)
  *
  */
-RUR.add_background_tile = function (name, x, y) {
+RUR.add_colored_tile = function (color, x, y) {
     "use strict";
-    var args = {name: name, x:x, y:y, type:"tiles", single:true};
-    RUR.add_artefact(args);
-    RUR.record_frame("RUR.add_background_tile", args);
+    var args;
+    if(RUR.KNOWN_THINGS.indexOf(RUR.translate_to_english(color)) != -1){
+        throw new RUR.ReeborgError(color + RUR.translate(" is not a valid color."))
+    }
+    args = {name: color, x:x, y:y, type:"tiles", single:true};
+    RUR._add_artefact(args);
+    RUR.record_frame("RUR.add_colored_tile", args);
 };
 
 
 /** @function remove_background_tile
  * @memberof RUR
  * @instance
- * @summary This function removes a background tile at a location.
+ * @summary This function removes a background tile (or a colored tile) at a location.
  *
- * @param {string} name Name of the tile
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {string} name Name of the tile or colored tile
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  *
  * @throws Will throw an error if `(x, y)` is not a valid location.
  * @throws Will throw an error if there is no background tile to remove
  *        at that location
- *
- * @todo add test
- * @todo add examples
- * @todo deal with translation
  */
 RUR.remove_background_tile = function (name, x, y) {
     "use strict";
     var args;
+    name = RUR.translate_to_english(name);
     args= {x:x, y:y, type:"tiles", name:name};
     try {
-        RUR.remove_artefact(args);
+        RUR._remove_artefact(args);
     } catch (e) {
         if (e.message == "No artefact to remove") {
-            throw new ReeborgError("No tile to remove here.");
+            throw new RUR.ReeborgError("No tile to remove here.");
         } else {
             throw e;
         }
@@ -122,32 +154,26 @@ RUR.remove_background_tile = function (name, x, y) {
  * @summary This function gets the tile name found at given location. Note that
  *    this could be an HTML colour.  If nothing is found at that location,
  *    `null` is returned (which is converted to `None` in Python programs.)
+ *  **Important** `RUR.get_background_tile` uses the singular form, instead
+ * of the plural (i.e. `tile` instead of `tiles`) since there only one tile
+ * can be found at a given location.
  *
- * @param {integer} x  Position of the tile.
- * @param {integer} y  Position of the tile.
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
  * @returns {string} The name of the tile found at that location or `null/None`.
  *
- * @throws Will throw an error if `(x, y)` is not a valid location..
- *
- * @todo add test
- * @todo add proper examples
- * @todo deal with translation
- * @example
- * // shows how to set various tiles;
- * // the mode will be set to Python and the highlighting
- * // will be turned off
- * World("/worlds/examples/tile1.json", "Example 1")
+ * @throws Will throw an error if `(x, y)` is not a valid location.
  *
  */
 
 RUR.get_background_tile = function (x, y) {
     "use strict";
     var tiles, args = {x:x, y:y, type:"tiles"};
-    tiles = RUR.get_artefacts(args);
+    tiles = RUR._get_artefacts(args);
     if (tiles === null) {
         return null;
     } else {
-        return tiles[0];
+        return RUR.translate(tiles[0]);
     }
 };
 
@@ -156,16 +182,21 @@ RUR.get_background_tile = function (x, y) {
  * @memberof RUR
  * @instance
  *
- * @todo finish writing documentation
- * @todo check all other is_XXX for documentation
+ * @summary Use to find out if there is a tile (including color) with that
+ * name at a given location.
+ *
+ * @param {string} name The name of the tile; it could be a color.
+ * @param {integer} x  Position: `1 <= x <= max_x`
+ * @param {integer} y  Position: `1 <= y <= max_y`
+ * @returns `true/True` if there is such a named tile at that location,
+ * `false/False` otherwise.
+ *
  *
  * @example {@lang python}
- * no_highlight()
+ * # A very different solution ...
  * World("worlds/examples/simple_path.json", "simple_path")
- * reeborg = default_robot()
  * while not at_goal():
- *     pos = RUR.get_position_in_front(reeborg.body)
- *     x, y = pos["x"], pos["y"]
+ *     x, y = position_in_front()
  *     if RUR.is_background_tile("gravel", x, y):
  *         move()
  *     else:
@@ -176,7 +207,7 @@ RUR.get_background_tile = function (x, y) {
 RUR.is_background_tile = function (name, x, y) {
     "use strict";
     var tile, args = {x:x, y:y, type:"tiles"};
-    tile = RUR.get_background_tile(x, y);
+    tile = RUR.get_background_tile(x, y); // returns translated name
     if (tile === null) {
         return false;
     } else if (tile == name){

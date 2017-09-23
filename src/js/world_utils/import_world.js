@@ -8,26 +8,28 @@ require("./create_empty_world.js");
 require("./../world_api/animated_images.js");
 
 var edit_robot_menu = require("./../ui/edit_robot_menu.js");
-var clone_world = require("./clone_world.js").clone_world;
 
 RUR.world_utils.import_world = function (json_string) {
     "use strict";
     var body, editor_content, library_content, i, keys, more_keys, coord, index, obstacles;
 
-    if (json_string === undefined){
+    if (json_string === undefined || json_string === "undefined"){
+        RUR.show_feedback("#Reeborg-shouts",
+            RUR.translate("Problem in RUR.world_utils.import_world: world not defined."));
         console.log("Problem: no argument passed to RUR.world_utils.import_world");
-        return {};
+        RUR.CURRENT_WORLD = RUR.create_empty_world();
+        return;
     }
-    RUR.animated_images_init();
+    RUR.reset_animated_images();
     if (typeof json_string == "string"){
         try {
-            RUR.CURRENT_WORLD = JSON.parse(json_string) || RUR.world_utils.create_empty_world();
+            RUR.CURRENT_WORLD = JSON.parse(json_string) || RUR.create_empty_world();
         } catch (e) {
             alert("Exception caught in import_world; see console for details.");
             console.warn("Exception caught in import_world.");
             console.log("First 80 characters of json_string = ", json_string.substring(0, 80));
             console.log("Error = ", e);
-            RUR.CURRENT_WORLD = RUR.world_utils.create_empty_world();
+            RUR.CURRENT_WORLD = RUR.create_empty_world();
         }
     } else {  // already parsed into a Javascript Object
         RUR.CURRENT_WORLD = json_string;
@@ -46,7 +48,87 @@ RUR.world_utils.import_world = function (json_string) {
         }
     }
 
-    //TODO: put the conversion into new function
+    convert_old_worlds();
+
+    RUR.CURRENT_WORLD.small_tiles = RUR.CURRENT_WORLD.small_tiles || false;
+    RUR.CURRENT_WORLD.rows = RUR.CURRENT_WORLD.rows || RUR.MAX_Y_DEFAULT;
+    RUR.CURRENT_WORLD.cols = RUR.CURRENT_WORLD.cols || RUR.MAX_X_DEFAULT;
+    RUR.set_world_size(RUR.CURRENT_WORLD.cols, RUR.CURRENT_WORLD.rows);
+
+    RUR.update_editors(RUR.CURRENT_WORLD);
+
+    if (RUR.state.editing_world) {
+        edit_robot_menu.toggle();
+    }
+    start_process_onload();
+};
+
+function start_process_onload() {
+    if (window.translate_python == undefined) {
+        console.log("startup delay: translate_python not available; will try again in 200ms.");
+        window.setTimeout(start_process_onload, 200);
+    }
+    else {
+        RUR.WORLD_BEFORE_ONLOAD = RUR.clone_world();
+        process_onload();
+    }
+}
+
+function show_onload_feedback (e, lang) {
+    var lang_info;
+    if (lang == "python") {
+        lang_info = "Invalid Python code in Onload editor";
+    } else {
+        lang_info = "Invalid Javascript code in Onload editor";
+    }
+    RUR.show_feedback("#Reeborg-shouts", e.message + "<br>" +
+        RUR.translate("Problem with onload code.") + "<pre>" +
+        RUR.CURRENT_WORLD.onload + "</pre>");
+}
+
+process_onload = function () {
+    if (RUR.CURRENT_WORLD.onload !== undefined && !RUR.state.editing_world) {
+        RUR.state.evaluating_onload = true; // affects the way errors are treated
+        if (RUR.CURRENT_WORLD.onload[0]=="#") {
+            RUR.state.onload_programming_language = "python"
+            try {
+                onload_editor.setOption("mode", {name: "python", version: 3});
+            } catch (e){}
+            try {
+               window.translate_python(RUR.CURRENT_WORLD.onload);
+               if (RUR.__python_error) {
+                    throw RUR.__python_error;
+                }
+            } catch (e) {
+                show_onload_feedback(e, "python");
+            }
+        } else {
+            RUR.state.onload_programming_language = "javascript";
+            try {
+                onload_editor.setOption("mode", "javascript");
+            } catch (e){}
+            try {
+                var result = eval(RUR.CURRENT_WORLD.onload);  // jshint ignore:line
+            } catch (e) {
+                show_onload_feedback(e, "javascript");
+            }
+        }
+
+        RUR.state.evaluating_onload = false;
+        // remove any frames created by onload
+        RUR.frames = [];
+        RUR.nb_frames = 0;
+        RUR.current_frame_no = 0;
+    }
+    RUR.WORLD_AFTER_ONLOAD = RUR.clone_world();
+    RUR.vis_world.draw_all();
+
+};
+RUR.world_utils.process_onload = process_onload;
+
+function convert_old_worlds () {
+    // TODO: convert goal.possible_positions to goal.possible_final_positions ?
+    // TODO: convert start_positions to possible_initial_positions ?
 
     // Backward compatibility following change done on Jan 5, 2016
     // top_tiles has been renamed obstacles (and prior to that [or after?],
@@ -78,6 +160,7 @@ RUR.world_utils.import_world = function (json_string) {
             }
         }
     }
+
     // and obstacles were written in the form {fence:1} and need to be simply
     // ["fence"]
     if (RUR.CURRENT_WORLD.obstacles !== undefined) {
@@ -125,80 +208,9 @@ RUR.world_utils.import_world = function (json_string) {
 
     if (RUR.CURRENT_WORLD.background_image !== undefined) {
         RUR.BACKGROUND_IMAGE.src = RUR.CURRENT_WORLD.background_image;
-        RUR.BACKGROUND_IMAGE.onload = function () {
-            RUR.vis_world.draw_all();
-        };
+        RUR.BACKGROUND_IMAGE.onload = RUR.onload_new_image;
     } else {
         RUR.BACKGROUND_IMAGE.src = '';
     }
 
-    RUR.CURRENT_WORLD.small_tiles = RUR.CURRENT_WORLD.small_tiles || false;
-    RUR.CURRENT_WORLD.rows = RUR.CURRENT_WORLD.rows || RUR.MAX_Y_DEFAULT;
-    RUR.CURRENT_WORLD.cols = RUR.CURRENT_WORLD.cols || RUR.MAX_X_DEFAULT;
-    RUR.vis_world.compute_world_geometry(RUR.CURRENT_WORLD.cols, RUR.CURRENT_WORLD.rows);
-
-    RUR.update_editors(RUR.CURRENT_WORLD);
-
-    if (RUR.state.editing_world) {
-        edit_robot_menu.toggle();
-    }
-    start_process_onload();
-};
-
-function start_process_onload() {
-    if (window.translate_python == undefined) {
-        console.log("startup delay: translate_python not available; will try again in 200ms.");
-        window.setTimeout(start_process_onload, 200);
-    }
-    else {
-        process_onload();
-    }
-}
-
-function show_onload_feedback (e) {
-    RUR.show_feedback("#Reeborg-shouts", e.message + "<br>" +
-        RUR.translate("Problem with onload code.") + "<pre>" +
-        RUR.CURRENT_WORLD.onload + "</pre>");
-    console.log("error in onload:", e);
-}
-
-process_onload = function () {
-    // TODO: review everything that needs to be reset and puts it here
-    // or put in reset_world.js and make sure to call it.
-    RUR.state.visible_grid = false;
-    RUR.state.do_not_draw_info = false;
-    //
-    RUR.WORLD_BEFORE_ONLOAD = clone_world();
-    if (RUR.CURRENT_WORLD.onload !== undefined && !RUR.state.editing_world) {
-        RUR.state.evaluating_onload = true; // affects the way errors are treated
-        if (RUR.CURRENT_WORLD.onload[0]=="#") {
-            try {
-               window.translate_python(RUR.CURRENT_WORLD.onload);
-            } catch (e) {
-                show_onload_feedback(e);
-            }
-        } else {
-            try {
-                eval(RUR.CURRENT_WORLD.onload);  // jshint ignore:line
-            } catch (e) {
-                show_onload_feedback(e);
-            }
-        }
-
-        RUR.state.evaluating_onload = false;
-        // remove any frames created by onload
-        RUR.frames = [];
-        RUR.nb_frames = 0;
-        RUR.current_frame_no = 0;
-    }
-    RUR.WORLD_AFTER_ONLOAD = clone_world();
-    RUR.vis_world.draw_all();
-
-};
-RUR.world_utils.process_onload = process_onload;
-
-function convert_old_worlds () {
-    // TODO: add code here
-    // TODO: convert goal.possible_positions to goal.possible_final_positions
-    // TODO: convert start_positions to possible_initial_positions
 }

@@ -54,20 +54,20 @@ RUR.make_default_menu = function(language) {
 RUR.make_default_menu_en = function () {
     "use strict";
     var contents,
-        new_tutorial_en = RUR._BASE_URL + '/worlds/tutorial_en/',
-        tutorial_en = RUR._BASE_URL + '/src/worlds/tutorial_en/',
-        menus = RUR._BASE_URL + '/src/worlds/menus/',
-        worlds = RUR._BASE_URL + '/src/worlds/',
-        docs = RUR._BASE_URL + '/src/worlds/documentation/',
-        permalinks = RUR._BASE_URL + '/src/worlds/permalinks/';
+        new_tutorial_en = RUR.BASE_URL + '/worlds/tutorial_en/',
+        tutorial_en = RUR.BASE_URL + '/src/worlds/tutorial_en/',
+        menus = RUR.BASE_URL + '/src/worlds/menus/',
+        worlds = RUR.BASE_URL + '/src/worlds/',
+        docs = RUR.BASE_URL + '/src/worlds/documentation/',
+        permalinks = RUR.BASE_URL + '/src/worlds/permalinks/';
 
     contents = [
         [worlds + 'alone.json', 'Alone'],
         [worlds + 'empty.json', 'Empty'],
-        [tutorial_en + 'around1.json', 'Around 1'],
-        [tutorial_en + 'around2.json', 'Around 2'],
-        [tutorial_en + 'around3.json', 'Around 3'],
-        [tutorial_en + 'around4.json', 'Around 4'],
+        [new_tutorial_en + 'around1.json', 'Around 1'],
+        [new_tutorial_en + 'around2.json', 'Around 2'],
+        [new_tutorial_en + 'around3.json', 'Around 3'],
+        [new_tutorial_en + 'around4.json', 'Around 4'],
         [tutorial_en + 'center1.json', 'Center 1'],
         [tutorial_en + 'center2.json', 'Center 2'],
         [tutorial_en + 'center3.json', 'Center 3'],
@@ -101,20 +101,6 @@ RUR.make_default_menu_en = function () {
         [tutorial_en + 'tokens4.json', 'Tokens 4'],
         [tutorial_en + 'tokens5.json', 'Tokens 5'],
         [tutorial_en + 'tokens6.json', 'Tokens 6'],
-        [docs + 'simple_demo1', 'Demo 1 (solution)'],
-        [docs + 'simple_demo2', 'Demo 2 (solution)'],
-        [docs + 'simple_demo3', 'Demo 3 (solution)'],
-        [worlds + 'simple_path.json', 'Simple path'],
-        [worlds + 'gravel_path.json', 'Gravel path'],
-        [worlds + 'gravel_path',
-                           'Gravel path (solution)'],
-        [worlds + 'slalom.json', 'Slalom'],
-        [permalinks + 'pre_post_demo', 'Pre & Post code demo'],
-        [permalinks + 'story', 'Story'],
-        [permalinks + 'test_remove', 'Robot replacement'],
-        [docs + 'big_maze.json', 'Big maze'],
-        [worlds + 'maze_gen_py', 'Maze generation (Python)'],
-        [worlds + 'maze_gen_js', 'Maze generation (Javascript)'],
         [worlds + 'blank.json', 'Blank canvas'],
         ];
 
@@ -125,20 +111,20 @@ RUR.make_default_menu_fr = function () {
     "use strict";
     var base_url, base_url2, contents, menus, worlds, new_tutorial_fr;
 
-    base_url = RUR._BASE_URL + '/src/worlds/tutorial_en/';
-    base_url2 = RUR._BASE_URL + '/src/worlds/tutorial_fr/';
+    base_url = RUR.BASE_URL + '/src/worlds/tutorial_en/';
+    base_url2 = RUR.BASE_URL + '/src/worlds/tutorial_fr/';
 
-    menus = RUR._BASE_URL + '/src/worlds/menus/';
-    worlds = RUR._BASE_URL + '/src/worlds/';
-    new_tutorial_fr = RUR._BASE_URL + '/worlds/tutorial_fr/',
+    menus = RUR.BASE_URL + '/src/worlds/menus/';
+    worlds = RUR.BASE_URL + '/src/worlds/';
+    new_tutorial_fr = RUR.BASE_URL + '/worlds/tutorial_fr/',
 
     contents = [
-        [RUR._BASE_URL + '/src/worlds/seul.json', 'Seul'],
-        [RUR._BASE_URL + '/src/worlds/empty.json', 'Vide'],
-        [base_url2 + 'around1.json', 'Autour 1'],
-        [base_url2 + 'around2.json', 'Autour 2'],
-        [base_url2 + 'around3.json', 'Autour 3'],
-        [base_url2 + 'around4.json', 'Autour 4'],
+        [RUR.BASE_URL + '/src/worlds/seul.json', 'Seul'],
+        [RUR.BASE_URL + '/src/worlds/empty.json', 'Vide'],
+        [new_tutorial_fr + 'around1.json', 'Autour 1'],
+        [new_tutorial_fr + 'around2.json', 'Autour 2'],
+        [new_tutorial_fr + 'around3.json', 'Autour 3'],
+        [new_tutorial_fr + 'around4.json', 'Autour 4'],
         [new_tutorial_fr + 'home1.json', 'But 1'],
         [new_tutorial_fr + 'home2.json', 'But 2'],
         [new_tutorial_fr + 'home3.json', 'But 3'],
@@ -172,14 +158,7 @@ RUR.make_default_menu_fr = function () {
         [base_url + 'storm1.json', 'Tempête 1'],
         [base_url + 'storm2.json', 'Tempête 2'],
         [base_url + 'storm3.json', 'Tempête 3'],
-        // [menus + 'default_fr', 'Menu par défaut'],
-        [worlds + 'menus/documentation_fr', 'Documentation (menu anglais)'],
-        [worlds + 'simple_path_fr.json', 'Simple sentier'],
-        [worlds + 'gravel_path.json', 'Sentier de gravier'],
-        [worlds + 'gravel_path_fr',
-                           'Sentier de gravier (solution)'],
-        [worlds + 'slalom.json', 'Slalom'],
-        [RUR._BASE_URL + 'src/worlds/blank.json', 'Canevas graphique'],
+        [RUR.BASE_URL + 'src/worlds/blank.json', 'Canevas graphique'],
     ];
 
     RUR.custom_world_select.make(contents);

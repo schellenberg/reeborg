@@ -1,6 +1,4 @@
 /* Menu driven world editor */
-
-
 require("./../translator.js");
 require("./../rur.js");
 require("./../default_tiles/tiles.js");
@@ -10,7 +8,7 @@ require("./../editors/update.js");
 require("./../drawing/visible_world.js");
 require("./../programming_api/exceptions.js");
 require("./../world_get/world_get.js");
-require("./../world_set/world_set.js");
+require("./../dialogs/set_dimensions.js");
 require("./../dialogs/create.js");
 require("./../listeners/canvas.js");
 require("./../editors/create.js");
@@ -219,7 +217,7 @@ RUR.we.select = function (choice) {
             }
         break;
         case "set":
-            RUR.world_set.dialog_set_dimensions.dialog('open');
+            RUR.dialog_set_dimensions.dialog('open');
             break;
     }
 };
@@ -233,22 +231,23 @@ RUR.we.toggle_editing_mode = function () {
 
         RUR.state.editing_world = false;
         RUR.state.code_evaluated = false;
-        // RUR.WALL_COLOR = "brown";
-        // RUR.SHADOW_WALL_COLOR = "#f0f0f0";
         try {
             localStorage.setItem("editor", editor.getValue());
             localStorage.setItem("library", library.getValue());
         } catch (e) {}
         $("#editor-tab").trigger('click');
+        if (RUR.state.programming_language == "python" && RUR.state.extra_code_visible) {
+            $("#extra-tab").parent().show();
+        }
+        RUR.reload();
     } else {
         $("#pre-code-tab").parent().show();
         $("#post-code-tab").parent().show();
         $("#description-tab").parent().show();
         $("#onload-editor-tab").parent().show();
+        $("#extra-tab").parent().hide();
         edit_robot_menu.toggle();
         RUR.state.editing_world = true;
-        // RUR.WALL_COLOR = "black";
-        // RUR.SHADOW_WALL_COLOR = "#ccd";
         $("#highlight").hide();
         $("#watch-variables-btn").hide();
     }
@@ -263,7 +262,7 @@ RUR.create_and_activate_dialogs( $("#edit-world"), $("#edit-world-panel"),
 
 function place_robot () {
     "use strict";
-    var position, world=RUR.CURRENT_WORLD, robot, arr=[], pos, present=false;
+    var position, world=RUR.get_current_world(), robot, arr=[], pos, present=false;
     position = RUR.calculate_grid_position();
     if (world.robots !== undefined){
         if (world.robots.length >0) {
@@ -296,7 +295,7 @@ function place_robot () {
     }
 
     if (arr.length===0){
-        RUR.CURRENT_WORLD.robots = [];
+        RUR.get_current_world().robots = [];
         edit_robot_menu.toggle();
         return;
     }
@@ -317,15 +316,15 @@ function give_objects_to_robot (specific_object){
 
 
 RUR.we.turn_robot = function (orientation) { // function used on reeborg.html
-    RUR.CURRENT_WORLD.robots[0]._orientation = orientation;
-    RUR.CURRENT_WORLD.robots[0]._prev_orientation = orientation;
+    RUR.get_current_world().robots[0]._orientation = orientation;
+    RUR.get_current_world().robots[0]._prev_orientation = orientation;
     RUR.vis_world.refresh_world_edited();
 };
 
 function calculate_wall_position () {
     var ctx, x, y, orientation, remain_x, remain_y, del_x, del_y;
-    x = RUR.mouse_x - $("#robot-canvas").offset().left;
-    y = RUR.mouse_y - $("#robot-canvas").offset().top;
+    x = RUR.mouse_x - $("#robot-anim-canvas").offset().left;
+    y = RUR.mouse_y - $("#robot-anim-canvas").offset().top;
 
     y = RUR.BACKGROUND_CANVAS.height - y;  // count from bottom
 
@@ -422,12 +421,9 @@ function add_goal_object (specific_object){
     dialog_goal_object.dialog("open");
 }
 
-/** @function set_goal_position
- * @memberof RUR
- * @instance
- * @summary TODO This needs to be refactored and documented
- *
- * @desc Ceci doit être documenté
+/* TODO This should probably be rewritten to make use of
+ * RUR.add_final_position, but would also require that
+ * RUR.is_final_position be written and and RUR.remove_final_position as well.
  *
  */
 
@@ -435,7 +431,7 @@ function add_goal_object (specific_object){
 RUR.we.set_goal_position = function (home){
     // will remove the position if clicked again.
     "use strict";
-    var position, world=RUR.CURRENT_WORLD, robot, arr=[], pos, present=false, goal;
+    var position, world=RUR.get_current_world(), robot, arr=[], pos, present=false, goal;
 
     $("#cmd-result").html(RUR.translate("Click on world to set home position for robot.")).effect("highlight", {color: "gold"}, 1500);
 
@@ -477,10 +473,10 @@ RUR.we.set_goal_position = function (home){
     goal.possible_final_positions = arr;
 
     if (arr.length === 0) {
-        delete RUR.CURRENT_WORLD.goal.position;
-        delete RUR.CURRENT_WORLD.goal.possible_final_positions;
-        if (Object.keys(RUR.CURRENT_WORLD.goal).length === 0) {
-            delete RUR.CURRENT_WORLD.goal;
+        delete RUR.get_current_world().goal.position;
+        delete RUR.get_current_world().goal.possible_final_positions;
+        if (Object.keys(RUR.get_current_world().goal).length === 0) {
+            delete RUR.get_current_world().goal;
         }
         $("#edit-world-turn").hide();
     }
@@ -547,7 +543,7 @@ function toggle_obstacle (obj){
 
 
 // mouse clicks also requested in listeners/canvas.js
-$("#robot-canvas").on("click", function (evt) {
+$("#robot-anim-canvas").on("click", function (evt) {
     if (RUR.state.editing_world && RUR.we.edit_world_flag !== undefined) {
         RUR.we.edit_world();
     }

@@ -75,6 +75,7 @@ def clear_print():  #py:clear_print
     RUR._clear_print_()
 
 def color_here():  #py:color_here
+    '''Returns the value of the color found at Reeborg's location'''
     return RUR._color_here_()
 colour_here = color_here
 
@@ -102,12 +103,6 @@ def get_robot_by_id(serial_number):  #py:default_robot
     return Robot()
 
 
-def dir_js(obj):  #py:dir_js
-    """Lists attributes and methods of a Javascript object."""
-    # do not translate the name of this function
-    RUR._dir_js_(obj)
-
-
 def done():  #py:done
     """Causes a program's execution to end."""
     RUR._done_()
@@ -122,10 +117,6 @@ def front_is_clear():  #py:front_is_clear
     """
     return RUR._front_is_clear_()
 
-def install_extra(url):
-    """Install a module (single file) to be used from within Reeborg."""
-    RUR.install_extra(url)
-
 
 def is_facing_north():  #py:is_facing_north
     """Indicates if Reeborg is facing North (top of the screen) or not."""
@@ -139,7 +130,26 @@ def move():  #py:move
 
 def new_robot_images(images):  #py:new_robot_images
     """
-    Allow to replace the images used for the robot.  See the documentation.
+    Allow to replace the images used for the robot.
+
+    Instead of using this function, it is preferable to use
+    RUR.new_robot_images in the Onload editor, so that the images can be
+    fetched as quickly as possible.
+
+        Args:
+            images: a Python dict
+            images[model]: The model name for the robot; if no value is
+                specified, the name will be set to "anonymous".
+
+            images["east"]  A url for the source of the image to be used
+            for the robot in the East orientation. If it is not specified, the
+            default "classic" image will be used.
+
+            images["north"]  Similar to images["east"]
+
+            images["west"]   Similar to images["east"]
+
+            images["south"]  Similar to images["east"]
     """
     RUR._new_robot_images_(images)
 
@@ -152,9 +162,10 @@ def no_highlight():  #py:no_highlight
     button in Reeborg's World.
 
     Code highlighting occurs thanks to some extra code inserted in a
-    user's program prior to execution.  When disabling highlighting
-    using this function, the extra instructions are still present,
-    but they will not be if the program is run a second time.
+    user's program prior to execution.  If this function is called
+    with highlighting active, it will be disabled and the program will stop.
+    If highlighting is not active, calls to this function will have no
+    effect.
     """
     RUR._no_highlight_()
 
@@ -204,6 +215,33 @@ def pause(ms=None):  #py:pause
         RUR._pause_(ms)
 
 
+def position_here():
+    '''
+    Returns a tuple (x, y) giving the coordinates of the robot.
+
+    The corresponding JavaScript function returns an array [x, y].
+    '''
+    body = RUR._default_robot_body_()
+    return (body.x, body.y)
+
+
+def position_in_front():
+    '''
+    Returns a tuple (x, y) giving the coordinates of position immediately
+    in front of the robot if the position is within the world boundaries,
+    otherwise returns an empty tuple.
+
+    The corresponding JavaScript function returns an array [x, y] or the value
+    undefined if the position is not within the world boundaries.
+    '''
+    body = RUR._default_robot_body_()
+    pos = RUR.get_position_in_front(body)
+    if RUR.is_valid_position(pos["x"], pos["y"]):
+        return (pos["x"], pos["y"])
+    else:
+        return tuple()
+
+
 def print_html(html, replace=False):  #py:print_html
     """
     Intended primarily for world creators, this function is similar to
@@ -216,7 +254,6 @@ def print_html(html, replace=False):  #py:print_html
 
     """
     RUR._print_html_(html, replace)
-window['print_html'] = print_html   # No translation needed
 
 
 def put(obj=None):  #py:put
@@ -231,7 +268,19 @@ def put(obj=None):  #py:put
         RUR._put_(obj)
 
 
-def recording(bool):  #py:recording
+def toss(obj=None):
+    """
+    Reeborg throws an object on the square in front of its current position.
+    If Reeborg carries more than one type of objects,
+    the type must be specified as an argument, otherwise an exception
+    will be raised.
+    """
+    if obj is None:
+        RUR._toss_()
+    else:
+        RUR._toss_(obj)
+
+def recording(boolean):  #py:recording
     """
     Stops or starts recording changes occuring in the world.
 
@@ -240,7 +289,7 @@ def recording(bool):  #py:recording
 
     Returns: the previous recording state value.
     """
-    return RUR._recording_(bool)
+    return RUR._recording_(boolean)
 
 
 def remove_robots():  #py:remove_robots
@@ -259,13 +308,13 @@ def right_is_clear():  #py:right_is_clear
     return RUR._right_is_clear_()
 
 
-def set_max_nb_instructions(nb):  #py:set_max_nb_instructions
+def set_max_nb_steps(nb):  #py:set_max_nb_steps
     """
     Intended primarily for world creators, this function allows
     to change the default maximum number of instructions executed in a
     program (1000) by a different value.
     """
-    RUR._set_max_nb_instructions_(nb)
+    RUR._set_max_nb_steps_(nb)
 
 
 def set_trace_color(color):  #py:set_trace_color
@@ -307,9 +356,9 @@ def set_trace_style(style="default"):  #py:set_trace_style
     RUR._set_trace_style_(style)
 
 
-def sound(bool):  #py:sound
+def sound(boolean):  #py:sound
     """Activate or deactivate sound effects."""
-    RUR._sound_(bool)
+    RUR._sound_(boolean)
 
 
 def take(obj=None):  #py:take
@@ -337,11 +386,6 @@ def think(ms):  #py:think
 def turn_left():  #py:turn_left
     """Reeborg turns to its left."""
     RUR._turn_left_()
-
-
-def view_source_js(fn):  #py:view_source_js
-    """Shows the source code of a Javascript function."""
-    RUR._view_source_js_(fn)
 
 
 def wall_in_front():  #py:wall_in_front
@@ -410,6 +454,7 @@ def World(url, shortname=None):  #py:World
 
 
 class UsedRobot(object):  #py:UR
+    '''The OOP version of Reeborg'''
     def __init__(self, x=1, y=1, orientation='e', tokens=None, **kwargs):  #py:UR.__init__
         """
         Creates a UsedRobot.
@@ -418,8 +463,8 @@ class UsedRobot(object):  #py:UR
                x: horizontal coordinate; an integer greater or equal to 1.
                y: vertical coordinate; an integer greater or equal to 1.
                orientation (string):
-                            one of "e" or "east",
-                            "w" or "west", "n" or "north", "s" or "south".
+                            one of "e" or "east","w" or "west",
+                            "n" or "north", "s" or "south", or "random".
                tokens: Initial number of tokens to give to the robot;
                        its value must be a positive integer, or the string
                        "Infinity" to indicate an infinite quantity.
@@ -509,6 +554,15 @@ class UsedRobot(object):  #py:UR
             else:
                 return 0
 
+    def color_here(self):  #py:color_here
+        '''Returns the value of the color found at Reeborg's location'''
+        return RUR._UR.color_here_(self.body)
+
+    def colour_here(self):
+        '''Returns the value of the color found at Reeborg's location'''
+        return self.color_here()
+
+
     def front_is_clear(self):  #py:UR.front_is_clear
         """
         Indicates if an obstacle (wall, fence, water, etc.) blocks the path.
@@ -553,6 +607,36 @@ class UsedRobot(object):  #py:UR
         else:
             return list(RUR._UR.object_here_(self.body))
 
+    def paint_square(self, color):
+        """Fills the grid square where Reeborg is located with the specified color"""
+        RUR._UR.paint_square_(color, self.body)
+
+
+    def position_here(self):
+        '''
+        Returns a tuple (x, y) giving the coordinates of the robot.
+
+        The corresponding JavaScript function returns an array [x, y].
+        '''
+        return (self.body.x, self.body.y)
+
+
+    def position_in_front(self):
+        '''
+        Returns a tuple (x, y) giving the coordinates of position immediately
+        in front of the robot if the position is within the world boundaries,
+        otherwise returns an empty tuple.
+
+        The corresponding JavaScript function returns an array [x, y] or the
+        value undefined if the position is not within the world boundaries.
+        '''
+        pos = RUR.get_position_in_front(self.body)
+        if RUR.is_valid_position(pos["x"], pos["y"]):
+            return (pos["x"], pos["y"])
+        else:
+            return tuple()
+
+
     def put(self, obj=None):  #py:UR.put
         """
         Puts down an object.  If Reeborg carries more than one type of objects,
@@ -563,6 +647,18 @@ class UsedRobot(object):  #py:UR
             RUR._UR.put_(self.body)
         else:
             RUR._UR.put_(self.body, obj)
+
+    def toss(self, obj=None):
+        """
+        Reeborg throws an object on the square in front of its current position.
+        If Reeborg carries more than one type of objects,
+        the type must be specified as an argument, otherwise an exception
+        will be raised.
+        """
+        if obj is None:
+            RUR._UR.toss_(self.body)
+        else:
+            RUR._UR.toss_(self.body, obj)
 
     def right_is_clear(self):  #py:UR.right_is_clear
         """
@@ -577,9 +673,6 @@ class UsedRobot(object):  #py:UR
     def set_model(self, model):  #py:UR.set_model
         """
         Select the model (images) for the robot.
-
-           Args:
-              model: a number between 0 and 3.
         """
         RUR._UR.set_model_(self.body, model)
 
@@ -668,20 +761,26 @@ def add_watch(expr):  #py:add_watch
 
 class ReeborgOK(Exception):  #py:RE
     """
-    Exceptions spécifique au monde de Reeborg. Utile pour indiquer qu'un
-    programme s'est terminé correctement.
+    Exception specific to Reeborg's World. Used to indicate that a
+    program ended with the correct result using a custom message.
+
+        Args:
+            message
     """
 
     def __init__(self, message):  #py:RE.__init__
         self.reeborg_concludes = message
+        self.message = message
+        super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return repr(self.reeborg_concludes)
+        return self.reeborg_concludes
 try:
-    window['ReeborgOK'] = ReeborgOK
+    window['ReeborgOK_en'] = ReeborgOK
+    window['ReeborgOk_en'] = ReeborgOK # preventing an annoying typo
 except:
     pass
-
+ReeborgOk = ReeborgOK  # preventing an annoying typo
 
 class ReeborgError(Exception):  #py:RE
     """
@@ -703,11 +802,13 @@ class ReeborgError(Exception):  #py:RE
 
     def __init__(self, message):  #py:RE.__init__
         self.reeborg_shouts = message
+        self.message = message
+        super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return repr(self.reeborg_shouts)
+        return self.reeborg_shouts
 try:
-    window['ReeborgError'] = ReeborgError
+    window['ReeborgError_en'] = ReeborgError
 except:
     pass
 
@@ -720,7 +821,7 @@ class WallCollisionError(ReeborgError):  #py:WCE
     """
     pass
 try:
-    window['WallCollisionError'] = WallCollisionError
+    window['WallCollisionError_en'] = WallCollisionError
 except:
     pass
 
@@ -732,33 +833,20 @@ class MissingObjectError(ReeborgError):
     """
     pass
 try:
-    window['MissingObjectError'] = MissingObjectError
+    window['MissingObjectError_en'] = MissingObjectError
 except:
     pass
 
 
 class SatelliteInfo():  #py:SI
-
+    '''Used to obtain a map of the world'''
     @property
     def world_map(self):  #py:SI.world_map
         '''Returns a dict containing information about world.
         '''
         import json
-        return json.loads(RUR.world_get.world_map())
+        return json.loads(RUR._world_map())
 
     def print_world_map(self):  #py:SI.print_world_map
         '''Prints a formatted copy of the world'''
-        print(RUR.world_get.world_map())
-
-
-#py:obsolete
-# Do not tranlate the following
-
-def narration(html):
-    '''Deprecated function; use print_html() instead'''
-    raise ReeborgError("narration is obsolete; use print_html().")
-
-
-def say():
-    '''Deprecated function mentioned in an old tutorial. Use print().'''
-    raise ReeborgError("say() is no longer supported; use print() instead.")
+        print(RUR._world_map())

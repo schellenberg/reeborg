@@ -8,25 +8,26 @@ require("./../default_tiles/tiles.js");
 require("./../dialogs/create.js");
 require("./../listeners/canvas.js");
 require("./../utils/supplant.js");
+require("./../world_api/things.js");
 
 RUR.world_get = {};
 
-RUR.world_get.tile_at_position = function (x, y) {
+RUR.world_get.tile_at_position = function (x, y) { // TODO: still needed or move elswhere?
     "use strict";
     var coords = x + "," + y;
-    if (RUR.CURRENT_WORLD.tiles === undefined) return false;
-    if (RUR.CURRENT_WORLD.tiles[coords] === undefined) return false;
-    return RUR.TILES[RUR.CURRENT_WORLD.tiles[coords]];
+    if (RUR.get_current_world().tiles === undefined) return false;
+    if (RUR.get_current_world().tiles[coords] === undefined) return false;
+    return RUR.THINGS[RUR.get_current_world().tiles[coords]];
 };
 
 
-RUR.world_get.object_at_robot_position = function (robot, obj) {
-    return object_of_type_here(robot, obj, RUR.CURRENT_WORLD.objects);
+RUR.world_get.object_at_robot_position = function (robot, obj) { // TODO: still needed or move elswhere?
+    return object_of_type_here(robot, obj, RUR.get_current_world().objects);
 };
 
 
 function object_of_type_here (robot, obj, object_type) {
-    // object_type == RUR.CURRENT_WORLD.objects or RUR.CURRENT_WORLD.decorative_objects
+    // object_type == RUR.get_current_world().objects or RUR.get_current_world().decorative_objects
     var obj_here, obj_type, all_objects;
     var coords = robot.x + "," + robot.y;
 
@@ -56,15 +57,10 @@ function object_of_type_here (robot, obj, object_type) {
     }
 }
 
-RUR.world_get.world_map = function () {
-    return JSON.stringify(RUR.CURRENT_WORLD, null, 2);
-};
-
 RUR.world_get.world_info = function (no_grid) {
     "use strict";
     // shows the information about a given grid position
     // when the user clicks on the canvas at that grid position.
-    // enabled in zz_dr_onclick.js
     var position, tile, obj, information, x, y, coords, obj_here, obj_type, goals;
     var topic, no_object, r, robot, robots;
     var tiles, tilename, fence_noted = false;
@@ -73,20 +69,35 @@ RUR.world_get.world_info = function (no_grid) {
 
     information = "<div class='automatic-description'>";
 
-    if (RUR.CURRENT_WORLD.description) {
-        description = RUR.CURRENT_WORLD.description;
-        if (RUR.CURRENT_WORLD.pre) { // can be either javascript or python code
-            insertion = "<pre class='world_info_source'>" + RUR.CURRENT_WORLD.pre + "</pre>";
+    if (RUR.get_current_world().description) {
+        description = RUR.get_current_world().description;
+        if (RUR.get_current_world().pre) {
+            insertion = "<pre class='world_info_source'>" + RUR.get_current_world().pre + "</pre>";
             to_replace = "INSERT_PRE";
             description = description.replace(to_replace, insertion);
         }
-        if (RUR.CURRENT_WORLD.post) { // can be either javascript or python code
-            insertion = "<pre class='world_info_source'>" + RUR.CURRENT_WORLD.post + "</pre>";
+        if (RUR.get_current_world().editor) {
+            insertion = "<pre class='world_info_source'>" + RUR.get_current_world().editor + "</pre>";
+            to_replace = "INSERT_EDITOR";
+            description = description.replace(to_replace, insertion);
+        }
+        if (RUR.get_current_world().library) {
+            insertion = "<pre class='world_info_source'>" + RUR.get_current_world().library + "</pre>";
+            to_replace = "INSERT_LIBRARY";
+            description = description.replace(to_replace, insertion);
+        }
+        if (RUR.get_current_world().post) {
+            insertion = "<pre class='world_info_source'>" + RUR.get_current_world().post + "</pre>";
             to_replace = "INSERT_POST";
             description = description.replace(to_replace, insertion);
         }
-        if (RUR.CURRENT_WORLD.onload) { // only javascript, hence different class
-            insertion = "<pre class='world_info_onload'>" + RUR.CURRENT_WORLD.onload + "</pre>";
+        if (RUR.get_current_world().onload) {
+            if (RUR.CURRENT_WORLD.onload[0]=="#") {
+                RUR.state.onload_programming_language = "python";
+            } else {
+                RUR.state.onload_programming_language = "javascript";
+            }
+            insertion = "<pre class='world_info_onload'>" + RUR.get_current_world().onload + "</pre>";
             to_replace = "INSERT_ONLOAD";
             description = description.replace(to_replace, insertion);
         }
@@ -126,7 +137,7 @@ RUR.world_get.world_info = function (no_grid) {
     }
     if (tiles) {
         for (tilename of tiles) {
-            tile = RUR.TILES[tilename];
+            tile = RUR.THINGS[tilename];
             if (RUR.translate(tile.info)){
                 if (topic){
                     topic = false;
@@ -144,22 +155,23 @@ RUR.world_get.world_info = function (no_grid) {
         }
     }
 
-    obj = RUR.CURRENT_WORLD.objects;
+    obj = RUR.get_current_world().objects;
     topic = true;
     if (obj !== undefined && obj[coords] !== undefined){
         obj_here = obj[coords];
         for (obj_type in obj_here) {
             if (obj_here.hasOwnProperty(obj_type)) {
-                    if (topic){
-                        topic = false;
-                        information += "<br><br><b>" + RUR.translate("Objects found here:") + "</b>";
-                    }
-               information += "<br>" + RUR.translate(obj_type) + ":" + obj_here[obj_type];
+                if (topic){
+                    topic = false;
+                    information += "<br><br><b>" + RUR.translate("Objects found here:") + "</b>";
+                }
+                information += "<br>" + RUR.translate(obj_type) + ":" + obj_here[obj_type];
+                information += " " + RUR.translate(RUR._get_property(obj_type, "info"));
             }
         }
     }
 
-    goals = RUR.CURRENT_WORLD.goal;
+    goals = RUR.get_current_world().goal;
     if (goals !== undefined){
         obj = goals.objects;
         topic = true;
@@ -208,7 +220,7 @@ RUR.world_get.world_info = function (no_grid) {
         }
     }
 
-    robots = RUR.CURRENT_WORLD.robots;
+    robots = RUR.get_current_world().robots;
     if (robots !== undefined && robots.length !== undefined){
         for (r=0; r<robots.length; r++){
             robot = robots[r];
@@ -235,7 +247,7 @@ RUR.world_get.world_info = function (no_grid) {
     }
 
 
-    goals = RUR.CURRENT_WORLD.goal;
+    goals = RUR.get_current_world().goal;
     if (goals !== undefined &&
          (goals.possible_final_positions !== undefined || goals.position !== undefined)){
         if (topic){
@@ -267,7 +279,7 @@ RUR.world_get.world_info = function (no_grid) {
         $this.empty();
         var myCodeMirror = CodeMirror(this, {
             value: $code,
-            mode:  "javascript",
+            mode:  RUR.state.onload_programming_language,
             lineNumbers: !$this.is('.inline'),
             readOnly: true,
             theme: 'reeborg-readonly'
@@ -276,4 +288,4 @@ RUR.world_get.world_info = function (no_grid) {
 };
 
 RUR.create_and_activate_dialogs( $("#world-info-button"), $("#World-info"),
-                                 {height:400, width:800}, RUR.world_get.world_info);
+                                 {height:600, width:800}, RUR.world_get.world_info);

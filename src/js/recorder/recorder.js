@@ -11,42 +11,28 @@ require("./../editors/create.js");
 require("./../recorder/record_frame.js");
 
 var identical = require("./../utils/identical.js").identical;
-var clone_world = require("./../world_utils/clone_world.js").clone_world;
 
 RUR.rec = {};
 
-
-RUR.set_lineno_highlight = function(lineno, frame) {
+RUR.set_lineno_highlight = function(lineno) {
     RUR.current_line_no = lineno;
-    RUR.record_frame("highlight");
+    if (RUR.current_line_no != RUR.prev_line_no) {
+        RUR.record_frame("highlight", lineno);
+    }
+    RUR.prev_line_no = RUR.current_line_no;
 };
 
-function update_editor_highlight() {
+function update_editor_highlight(frame_no) {
     "use strict";
-    var i, next_frame_line_numbers;
-        //track line number and highlight line to be executed
-    if (RUR.state.programming_language === "python" && RUR.state.highlight) {
-        try {
-            for (i=0; i < RUR.rec_previous_lines.length; i++){
-                editor.removeLineClass(RUR.rec_previous_lines[i], 'background', 'editor-highlight');
-            }
-        }catch (e) {console.log("diagnostic: error was raised while trying to removeLineClass", e);}
-        if (RUR.rec_line_numbers [RUR.current_frame_no+1] !== undefined){
-            next_frame_line_numbers = RUR.rec_line_numbers [RUR.current_frame_no+1];
-            for(i=0; i < next_frame_line_numbers.length; i++){
-                editor.addLineClass(next_frame_line_numbers[i], 'background', 'editor-highlight');
-            }
-            i = next_frame_line_numbers.length - 1;
-            if (RUR._max_lineno_highlighted < next_frame_line_numbers[i]) {
-                RUR._max_lineno_highlighted = next_frame_line_numbers[i];
-            }
-            RUR.rec_previous_lines = RUR.rec_line_numbers [RUR.current_frame_no+1];
-        } else {
-            try {  // try adding back to capture last line of program
-                for (i=0; i < RUR.rec_previous_lines.length; i++){
-                    editor.addLineClass(RUR.rec_previous_lines[i], 'background', 'editor-highlight');
-                }
-            }catch (e) {console.log("diagnostic: error was raised while trying to addLineClass", e);}
+    var i, frame;
+
+    frame = RUR.frames[frame_no];
+    if (frame !== undefined && frame.highlight !== undefined) {
+        for (i=0; i < editor.lineCount(); i++){
+            editor.removeLineClass(i, 'background', 'editor-highlight');
+        }
+        for(i=0; i < frame.highlight.length; i++){
+            editor.addLineClass(frame.highlight[i], 'background', 'editor-highlight');
         }
     }
 }
@@ -64,10 +50,11 @@ RUR.rec.display_frame = function () {
         return RUR.rec.conclude();
     }
 
-    update_editor_highlight();
-
     frame = RUR.frames[RUR.current_frame_no];
     RUR.update_frame_nb_info();
+    if ((RUR.state.programming_language === "python" && RUR.state.highlight)) {
+        update_editor_highlight(RUR.current_frame_no);
+    }
     RUR.current_frame_no++;
 
     if (frame === undefined){
@@ -89,7 +76,7 @@ RUR.rec.display_frame = function () {
         RUR.pause(frame.pause.pause_time);
         return "pause";
     } else if (frame.error !== undefined) {
-        RUR.CURRENT_WORLD = frame.world;
+        RUR.set_current_world(frame.world_map, true);
         RUR.vis_world.refresh();
         return RUR.rec.handle_error(frame);
     }
@@ -117,7 +104,7 @@ RUR.rec.display_frame = function () {
         $("#Reeborg-watches").dialog("open");
     }
 
-    RUR.CURRENT_WORLD = frame.world;
+    RUR.set_current_world(frame.world_map, true);
     if (frame.sound_id !== undefined){
         RUR._play_sound(frame.sound_id);
     }
@@ -132,9 +119,9 @@ RUR.rec.conclude = function () {
     }
     if (frame === undefined) {
         frame = {};
-        frame.world = clone_world();
+        frame.world_map = RUR.world_map();
     }
-    if (frame.world.goal !== undefined){
+    if (frame.world_map.goal !== undefined){
         goal_status = RUR.rec.check_goal(frame);
         if (goal_status.success) {
             if (RUR.state.sound_on) {
@@ -163,7 +150,7 @@ RUR.rec.conclude = function () {
 RUR.rec.handle_error = function (frame) {
     var goal_status;
     if (frame.error.reeborg_shouts === RUR.translate("Done!")){
-        if (frame.world.goal !== undefined){
+        if (frame.world_map.goal !== undefined){
             return RUR.rec.conclude();
         } else {
             if (RUR.state.sound_on) {
@@ -190,8 +177,8 @@ RUR.rec.handle_error = function (frame) {
 RUR.rec.check_current_world_status = function() {
     // this function is to check goals from the Python console.
     frame = {};
-    frame.world = RUR.CURRENT_WORLD;
-    if (frame.world.goal === undefined){
+    frame.world_map = RUR.get_current_world();
+    if (frame.world_map.goal === undefined){
         RUR.show_feedback("#Reeborg-concludes",
                              "<p class='center'>" +
                              RUR.translate("Last instruction completed!") +
@@ -208,7 +195,7 @@ RUR.rec.check_current_world_status = function() {
 
 RUR.rec.check_goal = function (frame) {
     var g, world, goal_status = {"success": true}, result;
-    g = frame.world.goal;
+    g = frame.world_map.goal;
     if (g === undefined) { // This is only needed for some
         return goal_status;        // functional which call check_goal directly
     } else if (Object.keys(g).length === 0) { // no real goal to check
@@ -218,7 +205,7 @@ RUR.rec.check_goal = function (frame) {
         return goal_status;
     }
 
-    world = frame.world;
+    world = frame.world_map;
     goal_status.message = "<ul>";
     if (g.position !== undefined){
         if (g.position.x === world.robots[0].x){
@@ -234,6 +221,16 @@ RUR.rec.check_goal = function (frame) {
             goal_status.success = false;
         }
     }
+    if (g.pushables !== undefined) {
+        result = identical(g.pushables, world.pushables, true);
+        if (result){
+            goal_status.message += RUR.translate("<li class='success'>All objects are at the correct location.</li>");
+        } else {
+            goal_status.message += RUR.translate("<li class='failure'>One or more objects are not at the correct location.</li>");
+            goal_status.success = false;
+        }
+    }
+
     if (g.objects !== undefined) {
         result = identical(g.objects, world.objects, true);
         if (result){
