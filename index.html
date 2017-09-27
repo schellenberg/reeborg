@@ -34,7 +34,7 @@
   <!-- load after codemirror.css -->
   <title>Reeborg's World</title>
   
-  <!-- intercepting keyboard save and open shortcuts, with ideas from:
+  <!-- intercepting keyboard save shortcut, ideas from 
     - https://stackoverflow.com/questions/4446987/overriding-controls-save-functionality-in-browser 
     - https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript#1085810
   -->
@@ -59,6 +59,7 @@
     }
 
     function load_file (obj) {
+      // remove_fileInput_listener();
       $("#fileInput").click();
       var fileInput = document.getElementById('fileInput');
       fileInput.addEventListener('change', function(e) {
@@ -84,7 +85,9 @@
     // alert("Saving now...")
     load_file(editor);
   }
-  </script>
+  
+
+}, false);</script>
 
 </head>
 <body>
