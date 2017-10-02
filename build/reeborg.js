@@ -9440,14 +9440,14 @@ RUR.make_default_menu_en = function () {
 
 RUR.make_default_menu_fr = function () {
     "use strict";
-    var base_url, base_url2, contents, menus, worlds, new_tutorial_fr;
+    var base_url, base_url2, contents, menus, worlds, new_tutorial_fr, steps;
 
     base_url = RUR.BASE_URL + '/src/worlds/tutorial_en/';
     base_url2 = RUR.BASE_URL + '/src/worlds/tutorial_fr/';
 
     menus = RUR.BASE_URL + '/src/worlds/menus/';
     worlds = RUR.BASE_URL + '/src/worlds/';
-    new_tutorial_fr = RUR.BASE_URL + '/worlds/tutorial_fr/',
+    new_tutorial_fr = RUR.BASE_URL + '/worlds/tutorial_fr/';
     steps = RUR.BASE_URL + '/src/worlds/steps/';
 
     contents = [
