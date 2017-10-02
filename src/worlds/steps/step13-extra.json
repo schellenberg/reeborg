@@ -1,5 +1,5 @@
 {
-  "description": "Extra for Experts world. Use a loop to walk around the edge of the world. Use the star Reeborg is carrying to help you determine when you are back to the start. Note that your code must also work for the Step 13d world!",
+  "description": "Try to adapt the solution for the basic world to also work with this new lake. Reeborg should once again put down the banana at the starting position and continue walking along the border of the lake until it finds the banana again. Staying along the wall will be trickier this time, but that’s the challenge! Note: Your solution for the Extra for Experts world should also work in the basic (Step 13a) world!",
   "small_tiles": false,
   "rows": 12,
   "cols": 14,
@@ -8,7 +8,7 @@
       "x": 1,
       "y": 1,
       "objects": {
-        "banana": 1
+        "star": 1
       },
       "model": "classic",
       "_orientation": 0,

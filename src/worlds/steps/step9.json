@@ -22,7 +22,7 @@
       ]
     }
   ],
-  "description": "Improve your code from Step 8, this time using loops. Have Reeborg put down all of the dandelions he picks up before completing the task.",
+  "description": "Adjust the solution you created for Step 8, this time making use of two repeat loops. The world doesn’t change from Step 8, but your solution should be much nicer. Remember to use comments and whitespace to increase the readability of your solution!",
   "small_tiles": false,
   "rows": 5,
   "cols": 14,

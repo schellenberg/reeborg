@@ -23,7 +23,7 @@
     }
   ],
   "walls": {},
-  "description": "Use a repeat 20: loop to walk around the edge of the garden, turning left whenever you find a tulip.",
+  "description": "Reeborg wants to make some bouquets of flowers for it’s friends, Zoe and Eli. Reeborg has permission to take() tulips from some of his neighbor’s gardens. Unfortunately for Reeborg, each of the gardens is different. Reeborg does know that the garden will be rectangular, that it will take 23 steps to get around the garden, and that there will be a tulip in each corner of the garden. Create a program to have Reeborg walk around the outside of the garden, picking up a tulip if it can, and moving ahead if it cannot. You must use a repeat 23: and if/else. Note: For this step, the world will be different each time you press the Play button. When you first open the world, the world will look empty, but will be built when you press Play. Later in the course, I will show you the Python code that creates this world randomly each time.",
   "small_tiles": false,
   "rows": 8,
   "cols": 4,

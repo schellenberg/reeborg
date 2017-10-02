@@ -25,7 +25,7 @@
     }
   ],
   "walls": {},
-  "description": "Make Reeborg walk around the pool. You might want to have him put something down, so that he knows when he gets back to where he started.",
+  "description": "Reeborg loves going for walks, especially when it is around a lake. The lakes in Reeborg’s neighborhood are all different sizes of rectangles, so Reeborg does not know how many steps it will take to get back to the start of walk. Thankfully, Reeborg happens to be carrying a banana, which you can tell Reeborg to put() down at the start of it’s walk. Reeborg knows it’s done walking when it reaches the banana again. Use a while statement (looking for the banana object) and an if/else to have Reeborg complete his walking adventure. Note: Reeborg cannot use a repeat statement, since it has no idea of the dimensions of the lake it is walking around.",
   "small_tiles": false,
   "rows": 6,
   "cols": 8,

@@ -85,7 +85,7 @@
       "east"
     ]
   },
-  "description": "Use what you've learned to have Reeborg pick up the star and put it down in the correct location.",
+  "description": "Reeborg needs to go pick up the newspaper (The Star Phoenix) that is sitting outside his house. If you haven’t done it yet, define both the turn_right() and turn_around() functions in the library tab. Now use the functions defined in the library to have Reeborg pick up the newspaper, walk back into the house, and put the newspaper down. Once again, be sure to use comments and whitespace to increase the readability of your solution!",
   "small_tiles": false,
   "rows": 10,
   "cols": 10,

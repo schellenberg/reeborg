@@ -28,7 +28,7 @@
       ]
     }
   ],
-  "description": "Move Reeborg around the square swimming pool, ending in the same location as he starts.",
+  "description": "Use the move() function and the turn_left() function to make Reeborg walk around the lake. To see what happens, let’s do some things intentionally wrong. For example, make Reeborg walk into the lake. You might also want to try not walking all the way around the lake to see what the error message will be.",
   "small_tiles": false,
   "rows": 5,
   "cols": 5,

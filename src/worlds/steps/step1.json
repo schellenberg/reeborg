@@ -23,7 +23,7 @@
     }
   ],
   "walls": {},
-  "description": "Step 1 -- make Reeborg move!",
+  "description": "Give Reeborg the appropriate instructions to make him return home! Use the move() function as many times as needed.",
   "small_tiles": false,
   "rows": 1,
   "cols": 5,

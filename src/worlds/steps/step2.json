@@ -23,7 +23,7 @@
     }
   ],
   "walls": {},
-  "description": "Pick all the dandelions, then have Reeborg put them in the trash before going inside!",
+  "description": "Give Reeborg the appropriate instructions to make him pick up the dandelions, put them in the garbage, and return home!",
   "small_tiles": false,
   "rows": 1,
   "cols": 6,

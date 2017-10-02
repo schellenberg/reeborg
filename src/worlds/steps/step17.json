@@ -23,7 +23,7 @@
     }
   ],
   "walls": {},
-  "description": "A simple, empty world, ready for Reeborg to explore.",
+  "description": "Reeborg is harvesting carrots again. This time, however, the gardens are all different sizes. The carrots grow really well in some areas (so there are more than one in some spots), and not well at all in some spots (so there are places where no carrots grow). Reeborg can start anywhere in the garden, and can be facing in any direction. Reeborg’s job is to pick all the carrots, put them down in the big carrot bin at the north-east corner of the garden, then head back to the south-west corner of the garden for a well deserved rest.",
   "small_tiles": false,
   "rows": 12,
   "cols": 14,
