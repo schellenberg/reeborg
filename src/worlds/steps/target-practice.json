@@ -1,0 +1,35 @@
+{
+  "robots": [
+    {
+      "x": 1,
+      "y": 1,
+      "_prev_x": 1,
+      "_prev_y": 1,
+      "_prev_orientation": 0,
+      "objects": {
+        "star": 99
+      },
+      "_orientation": 0,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 10,
+      "model": "classic",
+      "possible_initial_positions": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "description": "Reeborg decides to spend the day practicing its archery skills. Somewhere in the world is a triangular object. Write a program so that allows Reeborg to find this object, and then have it create cross hairs that span the whole world and centre on that target.",
+  "small_tiles": false,
+  "rows": 10,
+  "cols": 10,
+  "editor": "",
+  "pre": "\n",
+  "onload": "#Pre Code\nthink(0)\nimport random\nwidth = random.randint(10, 14)\nheight = random.randint(10, 14)\n\nRUR.set_world_size(width, height)\nRUR.fill_background(\"grass\")\nRUR.give_object_to_robot(\"star\",99)\n\n\n#Find Target Location\n\ntarget_x = random.randint(1, width)\ntarget_y = random.randint(1, height)\n\noptions = {'goal' : True}\nRUR.add_object(\"triangle\", target_x, target_y)\n#RUR.add_object(\"triangle\", target_x, target_y, options)\n\nfor x in range(width):\n\tRUR.add_object(\"triangle\", x+1, target_y, options)\n\nfor y in range(height):\n\tif( y+1 != target_y):\n\t\tRUR.add_object(\"triangle\", target_x, y+1, options)\t\n\n\n"
+}
