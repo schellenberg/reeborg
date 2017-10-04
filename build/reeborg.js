@@ -9424,7 +9424,7 @@ RUR.make_default_menu_en = function () {
         [steps + 'step10-hurdle.json', 'Step 10'],
         [steps + 'step11.json', 'Step 11'],
         [steps + 'step12.json', 'Step 12'],
-        // [steps + 'step13d.json', 'Step 13d'],
+        [steps + 'step13.json', 'Step 13'],
         [steps + 'step14-basic.json', 'Step 14a'],
         [steps + 'step14-extra.json', 'Step 14b'],
         [steps + 'step15a.json', 'Step 15a'],
