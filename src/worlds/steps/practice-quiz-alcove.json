@@ -159,7 +159,7 @@
       "east"
     ]
   },
-  "description": "A simple, empty world, ready for Reeborg to explore.",
+  "description": "The room (shown below) has alcoves on the left and the right. Some of the alcoves contain daisies. For each alcove on the left side that contains a daisy, make Reeborg move the daisy to the opposite alcove on the right hand side.",
   "small_tiles": false,
   "rows": 13,
   "cols": 9,

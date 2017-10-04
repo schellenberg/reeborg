@@ -102,7 +102,7 @@
       "north"
     ]
   },
-  "description": "A simple, empty world, ready for Reeborg to explore.",
+  "description": "This time, the distance between the alcove on the right and left is not consistent (in other words, the alcoves can be different distances apart). Once again, for each alcove on the left side that contains a daisy, make Reeborg move the daisy to the opposite alcove on the right hand side.",
   "small_tiles": false,
   "rows": 13,
   "cols": 9,
