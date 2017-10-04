@@ -4,9 +4,6 @@
     {
       "x": 1,
       "y": 1,
-      "objects": {
-        "carrot": "infinite"
-      },
       "_orientation": 0,
       "_is_leaky": true,
       "_prev_x": 1,
