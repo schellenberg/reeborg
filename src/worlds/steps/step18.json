@@ -12,7 +12,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 2,
+      "__id": 5,
       "model": "classic",
       "possible_initial_positions": [
         [
@@ -25,8 +25,8 @@
   "walls": {},
   "description": "Reeborg is harvesting carrots again. This time, however, the gardens are all different sizes. The carrots grow really well in some areas (so there are more than one in some spots), and not well at all in some spots (so there are places where no carrots grow). Reeborg can start anywhere in the garden, and can be facing in any direction. Reeborg’s job is to pick all the carrots, put them down in the big carrot bin at the north-east corner of the garden, then head back to the south-west corner of the garden for a well deserved rest.",
   "small_tiles": false,
-  "rows": 5,
-  "cols": 5,
+  "rows": 12,
+  "cols": 14,
   "goal": {
     "possible_final_positions": [
       [
@@ -40,5 +40,5 @@
       "y": 1
     }
   },
-  "onload": "#some python here\nimport random\nwidth = random.randint(3, 7)\nheight = random.randint(3, 7)\ntotal_number_of_carrots = 0\nRUR.set_world_size(width, height)\nRUR.fill_background(\"pale_grass\")\n\nfor i in range(5):\n    x = random.randint(1,width)\n    y = random.randint(1,height)\n    RUR.add_initial_position(x, y)\n\nfor x in range(1, width+1):\n    for y in range(1, height+1):\n        if random.randint(1, 100) > 50:\n            numberOfCarrots = random.randint(1,10)\n            total_number_of_carrots += numberOfCarrots\n            RUR.add_object(\"carrot\", x, y, {'number': numberOfCarrots})\n\nRUR.add_object(\"carrot\", width, height, {'goal': True, 'number': total_number_of_carrots})\n#RUR.add_final_position(\"flag\", 1, 1)\n"
+  "pre": "\n\nthink(0)\nimport random\nwidth = random.randint(3, 8)\nheight = random.randint(3, 8)\ntotal_number_of_carrots = 0\nRUR.set_world_size(width, height)\nRUR.fill_background(\"pale_grass\")\n\nfor x in range(1, width+1):\n    for y in range(1, height+1):\n        if random.randint(1, 100) > 50:\n            numberOfCarrots = random.randint(1,10)\n            total_number_of_carrots += numberOfCarrots\n            RUR.add_object(\"carrot\", x, y, {'number': numberOfCarrots})\n\nRUR.add_object(\"carrot\", width, height, {'goal': True, 'number': total_number_of_carrots})\n#RUR.add_final_position(\"flag\", 1, 1)\n\nthink(500)\n\n"
 }
