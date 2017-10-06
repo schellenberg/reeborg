@@ -12,7 +12,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 3,
+      "__id": 5,
       "model": "classic",
       "possible_initial_positions": [
         [
@@ -40,5 +40,5 @@
       "y": 1
     }
   },
-  "pre": "\n\nthink(0)\nimport random\nwidth = random.randint(4, 14)\nheight = random.randint(4, 14)\n\nRUR.set_world_size(width, height)\nRUR.fill_background(\"pale_grass\")\n\nfor x in range(1, width+1):\n\tfor y in range(1, height+1):\n\t\tif random.randint(1, 100) > 50:\n\t\t\tnumberOfCarrots = random.randint(1,10)\n\t\t\tRUR.add_object(\"carrot\", x, y, {'number': numberOfCarrots})\n\nRUR.add_object(\"carrot\", width, height, {'goal': True, 'number': \"all\"})\n#RUR.add_final_position(\"flag\", 1, 1)\n\nthink(500)\n\n"
+  "pre": "\n\nthink(0)\nimport random\nwidth = random.randint(3, 8)\nheight = random.randint(3, 8)\ntotal_number_of_carrots = 0\nRUR.set_world_size(width, height)\nRUR.fill_background(\"pale_grass\")\n\nfor x in range(1, width+1):\n    for y in range(1, height+1):\n        if random.randint(1, 100) > 50:\n            numberOfCarrots = random.randint(1,10)\n            total_number_of_carrots += numberOfCarrots\n            RUR.add_object(\"carrot\", x, y, {'number': numberOfCarrots})\n\nRUR.add_object(\"carrot\", width, height, {'goal': True, 'number': total_number_of_carrots})\n#RUR.add_final_position(\"flag\", 1, 1)\n\nthink(500)\n\n"
 }
