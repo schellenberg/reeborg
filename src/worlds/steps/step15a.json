@@ -73,7 +73,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 12,
+      "__id": 11,
       "possible_initial_positions": [
         [
           3,
@@ -401,5 +401,6 @@
     "6,5": [
       "gravel"
     ]
-  }
+  },
+  "pre": "think(0)\nimport random\n\nworld_choice = random.randint(0,100)\noptions = {\"goal\": True}\n\ndef move_window(wall_dir, x, y, newX, newY):\n    #remove\n    RUR.add_wall(wall_dir, x, y)\n    RUR.remove_object(\"star\", x, y, options)\n    \n    #add\n    RUR.remove_wall(wall_dir, newX, newY)\n    RUR.add_object(\"star\", newX, newY, options)\n\nif world_choice > 50:\n    #generate different version...\n    move_window(\"south\", 4, 3, 5, 3)\n    move_window(\"south\", 8, 3, 7, 3)\n    move_window(\"east\", 9, 5, 9, 4)\n    move_window(\"north\", 8, 7, 7, 7)\n    move_window(\"north\", 5, 7, 4, 7)\n    \nthink(500)    \n    \n"
 }
