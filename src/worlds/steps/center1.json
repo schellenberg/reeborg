@@ -27,5 +27,5 @@
   "small_tiles": false,
   "rows": 5,
   "cols": 1,
-  "pre": "think(0)\nimport random\nwidth = 2\nwhile width % 2 == 0:\n    width = random.randint(3, 15)\nheight = 1\n\nRUR.set_world_size(width, height)\nRUR.fill_background(\"grass\")\nRUR.give_object_to_robot(\"token\",99)\n\n#Find Target Location\ntarget_x = (width//2)+1\ntarget_y = (height//2)+1\n\n\noptions = {'goal' : True}\nRUR.add_object(\"token\", target_x, target_y)\n"
+  "pre": "think(0)\nimport random\nwidth = 2\nwhile width % 2 == 0:\n    width = random.randint(3, 15)\nheight = 1\n\nRUR.set_world_size(width, height)\nRUR.fill_background(\"grass\")\nRUR.give_object_to_robot(\"token\",99)\n\n#Find Target Location\ntarget_x = (width//2)+1\ntarget_y = (height//2)+1\n\n\noptions = {'goal' : True}\nRUR.add_object(\"token\", target_x, target_y, options)\n"
 }
