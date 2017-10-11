@@ -12,7 +12,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 8,
+      "__id": 4,
       "model": "classic",
       "possible_initial_positions": [
         [
@@ -530,32 +530,16 @@
       "y": 12
     },
     "objects": {
-      "8,2": {
-        "daisy": 1
-      },
-      "8,4": {
-        "daisy": 1
-      },
-      "8,8": {
-        "daisy": 1
-      },
-      "8,10": {
-        "daisy": 1
-      }
+      "8,2": {},
+      "8,4": {},
+      "8,8": {},
+      "8,10": {}
     }
   },
   "objects": {
-    "2,2": {
-      "daisy": 1
-    },
-    "2,4": {
-      "daisy": 1
-    },
-    "2,8": {
-      "daisy": 1
-    },
-    "2,10": {
-      "daisy": 1
-    }
+    "2,2": {},
+    "2,4": {},
+    "2,8": {},
+    "2,10": {}
   }
 }
