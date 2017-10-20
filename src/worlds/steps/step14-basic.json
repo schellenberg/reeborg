@@ -14,7 +14,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 6,
+      "__id": 4,
       "model": "classic",
       "possible_initial_positions": [
         [
@@ -30,5 +30,5 @@
   "rows": 6,
   "cols": 8,
   "pre": "\nthink(0)\nimport random\nwidth = random.randint(3, 13)\nheight = random.randint(3, 13)\n\nRUR.set_world_size(width, height)\nRUR.fill_background(\"water\")\n#bottom row\nfor x in range(1, width+1):\n    RUR.add_background_tile(\"grass\", x, 1)\n#right column\nfor y in range(1, height+1):\n    RUR.add_background_tile(\"grass\", width, y)\n#top row\nfor x in range(width, 0, -1):\n    RUR.add_background_tile(\"grass\", x, height)\n#left column\nfor y in range(height, 0, -1):\n    RUR.add_background_tile(\"grass\", 1, y)\n\n_path_followed = []\n\ndef move():\n    r = default_robot()\n    RUR._move_()\n    _path_followed.append((r.body.x, r.body.y))\n\nthink(500)\n",
-  "post": "_correct_path = []\n\n#bottom row\nfor x in range(2, width):\n    _correct_path.append((x, 1))\n#right column\nfor y in range(1, height):\n\t_correct_path.append((width, y))\n#top row\nfor x in range(width, 1, -1):\n\t_correct_path.append((x, height))\n#left column\nfor y in range(height, 0, -1):\n\t_correct_path.append((1, y))\n\nif _correct_path != _path_followed:\n    raise ReeborgError(\"Reeborg did not follow the required path.\")\n    \nraise ReeborgOK(\"Well done!\")\n"
+  "post": "if move.__doc__ != None:\n    raise ReeborgError(\"Do not use 'from library import *' for this step. Use something like 'from library import turn_right' instead, or do not import anything from the library for this step.\")\n\n_correct_path = []\n\n#bottom row\nfor x in range(2, width):\n    _correct_path.append((x, 1))\n#right column\nfor y in range(1, height):\n\t_correct_path.append((width, y))\n#top row\nfor x in range(width, 1, -1):\n\t_correct_path.append((x, height))\n#left column\nfor y in range(height, 0, -1):\n\t_correct_path.append((1, y))\n\nif _correct_path != _path_followed:\n    raise ReeborgError(\"Reeborg did not follow the required path.\")\n    \nraise ReeborgOK(\"Well done!\")\n"
 }
