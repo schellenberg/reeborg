@@ -39,14 +39,20 @@
     - https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript#1085810
   -->
   <script type="text/javascript">
-    function saveTextAsFile() {
+    function saveCodeAndLibraryAsFile() {
       var blob;
       event.preventDefault();
+      var library_separator = "\n\
+################################################################\n\
+# Library Code for this step is below\n\
+# (do not change this comment, or opening the file will mess up)\n\
+################################################################\n";
+      var combined_code = editor.getValue() + library_separator + library.getValue();
       var selectedWorld = document.getElementById("select-world");
       var filenameToSave = selectedWorld.options[selectedWorld.selectedIndex].text;
       var editor_filename = document.getElementById("editor-filename");
       if (RUR.state.programming_language == "python") {
-          blob = new Blob([editor.getValue()], {
+          blob = new Blob([combined_code], {
               type: "text/python;charset=utf-8"
           });
           saveAs(blob, filenameToSave + ".py", true);
@@ -58,15 +64,28 @@
       }
     }
 
-    function load_file (obj) {
+    function loadCodeAndLibraryFromFile() {
       // remove_fileInput_listener();
+      var library_separator = "\n\
+################################################################\n\
+# Library Code for this step is below\n\
+# (do not change this comment, or opening the file will mess up)\n\
+################################################################\n";
       $("#fileInput").click();
       var fileInput = document.getElementById('fileInput');
       fileInput.addEventListener('change', function(e) {
           var file = fileInput.files[0];
           var reader = new FileReader();
           reader.onload = function(e) {
-              obj.setValue(reader.result);
+              fullText = reader.result;
+              partsOfFile = fullText.split(library_separator);
+              if (partsOfFile.length == 2) {
+                editor.setValue(partsOfFile[0]);
+                library.setValue(partsOfFile[1]);
+              }
+              else {
+                editor.setValue(partsOfFile[0]);
+              }
               fileInput.value = '';
           };
           reader.readAsText(file);
@@ -76,14 +95,12 @@
   document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
-    // alert("Saving now...")
-    saveTextAsFile();
+    saveCodeAndLibraryAsFile();
   }
 
   if (e.keyCode == 79 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
-    // alert("Saving now...")
-    load_file(editor);
+    loadCodeAndLibraryFromFile();
   }
   
 
