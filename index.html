@@ -33,83 +33,15 @@
   <link defer rel="stylesheet" href="src/css/reeborg_world2.css">
   <!-- load after codemirror.css -->
   <title>Reeborg's World</title>
-  
-  <!-- intercepting keyboard save shortcut, ideas from 
-    - https://stackoverflow.com/questions/4446987/overriding-controls-save-functionality-in-browser 
-    - https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript#1085810
-  -->
   <script type="text/javascript">
-    function saveCodeAndLibraryAsFile() {
-      var blob;
-      event.preventDefault();
-      var library_separator = "\n\
-################################################################\n\
-# Library Code for this step is below\n\
-# (do not change this comment, or opening the file will mess up)\n\
-################################################################\n";
-      var combined_code = editor.getValue() + library_separator + library.getValue();
-      var selectedWorld = document.getElementById("select-world");
-      var filenameToSave = selectedWorld.options[selectedWorld.selectedIndex].text;
-      var editor_filename = document.getElementById("editor-filename");
-      if (RUR.state.programming_language == "python") {
-          blob = new Blob([combined_code], {
-              type: "text/python;charset=utf-8"
-          });
-          saveAs(blob, filenameToSave + ".py", true);
-      } else {
-          blob = new Blob([editor.getValue()], {
-              type: "text/javascript;charset=utf-8"
-          });
-          saveAs(blob, filenameToSave + ".js", true);
-      }
-    }
-
-    function loadCodeAndLibraryFromFile() {
-      // remove_fileInput_listener();
-      var library_separator = "\n\
-################################################################\n\
-# Library Code for this step is below\n\
-# (do not change this comment, or opening the file will mess up)\n\
-################################################################\n";
-      $("#fileInput").click();
-      var fileInput = document.getElementById('fileInput');
-      fileInput.addEventListener('change', function(e) {
-          var file = fileInput.files[0];
-          var reader = new FileReader();
-          reader.onload = function(e) {
-              fullText = reader.result;
-              partsOfFile = fullText.split(library_separator);
-              if (partsOfFile.length == 2) {
-                editor.setValue(partsOfFile[0]);
-                library.setValue(partsOfFile[1]);
-              }
-              else {
-                editor.setValue(partsOfFile[0]);
-              }
-              fileInput.value = '';
-          };
-          reader.readAsText(file);
-      });
-   }
-
-  document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-    e.preventDefault();
-    saveCodeAndLibraryAsFile();
-  }
-
-  if (e.keyCode == 79 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-    e.preventDefault();
-    loadCodeAndLibraryFromFile();
-  }
-  
-
-}, false);</script>
-
+    var RUR = {};
+    RUR.DEFAULT_MENU_EN = '/worlds/menus/select_collection_en.json';
+    RUR.DEFAULT_MENU_FR = '/worlds/menus/select_collection_fr.json';
+  </script>
 </head>
 <body>
   <header class="blue-gradient green-border">
-    <a id="logo" href="index_en.html" class="fake_button">
+    <a id="logo" href="index_en.html" class="fake-button">
       <img src="src/images/robot_e.png" alt="logo">
       <span id="site-name"></span>
     </a>
@@ -133,6 +65,7 @@
         <option value="fr">Français</option>
         <optgroup label="------------">
           <option class="select-mixed" value="ko-en">한국어 + en</option>
+          <option class="select-mixed" value="pl-en">Polski + en</option>
           <option class="select-mixed" value="fr-en">Français + en</option>
           <option class="select-mixed" value="en-fr">English + fr</option>
         </optgroup>
@@ -234,6 +167,12 @@
       </button>
       <input id="frame-selector" class="disabled" type="range" min="0" value="0" step="1"/>
       <span id="frame-id">0/0</span>
+      <button id="save-solution-btn" class="solution-button">
+        <img src="src/images/save_program.png" alt="Save solution">
+      </button>
+      <button id="open-solution-btn" class="solution-button">
+        <img src="src/images/open_program.png" alt="Open solution">
+      </button>
     </div>
     <div id="canvas-wrapper">
       <canvas id="background-canvas" width="625" height="550"></canvas> <!-- 1 -->
@@ -312,6 +251,10 @@
         <button id="highlight" class="active-element float-right">
           <img src="src/images/highlight.png" alt="highlight">
         </button>
+        <button id="increase-font-size" class="blue-gradient float-right">
+          <small><small>A</small></small>&uarr;A</button>
+        <button id="decrease-font-size" class="blue-gradient float-right">
+          A&darr;<small><small>A</small></small></button>
       </ul>
       <div id="editor">
         <textarea id="code" name="code">move()</textarea>
@@ -620,8 +563,11 @@
       </li>
     </ul>
   </div>
-    <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.2.7/www/src/brython.js"></script>/online-->
+    <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.3.4/www/src/brython.js"></script>/online-->
   <!--offline--> <script type="text/javascript" src="offline/brython/brython.js"></script> <!--/offline-->
+
+  <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.3.4/www/src/brython_stdlib.js"></script>/online-->
+  <!--offline--> <script type="text/javascript" src="offline/brython/brython_stdlib.js"></script> <!--/offline-->
 
   <!--offline--> <script type="text/javascript" src="offline/jquery-2.1.0/jquery.min.js"></script> <!--/offline-->
   <!--online<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>/online-->
@@ -647,9 +593,6 @@
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/python/python.js"></script> <!--/offline-->
   <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/python/python.min.js"></script>/online-->
 
-  <script>
-    var RUR = {};
-  </script>
   <script type="text/javascript" src="src/blockly/blockly_compressed.js"></script>
   <script type="text/javascript" src="src/blockly/blocks_compressed.js"></script>
   <script defer type="text/javascript" src="src/blockly/javascript_compressed.js"></script>
@@ -658,9 +601,10 @@
   <script type="text/javascript" src="src/blockly_msg/ko.js"></script>
   <script type="text/javascript" defer src="src/blockly/python_compressed.js"></script>
 
-  <script type="text/javascript" src="build/reeborg.js" defer data-cover></script>
+  <script type="text/javascript" src="build/reeborg.js" defer></script>
   <script type="text/python3" src="src/python/init_reeborg.py"></script>
   <script defer type="text/javascript" src="src/libraries/filesaver.js"></script>
+  <script defer type="text/javascript" src="src/libraries/diff_match_patch_uncompressed.js"></script>
   <script>
     TogetherJSConfig_cloneClicks = true;
   </script>
@@ -698,6 +642,13 @@
       <h3 id="delete-world-text"></h3>
     </div>
     <hr>
+    <h3 id="progress-section"></h3>
+    <p><span id="progress-explain"></span></p>
+      <button id="save-progress-btn" class="blue-gradient">
+      </button>
+      <button id="import-progress-btn" class="blue-gradient">
+      </button>
+    <hr>
     <h3 id="program-in-editor"></h3>
     <p>
       <form id="save-editor-form">
@@ -714,7 +665,6 @@
       <span id="load-editor-text"></span>
     </p>
     <hr>
-
     <h3 id="program-in-blockly-workspace"></h3>
     <p>
       <form id="save-blockly-form">
@@ -903,6 +853,7 @@
         <li id="kbd-turn-left"></li>
         <li id="kbd-take"></li>
         <li id="kbd-put"></li>
+        <li id="kbd-toss"></li>
         <li id="kbd-build-wall"></li>
         <li id="kbd-pause" class="no-console kbd-command"></li>
         <li id="kbd-done"></li>
@@ -1028,7 +979,6 @@
   </div>
 
   <!--online
-  <a style="display:none" href="http://clicky.com/100788691"><img alt="Real Time Analytics" src="//static.getclicky.com/media/links/badge.gif" /></a>
   <script type="text/javascript">
     var clicky_site_ids = clicky_site_ids || [];
     clicky_site_ids.push(100788691);

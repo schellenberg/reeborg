@@ -19,7 +19,7 @@ Changes from the 'normal' Reeborg's world repo:
 As of Jan 17, 2018
 -------------------
 
-Just copied over the main Reeborg repo, overwriting anything that had changed. Then, can link to the SK content by calling something like:
+Just copied over the main Reeborg repo, overwriting anything that had changed.Renamed the reeborg-offline.html file to be index.html. Then, can link to the SK content by calling something like:
 
 http://reeborg.ca/reeborg.html?lang=en&mode=python&collection=worlds/menus/sk_menu.json&name=Step%201
 
