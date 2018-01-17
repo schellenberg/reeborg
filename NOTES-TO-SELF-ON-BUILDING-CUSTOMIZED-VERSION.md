@@ -16,3 +16,14 @@ Changes from the 'normal' Reeborg's world repo:
 - added keyboard shortcuts for saving (not required anymore, as Andrè added this to the main version of Reeborg)
 
 
+As of Jan 17, 2018
+-------------------
+
+Just copied over the main Reeborg repo, overwriting anything that had changed. Then, can link to the SK content by calling something like:
+
+http://reeborg.ca/reeborg.html?lang=en&mode=python&collection=worlds/menus/sk_menu.json&name=Step%201
+
+http://reeborg.ca/reeborg.html?lang=en&mode=python&collection=worlds/menus/sk_menu.json
+
+where the URL is replaced by:
+https://sk-opentexts.github.io/reeborg?

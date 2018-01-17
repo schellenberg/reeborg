@@ -11,8 +11,22 @@
 */
 
 exports.identical = identical = function (a, b) {
+    if (a===b) {
+        return true;
+    }
+    // make copies to avoid chaning the original
+    if (a !== undefined) {
+        a = JSON.parse(JSON.stringify(a));
+    }
+    if (b !== undefined) {
+        b = JSON.parse(JSON.stringify(b));
+    }
+
 
     function sort(object) {
+        if (object === undefined) {
+            return undefined;
+        }
         if (Array.isArray(object)) {
             return object.sort();
         }

@@ -30,6 +30,10 @@ ui_pl["tulip"] = "tulipan";
 ui_pl["bucket"] = "wiadro";
 ui_pl["bulb"] = "żarówka";
 
+ui_pl["bricks"] = "bricks";  // translation needed
+pl_to_en["bricks"] = "bricks";
+
+
 pl_to_en["jabłko"] = "apple";
 pl_to_en["banan"] = "banana";
 pl_to_en["brzęczyk"] = "beeper";
@@ -63,6 +67,8 @@ pl_to_en["trawa"] = "grass";
 pl_to_en["żwir"] = "gravel";
 pl_to_en["lód"] = "ice";
 pl_to_en["ogień"] = "fire";
+
+ui_pl["infinite"] = "infinite number";
 
 ui_pl["fence_right"] = "płotek_po_prawa";
 ui_pl["fence_left"] = "płotek_po_lewo";
@@ -139,9 +145,9 @@ ui_pl[" is not a valid value!"] = " to nie jest prawidłowy numer!";
 ui_pl["Enter number of objects desired at that location."] = "Naciśnij na świat by wybrać numer <code>{obj}</code>.";
 ui_pl["Objects found here:"] = "Obiekty znalezione tutaj:";
 ui_pl["Description"] = "Opisy";
-ui_pl["A robot located here carries no objects."] = "Robot położony {x},{y} nie trzyma żadnych obiektów.";
+ui_pl["A robot located here carries no objects."] = "Robot położony (x, y) = ({x}, {y}) nie trzyma żadnych obiektów.";
 ui_pl["Goal to achieve:"] = "Cele do osiągnięcia:";
-ui_pl["A robot located here carries:"] = "Robot położony {x},{y} trzyma:";
+ui_pl["A robot located here carries:"] = "Robot położony (x, y) = ({x}, {y}) trzyma:";
 ui_pl["random location"] = "losowe położenie";
 ui_pl["Enter number of objects to give to robot."] = "Wpisz ilość obiektów <code>{obj}</code> które dasz robotowi.";
 ui_pl["Special information about this location:"] = "Specjalne informacje o tej lokacji:";
@@ -236,6 +242,16 @@ ui_pl["SAVE LIBRARY EXPLAIN"] = "Zapisz zawartość biblioteki w pliku." + mac_u
 ui_pl["SAVE WORLD"] = "Zapisz świat w pliku";
 ui_pl["SAVE WORLD EXPLAIN"] = "Zapisz świat (jako json obiekt) w pliku na Twoim komputerze." + mac_user_save_files_en;
 
+ui_pl["PROGRESS SECTION TITLE"] = "Keeping track of tasks solved";
+ui_pl["PROGRESS EXPLAIN"] = "Tasks solved are marked with " + RUR.CHECKMARK +
+    "in the world selector and the information is saved in your browser. If you use a different browser, " +
+    "the tasks you have already solved using a different browser will not be shown. " +
+    "If you click on the save button below, a file named progress.json will be saved with the tasks solved " +
+    "recorded in the current browser. You can import this file in a different browser so that your progress can be updated.";
+ui_pl["SAVE PROGRESS"] = "Save";
+ui_pl["IMPORT PROGRESS"] = "Import";
+
+
 ui_pl["ADD CONTENT TO WORLD"] = "Dodaj zawartość do świata z wybranych przedmiotów poniżej.";
 ui_pl["ADD BLOCKLY TEXT"] = "Bloki kodujące";
 ui_pl["ADD EDITOR TEXT"] = "Kod w edytorze";
@@ -279,7 +295,6 @@ ui_pl["EDIT WORLD"] = "Edytuj świat";
 ui_pl["EDIT WORLD EXPLAIN"] = "Możesz stworzyć swój świat edytująć bierzący.";
 ui_pl["PROGRAM IN EDITOR"] = "Program w edytorze";
 ui_pl["PROGRAM IN BLOCKLY WORKSPACE"] = "Program w przestrzeni roboczej blockly";
-ui_pl["REVERSE STEP EXPLAIN"] = "Odwróć ostani krok działania.";
 ui_pl["CONTACT"] = "(Tylko Angielski/Francuski) Email:";
 ui_pl["ISSUES"] = "Raporty bugów, sugestie, inne sprawy, etc. (Tylko Angielski/Francuski)";
 ui_pl["FORUM"] = "Forum dyskusyje (Tylko Angielski/Francuski)";
@@ -368,3 +383,17 @@ ui_pl["GIVE OBJECT EXPLAIN"] = "Wybierz liczbe przedmiotów, które ma trzymać 
 ui_pl["UPDATE BLOCKLY CONTENT"] = "Ten świat ma domyślne przestrzenie robocze dla bloków. By przenieść bierzącą zawartość bloków, kliknij na przycisk";
 ui_pl["UPDATE BLOCKLY BUTTON"] = "Przenieś istniejące bloki";
 ui_pl["Contents from World"] = "Zawartośc ze świata";
+
+ui_pl["WARNING: Do not change this comment."] = "WARNING: Do not change this comment.";
+ui_pl["Library Code is below."] = "Library Code is below.";
+ui_pl["No solution can be saved when using REPL (Py)."] = "No solution can be saved when using REPL (Py).";
+ui_pl["No solution can be loaded when using REPL (Py)."] = "No solution can be loaded when using REPL (Py).";
+
+ui_pl["You are not allowed to use <code>done</code> in this world!"] = "You are not allowed to use <code>done()</code> in this world!";
+ui_pl["Execution ended before the <em>Post</em> code was executed."] = "Execution ended before the <em>Post</em> code was executed.";
+
+ui_pl["Difficulty level"] = "Difficulty level";
+
+ui_pl["Expected result"] = "Expected result";
+ui_pl["Differences highlighted"] = "Differences highlighted";
+ui_pl["Actual result"] = "Actual result";

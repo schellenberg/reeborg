@@ -39,12 +39,12 @@ update_robot_trace_history = function (robot) {
 
     if(RUR.get_current_world().small_tiles) {
         offset = [[12, 12], [12, 12], [12, 12], [12, 12]];
-        trace_segment["thickness"] = 2;
+        trace_segment["thickness"] = 2;  
     } else if (robot._trace_style === "thick") {
         offset = [[25, 25], [25, 25], [25, 25], [25, 25]];
         trace_segment["thickness"] = 4;
     }  else if (robot._trace_style === "default") {
-        trace_segment["thickness"] = 1;
+        trace_segment["thickness"] = 2;
     } // else, invisible and we do not care.
 
     prev_offset = offset[robot._prev_orientation%4];
@@ -54,6 +54,11 @@ update_robot_trace_history = function (robot) {
     trace_segment["x"] = robot.x * RUR.WALL_LENGTH + offset[0];
     trace_segment["prev_y"] = RUR.HEIGHT - (robot._prev_y+1) * RUR.WALL_LENGTH + prev_offset[1];
     trace_segment["y"] = RUR.HEIGHT - (robot.y+1) * RUR.WALL_LENGTH + offset[1];
+    // the following are not required for drawing but may be used by a world
+    // creator to confirm that the correct path is being followed.
+    // See RUR.print_path and other functions in path_utils.js
+    trace_segment["grid_x"] = robot.x;
+    trace_segment["grid_y"] = robot.y;
 
     if (robot._trace_history.length > 0) {
         prev_trace_segment = robot._trace_history[robot._trace_history.length-1];
@@ -87,7 +92,7 @@ RUR.record_frame = function (name, obj) {
         }
         RUR.state.frame_insertion_called = true;
         if (RUR.state.programming_language === "python") {
-            py_err = RUR.frame_insertion(name, obj)
+            py_err = RUR.frame_insertion(name, obj);
             RUR.state.frame_insertion_called = false;
             if (py_err && py_err.__name__) {
                 if (RUR[py_err.__name__] !== undefined) {

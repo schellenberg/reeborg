@@ -47,6 +47,8 @@ fr_to_en["seau d'eau"] = "bucket";
 ui_fr["bulb"] = "bulbe de tulipe";
 fr_to_en["bulbe de tulipe"] = "bulb";
 ui_fr["Tulip bulb: might grow into a nice tulip with some water from a bucket."] = "Bulbe de tulipe : pourrait devenir une belle tulipe avec un seau d'eau.";
+ui_fr["bricks"] = "briques";
+fr_to_en["briques"] = "bricks";
 
 ui_fr["mud"] = "boue";
 fr_to_en["boue"] = "mud";
@@ -62,6 +64,8 @@ ui_fr["ice"] = "glace";
 fr_to_en["glace"] = "ice";
 ui_fr["fire"] = "feu";
 fr_to_en["feu"] = "fire";
+
+ui_fr["infinite"] = "nombre infini";
 
 ui_fr["fence_right"] = "clôture_droite";
 fr_to_en["clôture_droite"] = "fence_right";
@@ -136,8 +140,8 @@ ui_fr[" is not a valid value!"] = " n'est pas une valeur valide!";
 ui_fr["Enter number of objects desired at that location."] = "Cliquez sur le monde pour fixer le nombre d'objet <code>{obj}</code> désiré à cet endroit.";
 ui_fr["Objects found here:"] = "Objets trouvés ici:";
 ui_fr["Description"] = "Description";
-ui_fr["A robot located here carries no objects."] = "A robot situé à {x},{y} ne transporte aucun objet.";
-ui_fr["A robot located here carries:"] = "Un robot situé à {x},{y} transporte:";
+ui_fr["A robot located here carries no objects."] = "A robot situé à (x, y) = ({x}, {y}) ne transporte aucun objet.";
+ui_fr["A robot located here carries:"] = "Un robot situé à (x, y) = ({x}, {y}) transporte:";
 ui_fr["random location"] = "une position choisie au hasard";
 ui_fr["Enter number of objects to give to robot."] = "Quel nombre de <code>{obj}</code> voulez-vous donner au robot?";
 ui_fr["Special information about this location:"] = "Information particulière au sujet de cet endroit:";
@@ -186,7 +190,7 @@ ui_fr["I hit a fence!"] = "J'ai frappé une clôture!";
 ui_fr["Fence: Reeborg <b>can</b> detect this but will be stopped by it."] = "Clôture: Reeborg <b>peut</b> détecter ceci mais il ne peut pas passer au travers.";
 ui_fr["Bridge:Reeborg <b>can</b> detect this and will know that it allows safe passage over water."] = "Pont: Reeborg <b>peut</b> détecter ceci et sait que cela lui permettra de traverser l'eau en sureté.";
 ui_fr["My joints are melting!"] = "Mes articulations fondent !";
-ui_fr["A bucket full of water"] = "Un seau rempli d'eau."
+ui_fr["A bucket full of water"] = "Un seau rempli d'eau.";
 
 
 fr_to_en["pont"] = "bridge";
@@ -236,6 +240,16 @@ ui_fr["SAVE LIBRARY EXPLAIN"] = "Sauvegarde le contenu de la bibliothèque dans 
 ui_fr["SAVE WORLD"] = "Sauvegarder le monde";
 ui_fr["SAVE WORLD EXPLAIN"] = "Sauvegarde le monde dans un fichier (format json) sur votre ordinateur." + mac_user_save_files_fr;
 
+
+ui_fr["PROGRESS SECTION TITLE"] = "Le résumé des tâches";
+ui_fr["PROGRESS EXPLAIN"] = "Les tâches résolues sont indiqués par " + RUR.CHECKMARK +
+    "dans le sélecteur de monde et l'information est sauvegardée dans votre navigateur. " +
+    "Si vous utilisez un navigateur différent, les tâches que vous avez résolues ailleurs n'apparaîtront pas. " +
+    "Si vous cliquez sur le bouton sauvegarder, un fichier nommé progress.json sera sauvegardé avec l'information requise. " +
+    "vous pouvez importer ce fichier dans un autre navigateur pour mettre vos tâches à jour dans ce dernier.";
+ui_fr["SAVE PROGRESS"] = "Sauvegarder";
+ui_fr["IMPORT PROGRESS"] = "Importer";
+
 ui_fr["ADD CONTENT TO WORLD"] = "Ajouter au monde le contenu des items indiqués ci-dessous.";
 ui_fr["ADD BLOCKLY TEXT"] = "Blocs de code";
 ui_fr["ADD EDITOR TEXT"] = "Code dans l'éditeur";
@@ -279,7 +293,6 @@ ui_fr["EDIT WORLD"] = "Édition du monde";
 ui_fr["EDIT WORLD EXPLAIN"] = "Vous pouvez créer vos propres mondes en modifiant un monde existant.";
 ui_fr["PROGRAM IN EDITOR"] = "Programme dans l'éditeur";
 ui_fr["PROGRAM IN BLOCKLY WORKSPACE"] = "Programme de blocs";
-ui_fr["REVERSE STEP EXPLAIN"] = "Renverse l'instruction précédemment exécutée.";
 ui_fr["CONTACT"] = "Courriel :";
 ui_fr["ISSUES"] = "Rapports de bogues, suggestions, autres problèmes, etc. (en anglais ou en français seulement).";
 ui_fr["FORUM"] = "Forum de discussions (en anglais ou en français seulement).";
@@ -369,3 +382,17 @@ ui_fr["GIVE OBJECT EXPLAIN"] = "Choisissez un nombre d'objects que Reeborg aura 
 ui_fr["UPDATE BLOCKLY CONTENT"] = "Ce monde inclus des blocs différents de ceux qui s'y trouvent présentement. Pour remplacer les blocs présents par ceux définis par le monde, cliquez sur le bouton.";
 ui_fr["UPDATE BLOCKLY BUTTON"] = "Remplacer les blocs";
 ui_fr["Contents from World"] = "Remplacement de contenus";
+
+ui_fr["WARNING: Do not change this comment."] = "ATTENTION: Ne modifiez pas ce commentaire.";
+ui_fr["Library Code is below."] = "Le code de la biblio est ci-dessous.";
+ui_fr["No solution can be saved when using REPL (Py)."] = "Aucune solution ne peut être sauvegardée dans le mode REPL (Py).";
+ui_fr["No solution can be loaded when using REPL (Py)."] = "Aucune solution ne peut être chargée dans le mode REPL (Py).";
+
+ui_fr["You are not allowed to use <code>done</code> in this world!"] = "Il n'est pas permis d'utiliser <code>termine()</code> dans ce monde !";
+ui_fr["Execution ended before the <em>Post</em> code was executed."] = "L'exécution du programme a terminé avant que le code <em>Post</em> ne soit interprété.";
+
+ui_fr["Difficulty level"] = "Niveau de difficulté";
+
+ui_fr["Expected result"] = "Résultat attendu";
+ui_fr["Differences highlighted"] = "Différences observées";
+ui_fr["Actual result"] = "Résultat observé";

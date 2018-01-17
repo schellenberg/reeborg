@@ -46,6 +46,9 @@ ko_to_en["튤립"] = "tulip";
 ui_ko["bucket"] = "물통"; // bucket of water; translated using google
 ko_to_en["물통"] = "bucket";
 
+ui_ko["bricks"] = "bricks";  // translation needed
+ko_to_en["bricks"] = "bricks";
+
 ui_ko["mud"] = "진흙";
 ko_to_en["진흙"] = "mud";
 ui_ko["soil"] = "흙"; // translated using google
@@ -65,6 +68,9 @@ ko_to_en["불"] = "fire"; // translated using google
 ui_ko["bulb"] = "tulip bulb";
 ko_to_en["tulip bulb"] = "bulb";
 ui_ko["Tulip bulb: might grow into a nice tulip with some water from a bucket."] = "Tulip bulb: might grow into a nice tulip with some water from a bucket.";
+
+ui_ko["infinite"] = "infinite number";
+
 
 // more translations needed
 ui_ko["fence_right"] = "울타리 right";
@@ -140,9 +146,9 @@ ui_ko[" is not a valid value!"] = " 유효하지 않은 값입니다!";
 ui_ko["Enter number of objects desired at that location."] = "<code>{obj}</code> 의 수를 설정하기 위해 월드를 클릭하세요.";
 ui_ko["Objects found here:"] = "객체를 여기서 찾음:";
 ui_ko["Description"] = "설명";
-ui_ko["A robot located here carries no objects."] = "로봇은 {x},{y}에 위치해 있고 싣고 있는 객체는 없습니다.";
+ui_ko["A robot located here carries no objects."] = "로봇은 (x, y) = ({x}, {y})에 위치해 있고 싣고 있는 객체는 없습니다.";
 ui_ko["Goal to achieve:"] = "목표 달성:";
-ui_ko["A robot located here carries:"] = "로봇은 {x},{y}에 위치해 있습니다. 싣고 있는 객체:";
+ui_ko["A robot located here carries:"] = "로봇은 (x, y) = ({x}, {y})에 위치해 있습니다. 싣고 있는 객체:";
 ui_ko["random location"] = "무작위 위치";
 ui_ko["Enter number of objects to give to robot."] = "로봇에게 주기 위해 <code>{obj}</code> 의 수를 입력하세요..";
 ui_ko["Special information about this location:"] = "이 위치에 대한 특별한 정보:";
@@ -238,6 +244,15 @@ ui_ko["SAVE LIBRARY EXPLAIN"] = "파일 라이브러리의 내용 저장" + mac_
 ui_ko["SAVE WORLD"] = "파일로 저장";
 ui_ko["SAVE WORLD EXPLAIN"] = "(json 확장자) 월드를 컴퓨터에 저장" + mac_user_save_files_ko;
 
+ui_ko["PROGRESS SECTION TITLE"] = "Keeping track of tasks solved";
+ui_ko["PROGRESS EXPLAIN"] = "Tasks solved are marked with " + RUR.CHECKMARK +
+    "in the world selector and the information is saved in your browser. If you use a different browser, " +
+    "the tasks you have already solved using a different browser will not be shown. " +
+    "If you click on the save button below, a file named progress.json will be saved with the tasks solved " +
+    "recorded in the current browser. You can import this file in a different browser so that your progress can be updated.";
+ui_ko["SAVE PROGRESS"] = "Save";
+ui_ko["IMPORT PROGRESS"] = "Import";
+
 ui_ko["ADD CONTENT TO WORLD"] = "Add content to world from selected items below.";
 ui_ko["ADD BLOCKLY TEXT"] = "Code blocks";
 ui_ko["ADD EDITOR TEXT"] = "Code in editor";
@@ -281,7 +296,6 @@ ui_ko["EDIT WORLD"] = "월드 수정";
 ui_ko["EDIT WORLD EXPLAIN"] = "기존 월드를 수정하여 자신 만의 월드를 만들 수 있습니다.";
 ui_ko["PROGRAM IN EDITOR"] = "에디터";
 ui_ko["PROGRAM IN BLOCKLY WORKSPACE"] = "blockly 작업 공간 프로그램";
-ui_ko["REVERSE STEP EXPLAIN"] = "이전 실행 상태를 되돌립니다.";
 ui_ko["CONTACT"] = "(English/French only) 이메일:";
 ui_ko["ISSUES"] = "버그 제보, 건의 그외 문제 등. (영어/프랑스어만 됨)";
 ui_ko["FORUM"] = "토론 포럼 (영어/프랑스어만 됨";
@@ -371,3 +385,17 @@ ui_ko["GIVE OBJECT EXPLAIN"] = "로봇이 운반 할 객체의 수를 고르세�
 ui_ko["UPDATE BLOCKLY CONTENT"] = "This world has some default content for the blocks workspace. To replace the current blocks content, click on the button";
 ui_ko["UPDATE BLOCKLY BUTTON"] = "Replace existing blocks";
 ui_ko["Contents from World"] = "Contents from World";
+
+ui_ko["WARNING: Do not change this comment."] = "WARNING: Do not change this comment.";
+ui_ko["Library Code is below."] = "Library Code is below.";
+ui_ko["No solution can be saved when using REPL (Py)."] = "No solution can be saved when using REPL (Py).";
+ui_ko["No solution can be loaded when using REPL (Py)."] = "No solution can be loaded when using REPL (Py).";
+
+ui_ko["You are not allowed to use <code>done</code> in this world!"] = "You are not allowed to use <code>done()</code> in this world!";
+ui_ko["Execution ended before the <em>Post</em> code was executed."] = "Execution ended before the <em>Post</em> code was executed.";
+
+ui_ko["Difficulty level"] = "Difficulty level";
+
+ui_ko["Expected result"] = "Expected result";
+ui_ko["Differences highlighted"] = "Differences highlighted";
+ui_ko["Actual result"] = "Actual result";

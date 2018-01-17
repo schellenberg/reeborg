@@ -8,7 +8,7 @@
       },
       "_orientation": 0,
       "_is_leaky": true,
-      "model": 0,
+      "model": "classic",
       "possible_initial_positions": [
         [
           4,
@@ -21,7 +21,7 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 17
+      "__id": 9
     }
   ],
   "walls": {
@@ -78,34 +78,34 @@
   "cols": 10,
   "tiles": {
     "1,1": [
-      "pale_grass"
+      "gravel"
     ],
     "1,2": [
-      "pale_grass"
+      "gravel"
     ],
     "1,3": [
-      "pale_grass"
+      "gravel"
     ],
     "1,4": [
-      "pale_grass"
+      "gravel"
     ],
     "1,5": [
-      "pale_grass"
+      "gravel"
     ],
     "1,6": [
-      "pale_grass"
+      "gravel"
     ],
     "1,7": [
-      "pale_grass"
+      "gravel"
     ],
     "1,8": [
-      "pale_grass"
+      "gravel"
     ],
     "1,9": [
-      "pale_grass"
+      "gravel"
     ],
     "1,10": [
-      "pale_grass"
+      "gravel"
     ],
     "2,2": [
       "grass"
@@ -132,16 +132,16 @@
       "grass"
     ],
     "2,10": [
-      "pale_grass"
+      "gravel"
     ],
     "3,1": [
-      "pale_grass"
+      "gravel"
     ],
     "3,2": [
-      "pale_grass"
+      "gravel"
     ],
     "3,3": [
-      "pale_grass"
+      "gravel"
     ],
     "3,4": [
       "grass"
@@ -162,13 +162,13 @@
       "grass"
     ],
     "3,10": [
-      "pale_grass"
+      "gravel"
     ],
     "4,2": [
       "bricks"
     ],
     "4,3": [
-      "pale_grass"
+      "gravel"
     ],
     "4,4": [
       "grass"
@@ -189,7 +189,7 @@
       "grass"
     ],
     "4,10": [
-      "pale_grass"
+      "gravel"
     ],
     "5,1": [
       "bricks"
@@ -198,43 +198,43 @@
       "bricks"
     ],
     "5,3": [
-      "pale_grass"
+      "gravel"
     ],
     "5,4": [
       "grass"
     ],
     "5,5": [
-      "pale_grass"
+      "gravel"
     ],
     "5,6": [
-      "pale_grass"
+      "gravel"
     ],
     "5,7": [
-      "pale_grass"
+      "gravel"
     ],
     "5,8": [
-      "pale_grass"
+      "gravel"
     ],
     "5,9": [
-      "pale_grass"
+      "gravel"
     ],
     "5,10": [
-      "pale_grass"
+      "gravel"
     ],
     "6,1": [
-      "pale_grass"
+      "gravel"
     ],
     "6,2": [
-      "pale_grass"
+      "gravel"
     ],
     "6,3": [
-      "pale_grass"
+      "gravel"
     ],
     "6,4": [
       "grass"
     ],
     "6,5": [
-      "pale_grass"
+      "gravel"
     ],
     "6,6": [
       "water"
@@ -252,7 +252,7 @@
       "water"
     ],
     "7,1": [
-      "pale_grass"
+      "gravel"
     ],
     "7,2": [
       "grass"
@@ -264,7 +264,7 @@
       "grass"
     ],
     "7,5": [
-      "pale_grass"
+      "gravel"
     ],
     "7,6": [
       "water"
@@ -282,7 +282,7 @@
       "water"
     ],
     "8,1": [
-      "pale_grass"
+      "gravel"
     ],
     "8,2": [
       "grass"
@@ -294,7 +294,7 @@
       "grass"
     ],
     "8,5": [
-      "pale_grass"
+      "gravel"
     ],
     "8,6": [
       "water"
@@ -312,7 +312,7 @@
       "water"
     ],
     "9,1": [
-      "pale_grass"
+      "gravel"
     ],
     "9,2": [
       "grass"
@@ -324,7 +324,7 @@
       "grass"
     ],
     "9,5": [
-      "pale_grass"
+      "gravel"
     ],
     "9,6": [
       "water"
@@ -342,19 +342,19 @@
       "water"
     ],
     "10,1": [
-      "pale_grass"
+      "gravel"
     ],
     "10,2": [
-      "pale_grass"
+      "gravel"
     ],
     "10,3": [
-      "pale_grass"
+      "gravel"
     ],
     "10,4": [
-      "pale_grass"
+      "gravel"
     ],
     "10,5": [
-      "pale_grass"
+      "gravel"
     ],
     "10,6": [
       "water"
@@ -372,15 +372,54 @@
       "water"
     ],
     "2,1": [
-      "pale_grass"
+      "gravel"
     ],
     "4,1": [
-      "pale_grass"
+      "gravel"
     ]
   },
-  "description": "Aidez Reeborg à faire le tour du monde dans le sens contraire des aiguilles d'une montre. \nReeborg ne doit pas marcher sur le gazon vert foncé.<br>\n<img src=\"/src/images/around4.gif\">\n<br>\n\nSuggestion: Reeborg transporte des jetons; vous en\navez besoin d'un seul.\n<br>\nCe monde a été conçu pour être programmé avec Python.\n\n",
-  "onload": "RUR.onload_set_programming_language(\"python\")\n",
-  "pre": "_path_followed = []\ncouleur_de_trace(\"black\")\ndef avance():\n    r = robot_par_defaut()\n    RUR._move_()\n    _path_followed.append((r.body.x, r.body.y))\n",
-  "post": "_correct_path = [(3, 1), (3, 2), (3, 3), (4, 3), (5, 3), (6, 3), \n             (6, 2), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1), \n             (10, 2), (10, 3), (10, 4), (10, 5), (9, 5), (8, 5), \n             (7, 5), (6, 5), (5, 5), (5, 6), (5, 7), (5, 8), \n             (5, 9), (5, 10), (4, 10), (3, 10), (2, 10), \n             (1, 10), (1, 9), (1, 8), (1, 7), (1, 6), (1, 5), \n             (1, 4), (1, 3), (1, 2), (1, 1), (2, 1), (3, 1), \n             (4, 1)]\n\nif _correct_path != _path_followed:\n    raise ReeborgError(\"Reeborg n'a pas suivi le bon chemin !\")\n    \nraise ReeborgOK(\"Très bien fait !\")",
-  "objects": {}
+  "description": [
+    "<h1>Faire le tour du monde</h1>",
+    "Aidez Reeborg à faire le tour du monde dans le sens contraire des aiguilles d'une montre. ",
+    "Reeborg ne doit pas marcher sur le gazon.",
+    "Le chemin à suivre est indiqué en pointillés blancs.<br>",
+    "<br>",
+    "",
+    "<em>Suggestion: Reeborg transporte des jetons; vous en",
+    "avez besoin d'un seul.</em>",
+    "<br><br>Le même programme doit également être valide pour les mondes <b>Autour 1</b> à <b>Autour 3</b>.",
+    "<h3>Ce que vous devez connaître</h3>",
+    "<ul><li>Les fonctions <code>avance()</code>, <code>tourne_a_gauche()</code> et <code>depose()</code>.</li>",
+    "<li>Les conditions <code>rien_devant()</code> ou <code>mur_devant()</code>,",
+    "<code>rien_a_droite()</code> ou <code>mur_a_droite()</code>, et <code>objet_ici()</code>.</li>",
+    "<li>Comment utiliser des boucles <code>while</code> et des énoncés <code>if/elif/else</code>.</li>",
+    "<li>Il pourrait être utile de savoir comment faire la négation d'une condition",
+    "(mot-clé <code>not</code> en Python).</li></ul>",
+    "DIFFICULTY5",
+    ""
+  ],
+  "onload": [
+    "RUR.public['path'] = [[4,1], [3,1], [3,2], [3,3], [4,3],",
+    "    [5,3], [6,3], [6,2], [6,1], [7,1], [8,1], [9,1],",
+    "    [10,1], [10,2], [10,3], [10,4], [10,5], [9,5],",
+    "    [8,5], [7,5], [6,5], [5,5], [5,6], [5,7], [5,8],",
+    "    [5,9], [5,10], [4,10], [3,10], [2,10], [1,10],",
+    "    [1,9], [1,8], [1,7], [1,6], [1,5], [1,4], [1,3],",
+    "    [1,2], [1,1], [2,1], [3,1], [4,1]];",
+    "RUR.show_path(RUR.public['path'], 'white');",    
+    "RUR.state.visible_grid = RUR.PATH_ONLY;",
+    ""
+  ],
+  "pre": [
+    "RUR.show_path()", 
+    ""
+  ],
+  "post": [
+    "",
+    "RUR.check_path(RUR.public['path'],",
+    "     {'failure':\"Reeborg n'a pas suivi le bon chemin.\", ",
+    "      'success': 'Très bien fait !', ",
+    "      'show_path': 'true', 'color': 'white'})",
+    ""
+  ]
 }

@@ -1,4 +1,5 @@
 require("./../rur.js");
+require("./../translator.js");
 require("./background_tile.js");
 require("./bridges.js");
 require("./obstacles.js");
@@ -57,13 +58,10 @@ RUR.is_fatal_position = function (x, y, robot){
     obstacles = RUR.get_obstacles(x, y);
     if (obstacles) {
         for (obs of obstacles) {
-            // Here, and below, we call RUR._get_property instead of
-            // RUR.get_property since this uses the internal english names;
-            // RUR.get_property assumes an untranslated argument.
-            if (RUR._get_property(obs, "fatal")) {
-                if (protections.indexOf(RUR._get_property(obs, "fatal")) === -1) {
-                    if (RUR.THINGS[obs].message) {
-                        return RUR.THINGS[obs].message;
+            if (RUR.get_property(obs, "fatal")) {
+                if (protections.indexOf(RUR.get_property(obs, "fatal")) === -1) {
+                    if (RUR.THINGS[RUR.translate_to_english(obs)].message) {
+                        return RUR.THINGS[RUR.translate_to_english(obs)].message;
                     } else {
                         return "Fatal obstacle needs message defined";
                     }
@@ -77,11 +75,11 @@ RUR.is_fatal_position = function (x, y, robot){
     protections = protections.concat(RUR.get_bridge_protections(x, y));
     tile = RUR.get_background_tile(x, y);
     // tile is a name; it could be a colour, which is never fatal.
-    if (tile && RUR.THINGS[tile] !== undefined) {
-        if (RUR._get_property(tile, "fatal")) {
-            if (protections.indexOf(RUR._get_property(tile, "fatal")) === -1) {
-                if (RUR.THINGS[tile].message) {
-                    return RUR.THINGS[tile].message;
+    if (tile && RUR.THINGS[RUR.translate_to_english(tile)] !== undefined) {
+        if (RUR.get_property(tile, "fatal")) {
+            if (protections.indexOf(RUR.get_property(tile, "fatal")) === -1) {
+                if (RUR.THINGS[RUR.translate_to_english(tile)].message) {
+                    return RUR.THINGS[RUR.translate_to_english(tile)].message;
                 } else {
                     return "Fatal tile needs message defined";
                 }
@@ -118,11 +116,13 @@ RUR.is_detectable_position = function (x, y){
         tiles = [];
     }
     tile = RUR.get_background_tile(x, y);
-    if (tile && RUR.THINGS[tile] !== undefined) {
+    // all tiles obtained so far are translated arguments
+    if (tile && RUR.THINGS[RUR.translate_to_english(tile)] !== undefined) {
         tiles.push(tile);
     }
     for (tile of tiles) {
-        if (RUR._get_property(tile, "detectable")) {
+        // get_property, without a leading underscore, works for original language
+        if (RUR.get_property(tile, "detectable")) {
             return true;
         }
     }

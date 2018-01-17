@@ -47,8 +47,7 @@ function set_button (name, content_present) {
 
 function _update_user_editor (world, name, ed) {
     try {
-        test_utils; // global variable defined for functional testing
-        return;
+        if (test_utils !== undefined) return;
     } catch (e) {}
     // For blockly when not running tests,
     // the user is given the choice to update the content or to keep their own.
@@ -66,9 +65,13 @@ function _update_user_editor (world, name, ed) {
 
 function _update_world_editor (world, name, ed) {
     // For editors defining the world: pre, post, description, onload.
-    if (world[name]) {
+    content = world[name];
+    if (content) {
+        if (typeof content != "string") {
+            content = content.join("\n");
+        }
         set_button(name, true);
-        ed.setValue(world[name]);
+        ed.setValue(content);
     } else {
         set_button(name, false);
         ed.setValue('\n');

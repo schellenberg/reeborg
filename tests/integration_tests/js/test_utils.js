@@ -142,6 +142,41 @@ test_utils.run_program = function(world_url, program_url, language) {
     return RUR.frames;
 };
 
+test_utils.run_javascript_2 = function (world_url, program_url) {
+    return test_utils.run_program_2(world_url, program_url, "javascript");
+};
+
+
+test_utils.run_python_2 = function (world_url, program_url) {
+    return test_utils.run_program_2(world_url, program_url, "python");
+};
+
+
+test_utils.run_program_2 = function(world_url, program_url, language) {
+    var last_frame, world, step;
+    test_utils.reset();
+    RUR.state.programming_language = language;
+
+    if (world_url !== null) {
+        test_utils.load_world_file(world_url);
+    }
+    if (program_url !== undefined) {    // otherwise, reuse same program
+        test_utils.load_program(program_url);
+    }
+
+    try {
+        RUR.runner.run(test_utils.playback);
+        RUR.rec.conclude();
+        return true;  //  TODO: make use of this return value??
+    } catch(e) {
+        console.log(">>=========\nError raised", step, e);
+        console.log("  frames = ", RUR.frames);
+        console.log("  program = ", test_utils.program, "\n------------<<");
+        return false;
+    }
+};
+
+
 test_utils.playback = function() {
     return true;
 };
@@ -196,3 +231,6 @@ description_editor.setValue = function (code) {
 onload_editor.setValue = function (code) {
     test_utils.onload = code;
 };
+onload_editor.setOption = function () {};
+pre_code_editor.setOption = function () {};
+post_code_editor.setOption = function () {};

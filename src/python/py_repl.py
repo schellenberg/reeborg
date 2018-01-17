@@ -3,7 +3,7 @@
 
 import sys
 from browser import document, window
-from common import __import_en, __import_fr, print_dir
+from common import _import_en, _import_fr, print_dir
 RUR = window['RUR']
 
 
@@ -170,16 +170,12 @@ class Interpreter():
         except:
             lang = 'en'
         if lang == 'en':
-            __import_en(self.namespace)
+            _import_en(self.namespace)
             self.namespace["done"] = self.done
-            # in case "done" gets reassigned in the "pre" code of a world,
-            # we keep another version available.
-            self.namespace["Done"] = self.done
             self.namespace["World"] = self.world
         elif lang == 'fr':
-            __import_fr(self.namespace)
+            _import_fr(self.namespace)
             self.namespace["termine"] = self.done
-            self.namespace["Termine"] = self.done
             self.namespace["Monde"] = self.world
         self.namespace["__help"] = window["__help"]
         self.namespace["init"] = window.RUR.world_init
@@ -191,8 +187,11 @@ class Interpreter():
 
     def run_pre(self):
         if hasattr(RUR.CURRENT_WORLD, "pre"):
+            pre = RUR.CURRENT_WORLD.pre
+            if isinstance(pre, list):
+                pre = '\n'.join(pre)
             try:
-                exec(RUR.CURRENT_WORLD.pre, self.namespace)
+                exec(pre, self.namespace)
             except Exception as e:
                 window.console.log("Error when executing pre:", e)
 
@@ -206,7 +205,11 @@ class Interpreter():
         '''
         RUR.hide_end_dialogs() # hide previously shown dialogs
         if hasattr(RUR.CURRENT_WORLD, "post"):
-            exec(RUR.CURRENT_WORLD.post, self.namespace) # may raise an exception
+            RUR.state.post_code_executed = True
+            post = RUR.CURRENT_WORLD.post
+            if isinstance(post, list):
+                post = '\n'.join(post)
+            exec(post, self.namespace) # may raise an exception
         RUR.rec.check_current_world_status()
 
 

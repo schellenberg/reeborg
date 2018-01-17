@@ -104,7 +104,11 @@ def get_robot_by_id(serial_number):  #py:default_robot
 
 
 def done():  #py:done
-    """Causes a program's execution to end."""
+    """
+    Causes a program's execution to end.
+
+    When used in REPL mode, this results in the world's goal being checked.
+    """
     RUR._done_()
 
 
@@ -181,6 +185,9 @@ def object_here(obj=None):  #py:object_here
         a list of the type of objects found.  If no object is present,
         or if the specified object is not found, the result is an empty list.
 
+    Note: When using Javascript, instead of returning an empty list is no
+    object if found, 'false' is returned.
+
     Examples:
 
         >>> object_here()
@@ -194,7 +201,10 @@ def object_here(obj=None):  #py:object_here
         ans = RUR._object_here_(obj)
     else:
         ans = RUR._object_here_()
-    return list(ans)  # convert from JS list-like object to proper Python list
+    if ans:
+        return list(ans)  # convert from JS list-like object to proper Python list
+    else:
+        return []
 
 
 def paint_square(color):  #py:paint_square
@@ -592,6 +602,9 @@ class UsedRobot(object):  #py:UR
             or if the specified object is not found, the result is an
             empty list.
 
+        Note: When using Javascript, instead of returning an empty list is no
+        object if found, 'false' is returned.
+
         Examples:
 
             >>> reeborg = UsedRobot()
@@ -603,9 +616,14 @@ class UsedRobot(object):  #py:UR
             []
         """
         if obj is not None:
-            return list(RUR._UR.object_here_(self.body, obj))
+            ans = RUR._UR.object_here_(self.body, obj)
         else:
-            return list(RUR._UR.object_here_(self.body))
+            ans = RUR._UR.object_here_(self.body)
+        if ans:
+            return list(ans)
+        else:
+            return []
+
 
     def paint_square(self, color):
         """Fills the grid square where Reeborg is located with the specified color"""

@@ -40,6 +40,8 @@ try {
   Namespaces
 ==========================================================*/
 
+RUR.initial_defaults = {};
+RUR.listeners = {};
 RUR.utils = {};
 RUR.world_utils = {};
 RUR.UnitTest = {}; // used to provide links to function mused for unit tests
@@ -47,6 +49,7 @@ RUR.state = {};    /* Reeborg's World can be in different states
                       (running a program, editing a world, etc.) and the
                       behaviour of some features can be affected (
                       e.g. enabled or disabled) depending on that state.*/
+RUR.public = {}; // To be used by world creators.
 
 
 /*========================================================
@@ -79,11 +82,14 @@ RUR.MAX_X_DEFAULT = 14; // These two values are used in the dialog used to resiz
 RUR.MAX_Y_DEFAULT = 12; // a world, hard-coded in the html dialog #dialog-set-dimensions.
 RUR.END_CYCLE = "end cycle"; // for animated images
 
+RUR.CHECKMARK = " ✓🤖"; // do not add multiple spaces; they are irrelevant for
+// the display and prevent strip_checkmark from working correctly in all cases.
+
 // The following are editors (content) that can be part of a world.
 RUR.WORLD_EDITORS = ["description", "editor", "library", "pre", "post", "onload"];
 
 /*========================================================
-  World contants
+  World constants
 
   These can take different values based on world definition,
   but are otherwise constant within a given world.
@@ -120,24 +126,50 @@ RUR.MAX_X = Math.floor(RUR.WIDTH / RUR.WALL_LENGTH) - 1;
 RUR.GREEN = "green"; // for colour blind people; see
 RUR.RED = "red";     // RUR.configure_red_green() below
 
+/*=========================================================
+  The following is potentially useful for world creators; if
+  set to true, it will include the contents of the various
+  editors when the world's description is shown.
+==========================================================*/
+
+RUR.SHOW_EDITORS_CONTENTS = false;
+
+/*=========================================================
+  Grid visibility when background tiles or background image
+  would other wise hide it.
+
+  This would be a value assigned to RUR.state.visible_grid
+==========================================================*/
+
+RUR.ALL_GRID_VISIBLE = 1;
+RUR.PATH_ONLY = "grid_visible_on_path_only";
+
 /*========================================================
+  Some initial defaults
+==========================================================*/
+RUR.initial_defaults.human_language = 'en';
+RUR.initial_defaults.input_method = 'python';
 
-   Configuration through UI interaction including URL: default values
-
+/*========================================================
+   State changed through UI interaction or from initial URI
 ==========================================================*/
 
 RUR.state.session_initialized = false; // when first loading the site
 
-RUR.state.human_language = "en";
-RUR.state.input_method = "python";
-RUR.state.programming_language = "python";
-RUR.state.onload_programming_language = "python"; // language is determined by content of editor
+RUR.state.human_language = undefined;
+RUR.state.input_method = undefined;
+RUR.state.programming_language = undefined;
+
+RUR.state.world_name = undefined;
+RUR.state.world_url = undefined;
+RUR.state.current_menu = undefined;
+
+RUR.state.onload_programming_language = undefined; // determined by content of onload editor
 
 RUR.state.x = undefined; // recorded mouse clicks
 RUR.state.y = undefined;
 
 RUR.state.run_button_clicked = false;
-RUR.state.stop_called = false;
 RUR.state.playback = false;  // from pause/play/stop
 RUR.state.highlight = true;
 RUR.state.watch_vars = false;
@@ -145,7 +177,12 @@ RUR.state.editing_world = false;
 
 RUR.state.extra_code_visible = false;
 
+RUR.state.user_progress = {}; // keep track of user progress (worlds solved).
 
+// This will keep track of the current font size if changed by the user.
+RUR.state.editors_font_size = undefined;
+
+RUR.state.ui_ready = false;
 
 /*========================================================
 
@@ -200,8 +237,9 @@ RUR.reset_pre_run_defaults = function () {
         // set to true.
     RUR.state.prevent_playback = false;
 
-    /* Special drawing settings that can be set to true in a program */
-    RUR.state.visible_grid = false;
+    RUR.state.visible_grid = false; /* if true, will be shown above tiles */
+    RUR.public = {}; // reset
+
     RUR.state.do_not_draw_info = false; // see document titled
                     // "How to show just the path followed by Reeborg"
 
@@ -228,7 +266,19 @@ RUR.reset_pre_run_defaults = function () {
     RUR.__python_error = false; // used to catch Python error in custom format
 
     RUR.current_maze = undefined; // special namespace when mazes are created
-}
+
+    RUR.state.done_executed = false; // Used to monitor if done is used 
+                                     // preventing the evaluation of Post code.
+    RUR.state.post_code_executed = false;
+
+    RUR.print_cache = '';  // capturing the standard output from a user's program.
+
+    // The following may be specified by a world creator to replace the
+    // standard/default message when a goal is checked at the end of a run
+    RUR.success_custom_message = undefined;
+    RUR.failure_custom_message = undefined;
+
+};
 RUR.reset_pre_run_defaults();
 
 
@@ -337,6 +387,15 @@ function set_canvases () {
     RUR.TRACE_CANVAS = document.getElementById("trace-canvas"); //15
     create_ctx(RUR.TRACE_CANVAS, "TRACE_CTX");
 
+    // line drawing on canvas is drawn on overlapping pixels; 
+    // see https://stackoverflow.com/a/7531540/558799 and
+    // https://stackoverflow.com/a/13884434/558799 for an explanation.
+    // Rather than adding 0.5 pixel each time we with to draw a line,
+    // we shift the entire trace canvas by 0.5, and can work with integer
+    // values.
+    RUR.TRACE_CTX.translate(0.5, 0.5);
+
+
     RUR.PUSHABLES_CANVAS = document.getElementById("pushables-canvas"); //16
     create_ctx(RUR.PUSHABLES_CANVAS, "PUSHABLES_CTX");
 
@@ -380,7 +439,7 @@ RUR.get_current_world = function () {
  */
 
 RUR.world_map = function () {
-    "use strict"
+    "use strict";
     var world, to_remove, i;
     // clone the world so as not to modify the original
     world = JSON.parse(JSON.stringify(RUR.get_current_world()));
@@ -396,7 +455,7 @@ RUR.world_map = function () {
 
 RUR.set_current_world = function (world, merge_editors) {
     "use strict";
-    var editor_name;
+    var editor_name, i;
     // merge_editor is used when a copy of the world was obtained
     // using world_map, which removed the editor content.
     if (merge_editors) {
@@ -408,15 +467,26 @@ RUR.set_current_world = function (world, merge_editors) {
         }
     }
     RUR.CURRENT_WORLD = world;
-}
+};
+
 
 RUR.export_world = function (world) {
-    if (world === undefined) {
-        return JSON.stringify(RUR.get_current_world(), null, 2);
-    } else {
-        return JSON.stringify(world, null, 2);
-    }
+    var content, editor_name, i, world_copy;
+
+    world_copy = RUR.clone_world(world);
+    for (i=0; i < RUR.WORLD_EDITORS.length; i++) {
+        editor_name = RUR.WORLD_EDITORS[i];
+        content = world_copy[editor_name];
+        /* editors content can be saved either as a string (old format)
+           with embedded new lines characters or as an array of lines (new format)
+           */
+        if (content !== undefined && typeof content == "string") {
+            world_copy[editor_name] = content.split("\n");
+        }
+    }    
+    return JSON.stringify(world_copy, null, 2);
 };
+
 
 RUR.clone_world = function (world) {
     if (world === undefined) {
@@ -455,12 +525,12 @@ RUR._world_map = function () {
  */
 RUR.print_maze = function () {
     var maze = RUR.world_map().maze;
-    if (maze == undefined) {
+    if (maze === undefined) {
         RUR.output.write("undefined\n");
     } else {
         RUR.output.write(JSON.stringify(maze, null, 2), "\n");
     }
-}
+};
 
 /** @function configure_red_green
  * @memberof RUR
@@ -494,4 +564,31 @@ RUR.configure_red_green = function (red, green) {
 //
 RUR.show_feedback = function (element, content) {
     $(element).html(content).dialog("open");
+};
+
+
+/** @function randint
+ * @memberof RUR
+ * @instance
+ * @desc Like the Python function random.randit, it returns a
+ * random integer in range [min, max], including both end points.
+ * @param [integer] min
+ * @param [integer] max
+ */
+RUR.randint = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+
+RUR.hide_end_dialogs = function () {
+    $("#Reeborg-concludes").dialog("close");
+    $("#Reeborg-shouts").dialog("close");
+    // reset the options in case the user has dragged the dialogs as it would
+    // then open at the top left of the window
+    $("#Reeborg-concludes").dialog("option", {minimize: false, maximize: false,
+        autoOpen:false, width:500, dialogClass: "concludes",
+        position:{my: "left", at: "left", of: $("#editor-panel")}});
+    $("#Reeborg-shouts").dialog("option", {minimize: false, maximize: false,
+        autoOpen:false, width:500, dialogClass: "alert",
+        position:{my: "left", at: "left", of: $("#editor-panel")}});
 };

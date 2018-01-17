@@ -101,9 +101,21 @@ RUR.vis_world.draw_all = function () {
 };
 
 
+RUR.vis_world.clear_all_ctx = function () {
+    // useful for graphics.py
+    for (var ctx of RUR.ALL_CTX) {
+        ctx.clearRect(0, 0, RUR.WIDTH, RUR.HEIGHT);
+    }
+};
+
+
 RUR.vis_world.refresh = function () {
     "use strict";
     var canvas, canvases, goal, world = RUR.get_current_world();
+
+    if (world.blank_canvas) {
+        return;
+    }
     // This is not the most efficient way to do things; ideally, one
     // would keep track of changes (e.g. addition or deletion of objects)
     // and only redraw when needed.  However, it is not critical at
@@ -123,7 +135,13 @@ RUR.vis_world.refresh = function () {
     draw_tiles(world.pushables, RUR.PUSHABLES_CTX);
     draw_tiles(world.walls, RUR.WALL_CTX);
     draw_tiles(world.objects, RUR.OBJECTS_CTX);
-
+    if (world._CORRECT_PATH && world._CORRECT_PATH.length > 0) {
+        try {
+            draw_correct_path(world._CORRECT_PATH, world._CORRECT_PATH_COLOR);
+        } catch (e) {
+            console.warn("problem with draw_correct_path", e);
+        }
+    }
     draw_info();     // on ROBOT_CTX
     if (RUR.ROBOT_ANIMATION_FRAME_ID) {
         clearTimeout(RUR.ROBOT_ANIMATION_FRAME_ID);
@@ -163,6 +181,16 @@ function draw_coordinates () {
     "use strict";
     var x, y, ctx = RUR.BACKGROUND_CTX, grid_size=RUR.WALL_LENGTH;
 
+    // for some reason, background font gets reset to "10px sans-serif"
+    // when a session starts, this after I explicitly set it to
+    // something else, and never set it to 10px anywhere in my code.
+    // The code included here fixes this.
+    if (RUR.get_current_world().small_tiles) {
+        RUR.BACKGROUND_CTX.font = "8px sans-serif";
+    } else {
+        RUR.BACKGROUND_CTX.font = "bold 12px sans-serif";
+    }
+
     ctx.fillStyle = RUR.COORDINATES_COLOR;
     y = RUR.HEIGHT + 5 - grid_size/2;
     for(x=1; x <= RUR.MAX_X; x++){
@@ -180,12 +208,15 @@ function draw_coordinates () {
 
 function draw_grid_walls (ctx, edit){
     "use strict";
-    var i, j, image_e, image_n, wall_e, wall_n,
+    var i, j, image_e, image_n, wall_e, wall_n, draw_only_path, x, y,
         x_offset_e, x_offset_n, y_offset_e, y_offset_n;
 
     if (RUR.SCALE == 0.5) {  // small wall, adjust grid walls to be less visible
         ctx.save();
         ctx.globalAlpha = 0.3;
+    } else if (!edit) {
+        ctx.save();
+        ctx.globalAlpha = 0.5;
     }
 
     if (edit) {
@@ -204,13 +235,60 @@ function draw_grid_walls (ctx, edit){
     x_offset_n = wall_n.x_offset;
     y_offset_n = wall_n.y_offset;
 
-    for (i = 1; i <= RUR.MAX_X; i++) {
-        for (j = 1; j <= RUR.MAX_Y; j++) {
-            draw_single_object(image_e, i, j, ctx, x_offset_e, y_offset_e);
-            draw_single_object(image_n, i, j, ctx, x_offset_n, y_offset_n);
+    /* draw_grid_wall is called initially to draw the grid on the background
+       drawing context.
+       If may also be called to draw on the goal drawing context (above the tile)
+       if we are editing the world **or** if RUR.state.visible_grid evaluates
+       to RUR.PATH_ONLY.
+       
+       If RUR.state.visible_grid is equal to RUR.PATH_ONLY
+       and a desired path named RUR.public.path has been defined, then we only
+       draw the grid on that desired path.
+
+       If RUR.state.visible_grid is true but not equal to RUR.PATH_ONLY 
+       OR if RUR.public.path is not defined 
+       (or is not used for something that can be treated as
+       as path below, raising an Error), 
+       then we draw the grid everywhere.
+     */
+
+    draw_only_path = false;
+    if (!edit && // always draw when edit
+        RUR.state.visible_grid == RUR.PATH_ONLY && 
+        RUR.public !== undefined && // should always be the case
+        RUR.public.path !== undefined) { // world creator appears to have created a desired path
+            draw_only_path = true;
+        } 
+
+    if (draw_only_path) {
+        try {
+            for (i=0; i < RUR.public.path.length; i++) {
+                x = RUR.public.path[i][0];
+                y = RUR.public.path[i][1];
+                // draw all four grid "walls" surrounding each position
+                draw_single_object(image_e, x, y, ctx, x_offset_e, y_offset_e);
+                draw_single_object(image_e, x-1, y, ctx, x_offset_e, y_offset_e);
+                draw_single_object(image_n, x, y, ctx, x_offset_n, y_offset_n);                
+                draw_single_object(image_n, x, y-1, ctx, x_offset_n, y_offset_n);                
+            }
+        } catch (e) {
+            draw_only_path = false;
         }
     }
-    if (RUR.SCALE == 0.5) {
+
+    if (!draw_only_path) { // no path or previous attempt failed
+        for (i = 1; i <= RUR.MAX_X; i++) {
+            for (j = 1; j <= RUR.MAX_Y; j++) {
+                // when drawing full grid, only need to draw East and North
+                // grid "wall" for each location
+                draw_single_object(image_e, i, j, ctx, x_offset_e, y_offset_e);
+                draw_single_object(image_n, i, j, ctx, x_offset_n, y_offset_n);
+            }
+        }
+    }
+
+
+    if (RUR.SCALE == 0.5 || !edit) {
         ctx.restore();
     }
 }
@@ -218,7 +296,7 @@ function draw_grid_walls (ctx, edit){
 function draw_border (ctx) {
     "use strict";
     var j, image, wall, x_offset, y_offset, world;
-    world = RUR.get_current_world()
+    world = RUR.get_current_world();
     wall = RUR.THINGS["east_border"];
     image = wall.image;
     x_offset = wall.x_offset;
@@ -709,6 +787,91 @@ function draw_info () {
                 // information drawn to right side of object
                 ctx.fillText(info, (i+0.8)*scale, Y - (j)*scale);
             }
+        }
+    }
+}
+
+
+function draw_correct_path (path, color) {
+    "use strict";
+    var i, x, y, offset, prev_x, prev_y, ctx = RUR.OBJECTS_CTX; // below RUR.TRACE_CTX
+    ctx.strokeStyle = color;
+    ctx.lineCap = "round";
+
+    if(RUR.get_current_world().small_tiles) {
+        offset = 12;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 2]);
+    } else {
+        offset = 25;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+    }
+
+    x = path[0][0] * RUR.WALL_LENGTH + offset;
+    y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    for (i=1; i < path.length; i++){
+        x = path[i][0] * RUR.WALL_LENGTH + offset;
+        y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
+        ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // draw arrows.
+    x = path[0][0] * RUR.WALL_LENGTH + offset;
+    y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
+    for (i=1; i < path.length; i++){
+        prev_x = x;
+        prev_y = y;
+        x = path[i][0] * RUR.WALL_LENGTH + offset;
+        y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
+        draw_arrow(x, y, prev_x, prev_y, ctx);
+    }
+}
+
+
+function draw_arrow(x, y, prev_x, prev_y, ctx) {
+    var len = ctx.lineWidth * 3;
+    ctx.beginPath();
+    if (x == prev_x) { // vertical arrow
+        y = (y + prev_y)/2; 
+        ctx.moveTo(x, y);
+        if (y > prev_y) {
+            ctx.lineTo(x-len, y-len);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x+len, y-len);
+            ctx.stroke();
+        } else {
+            ctx.lineTo(x-len, y+len);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x+len, y+len);
+            ctx.stroke();
+        }
+    } else {
+        x = (x + prev_x)/2;
+        ctx.moveTo(x, y);
+        if (x > prev_x) {
+            ctx.lineTo(x-len, y-len);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x-len, y+len);
+            ctx.stroke();
+        } else {
+            ctx.lineTo(x+len, y-len);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x+len, y+len);
+            ctx.stroke();
         }
     }
 }

@@ -1,6 +1,6 @@
 require("./../rur.js");
 require("./commands.js");
-require("./../world_set/add_robot.js");
+require("./../world_api/robot.js");
 
 /* Since Javascript is a dynamic language, a user or world creator could
     (possibly accidently) redefine a basic function, which could lead to some
@@ -68,6 +68,7 @@ RUR.reset_definitions_en = function () {
     window.remove_robots = RUR._remove_robots_;
     window.right_is_clear = RUR._right_is_clear_;
     window.set_max_nb_steps = RUR._set_max_nb_steps_;
+    window.set_trace_color = RUR._set_trace_color_;
     window.sound = RUR._sound_;
     window.take = RUR._take_;
     window.think = RUR._think_;

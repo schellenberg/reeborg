@@ -29,6 +29,7 @@ ui_en["triangle"] = en_to_en["triangle"] = "triangle";
 ui_en["tulip"] = en_to_en["tulip"] = "tulip";
 ui_en["bucket"] = en_to_en["bucket"] = "bucket";
 ui_en["bulb"] = en_to_en["bulb"] = "bulb";
+ui_en["bricks"] = en_to_en["bricks"] = "bricks";
 
 ui_en["mud"] = en_to_en["mud"] = "mud";
 ui_en["soil"] = en_to_en["soil"] = "soil";
@@ -37,6 +38,8 @@ ui_en["grass"] = en_to_en["grass"] = "grass";
 ui_en["gravel"] = en_to_en["gravel"] = "gravel";
 ui_en["ice"] = en_to_en["ice"] = "ice";
 ui_en["fire"] = en_to_en["fire"] = "fire";
+
+ui_en["infinite"] = "infinite number";
 
 ui_en["fence_right"] = en_to_en["fence_right"] = "fence_right";
 ui_en["fence_left"] = en_to_en["fence_left"] = "fence_left";
@@ -104,9 +107,9 @@ ui_en[" is not a valid value!"] = " is not a valid value!";
 ui_en["Enter number of objects desired at that location."] = "Click on world to set number <code>{obj}</code>.";
 ui_en["Objects found here:"] = "Objects found here:";
 ui_en["Description"] = "Description";
-ui_en["A robot located here carries no objects."] = "A robot located at {x},{y} carries no objects.";
+ui_en["A robot located here carries no objects."] = "A robot located at (x, y) = ({x}, {y}) carries no objects.";
 ui_en["Goal to achieve:"] = "Goal to achieve:";
-ui_en["A robot located here carries:"] = "A robot located at {x},{y} carries:";
+ui_en["A robot located here carries:"] = "A robot located at (x, y) = ({x}, {y}) carries:";
 ui_en["random location"] = "random location";
 ui_en["Enter number of objects to give to robot."] = "Enter number of <code>{obj}</code> to give to robot.";
 ui_en["Special information about this location:"] = "Special information about this location:";
@@ -201,6 +204,15 @@ ui_en["SAVE LIBRARY EXPLAIN"] = "Saves the content of the library in a file." + 
 ui_en["SAVE WORLD"] = "Save world to file";
 ui_en["SAVE WORLD EXPLAIN"] = "Saves the world (as a json object) to a file on your computer." + mac_user_save_files_en;
 
+ui_en["PROGRESS SECTION TITLE"] = "Keeping track of tasks solved";
+ui_en["PROGRESS EXPLAIN"] = "Tasks solved are marked with " + RUR.CHECKMARK +
+    "in the world selector and the information is saved in your browser. If you use a different browser, " +
+    "the tasks you have already solved using a different browser will not be shown. " +
+    "If you click on the save button below, a file named progress.json will be saved with the tasks solved " +
+    "recorded in the current browser. You can import this file in a different browser so that your progress can be updated.";
+ui_en["SAVE PROGRESS"] = "Save";
+ui_en["IMPORT PROGRESS"] = "Import";
+
 ui_en["ADD CONTENT TO WORLD"] = "Add content to world from selected items below.";
 ui_en["ADD BLOCKLY TEXT"] = "Code blocks";
 ui_en["ADD EDITOR TEXT"] = "Code in editor";
@@ -244,7 +256,6 @@ ui_en["EDIT WORLD"] = "Edit world";
 ui_en["EDIT WORLD EXPLAIN"] = "You can create your own world by editing the current one.";
 ui_en["PROGRAM IN EDITOR"] = "Program in editor";
 ui_en["PROGRAM IN BLOCKLY WORKSPACE"] = "Program in blockly workspace";
-ui_en["REVERSE STEP EXPLAIN"] = "Reverses the previous execution step.";
 ui_en["CONTACT"] = "(English/French only) Email:";
 ui_en["ISSUES"] = "Bug reports, suggestions, other issues, etc. (English/French only)";
 ui_en["FORUM"] = "Discussion forum (English/French only)";
@@ -333,3 +344,17 @@ ui_en["GIVE OBJECT EXPLAIN"] = "Choose a number of objects for the robot to carr
 ui_en["UPDATE BLOCKLY CONTENT"] = "This world has some default content for the blocks workspace. To replace the current blocks content, click on the button";
 ui_en["UPDATE BLOCKLY BUTTON"] = "Replace existing blocks";
 ui_en["Contents from World"] = "Contents from World";
+
+ui_en["WARNING: Do not change this comment."] = "WARNING: Do not change this comment.";
+ui_en["Library Code is below."] = "Library Code is below.";
+ui_en["No solution can be saved when using REPL (Py)."] = "No solution can be saved when using REPL (Py).";
+ui_en["No solution can be loaded when using REPL (Py)."] = "No solution can be loaded when using REPL (Py).";
+
+ui_en["You are not allowed to use <code>done</code> in this world!"] = "You are not allowed to use <code>done()</code> in this world!";
+ui_en["Execution ended before the <em>Post</em> code was executed."] = "Execution ended before the <em>Post</em> code was executed.";
+
+ui_en["Difficulty level"] = "Difficulty level";
+
+ui_en["Expected result"] = "Expected result";
+ui_en["Differences highlighted"] = "Differences highlighted";
+ui_en["Actual result"] = "Actual result";

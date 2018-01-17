@@ -4,10 +4,12 @@ html, body {
 
 body {
     font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size: 13pt;
 }
 
 /** Collecting all z-indices for easier maintenance */
 header                 {z-index: 100;}
+#container     {z-index: 0;} /* only used for turtle module*/
 #background-canvas     {z-index: 1;} /* 1 */
 #tiles-canvas          {z-index: 10;} /* 2 */
 #tiles-canvas-anim     {z-index: 11;} /* 3 */
@@ -34,7 +36,7 @@ ensure that it replaces #robot-anim-canvas in world_editor.js and canvas.js */
 #Reeborg-concludes     {z-index: 211;}
 #Reeborg-shouts        {z-index: 211;}
 #World-info            {z-index: 205;}
-#world-panel           {z-index: 120}
+#world-panel           {z-index: 120;}
 #editor-panel.active   {z-index: 200;}
 #keyboard-buttons ul li {z-index: 230;}
 
@@ -45,8 +47,6 @@ button:focus, a:focus {
 button[disabled] {
     background: #eee;
 }
-
-
 
 header {
     position: absolute;
@@ -83,7 +83,7 @@ h3 {
     color: #248;
 }
 
-canvas {
+canvas{
     position: absolute;
     top: 5px;
     border: 1px solid green;
@@ -91,6 +91,10 @@ canvas {
 
 .edit-canvas {
     position: relative;
+}
+
+.align-middle {
+    vertical-align: middle;
 }
 
 #tooltip {
@@ -109,12 +113,13 @@ canvas {
 }
 
 code {
-    font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', 'Monaco', Courier, monospace;
-    font-size: 12px;
+    font-family: 'Roboto Mono', 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', 'Monaco', Courier, monospace;
     font-weight: bold;
-    border: 1px solid green;
-    border-radius: 5px;
-    padding: 2px;
+    color: green;
+}
+
+pre.error {
+    color: darkred;
 }
 
 nav {
@@ -137,7 +142,8 @@ nav a:first-child {
 #highlight, #watch-variables-btn {
     height: 40px;
 }
-#highlight:disabled, #watch-variables-btn:disabled{
+#highlight:disabled, #watch-variables-btn:disabled, 
+#open-solution-btn:disabled, #save-solution-btn:disabled{
     display: none !important;
 }
 
@@ -149,11 +155,12 @@ button {
     background-color: #124;
 }
 
-a.left-link, a.right-link, button, a.fake_button {
+
+a.left-link, a.right-link, button, a.fake-button {
     font-size: 12pt;
     padding: 5px;
     text-decoration: none;
-    color: white;
+    color: white !important;
     border-top: 0;
     border-right: 1px solid rgba(0, 0, 0, .1);
     border-bottom: 0;
@@ -219,7 +226,12 @@ legend {
 .active-element {
     background-color: #124;
 }
+button.solution-button {
+    border: 1px solid #124;
+    background-color: white;
+}
 
+.automatic-description a.fake-button,
 .ui-tabs .ui-tabs-nav li,
 .blue-gradient,
 .left-link,
@@ -268,7 +280,7 @@ button.blue-gradient {
 
 .ui-tabs .ui-tabs-nav li:hover,
 button:hover:enabled,
-a.fake_button:hover,
+a.fake-button:hover,
 .green-gradient,
 a.left-link:hover,
 a.right-link:hover,
@@ -309,6 +321,11 @@ input.blue-gradient:hover {
     background-image: none;
 }
 
+.warning {
+    color: red;
+    text-shadow: 1px 1px 1px black;
+}
+
 .green-border {
     border-bottom: 4px solid #75a110;
 }
@@ -322,7 +339,7 @@ input.blue-gradient:hover {
     color: green;
 }
 
-li.success:after {
+li.success:after, p.success:after {
     content: url(../images/ok.png);
 }
 
@@ -331,7 +348,7 @@ li.success:after {
     color: #c80000;
 }
 
-li.failure:after {
+li.failure:after, p.failure:after {
     content: url(../images/not_ok.png);
 }
 
@@ -492,6 +509,16 @@ li.failure:after {
   padding: 1em;
 }
 
+.automatic-description a {
+    color: blue;
+}
+
+.grid-info {
+    background-color: cornsilk;
+    padding: 1em;
+    font-size: 75%;
+}
+
 #logo {
     font-size: 30px;
     font-weight: bold;
@@ -598,6 +625,9 @@ li.failure:after {
 #world-panel, #blockly-wrapper {
     width: 620px;
 }
+#world-panel {
+    background-color: white;
+}
 
 #editor-panel {
     width: 590px;
@@ -606,7 +636,7 @@ li.failure:after {
 #world-panel,
 #editor-panel, #blockly-wrapper {
     position: absolute;
-    margin-top: 32px;
+    margin-top: 37px;
     vertical-align: top;
 }
 
@@ -877,3 +907,54 @@ td {
     padding: 10px;
 }
 
+.difficulty {
+    margin: auto;
+}
+
+.difficulty > img {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+
+.difficulty1, .difficulty2, .difficulty3, .difficulty4 {
+  background-color: hsl(120, 100%, 40%);
+}
+
+.difficulty5 {
+  background: linear-gradient(
+    to top,
+    hsl(120, 100%, 40%),
+    hsl(54, 100%, 50%)
+    );
+}
+
+.difficulty6 {
+  background-color: hsl(54, 100%, 50%);
+}
+
+.difficulty7 {
+  background: linear-gradient(
+    to top,
+    hsl(54, 100%, 50%),
+    hsl(30, 100%, 50%)
+    );
+}
+
+.difficulty8 {
+  background-color: hsl(30, 100%, 50%);
+}
+
+.difficulty9 {
+  background: linear-gradient(
+    to top,
+    hsl(30, 100%, 50%),
+    hsl(0, 100%, 50%)
+    );
+}
+
+.difficulty10 {
+  background-color: hsl(0, 100%, 50%);
+}

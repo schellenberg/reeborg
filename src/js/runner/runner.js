@@ -116,8 +116,8 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
             message = response.message;
             other_info = response.other_info;
             error.name = response.error_name;
-            error.message = "<h3>" + error.name + "</h3><h4>" +
-                                    message + "</h4><p>" + other_info + '</p>';
+            error.message = "<h3>" + error.name + "</h3><p>" +
+                                    message + "</p><p>" + other_info + '</p>';
         } else {
             error.name = e.name;
             message = e.message;
@@ -132,8 +132,8 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
             RUR.record_frame("error", error);
         } else {
             RUR.show_feedback("#Reeborg-shouts",
-                                    "<h3>" + error.name + "</h3><h4>" +
-                                    message + "</h4><p>" + other_info + '</p>');
+                                    "<h3>" + error.name + "</h3><p>" +
+                                    message + "</p><p>" + other_info + '</p>');
             return true;
         }
     }
@@ -148,7 +148,7 @@ RUR.runner.eval_javascript = function (src) {
     pre_code = pre_code_editor.getValue();
     post_code = post_code_editor.getValue();
     RUR.reset_definitions();
-    src = pre_code + "\n" + src + "\n" + post_code;
+    src = pre_code + "\n" + src + "\nRUR.state.post_code_executed=true\n" + post_code;
     eval(src); // jshint ignore:line
 };
 
@@ -158,16 +158,16 @@ RUR.runner.eval_python = function (src) {
     var pre_code, post_code;
     RUR.reset_definitions();
     pre_code = pre_code_editor.getValue();
-    post_code = post_code_editor.getValue();
+    post_code = "\nRUR.state.post_code_executed=True\n" + post_code_editor.getValue();
     translate_python(src, RUR.state.highlight, RUR.state.watch_vars, pre_code, post_code);
 };
 
 RUR.runner.simplify_python_traceback = function(e) {
     "use strict";
-    var message, error_name, other_info, diagnostic;
+    var message, error_name, other_info, diagnostic, parts;
     other_info = '';
     if (e.reeborg_shouts === undefined) {
-        message = e.$message;
+        message = e.args[0];
         error_name = e.__name__;
         diagnostic = '';
         switch (error_name) {
@@ -180,15 +180,15 @@ RUR.runner.simplify_python_traceback = function(e) {
                         other_info += RUR.translate("<br>Perhaps you forgot to add parentheses ().");
                     } else {
                         console.log(e.args);
-                        try {
-                            other_info += e.args[4];
-                        } catch (e) {
-                            console.log("error in simplifying traceback: ", e);
-                        }
                     }
-                } catch (e) { // jshint ignore:line
+                    try {
+                        other_info = "<pre class='error'>" + e.args[4] + "</pre>" + other_info;
+                    } catch (e1) {
+                        console.log("error in simplifying traceback: ", e1);
+                    }
+                } catch (e2) { // jshint ignore:line
                     other_info = "I could not analyze this error; you might want to contact my programmer with a description of this problem.";
-                    console.log("error in simplifying traceback: ", e);
+                    console.log("error in simplifying traceback: ", e2);
                 }
                 break;
             case "IndentationError":
@@ -196,29 +196,35 @@ RUR.runner.simplify_python_traceback = function(e) {
                 try {
                     other_info = RUR.runner.find_line_number(e.args[4]);
                     if (e.args[4].indexOf("RUR.set_lineno_highlight([") == -1){
-                        other_info += "<br><code>" + e.args[4] + "</code>";
+                        other_info = "<pre class='error'>" + e.args[4] + "</pre>" + other_info;
                     } else if (RUR.state.highlight) {
                         other_info += "Try turning off syntax highlighting; if this fixes the problem, please file a bug.";
                     }
-                } catch (e) {  // jshint ignore:line
+                } catch (e1) {  // jshint ignore:line
                     if (RUR.state.highlight) {
                         other_info += "Try turning off syntax highlighting; if this fixes the problem, please file a bug.";
                     } else {
                         other_info = "I could not analyze this error; you might want to contact my programmer with a description of this problem.";
+                        other_info = "<pre class='error'>" + e.args[4] + "</pre>" + other_info;
                     }
                 }
                 break;
             case "NameError":
                 try {
-                    other_info = RUR.runner.find_line_number(message);
-                    other_info += RUR.translate("<br>Perhaps you misspelled a word or forgot to define a function or a variable.");
-                } catch (e) {  // jshint ignore:line
+                    parts = message.split("'");
+                    if (parts.length == 3 && parts[0] == "name " && parts[2] == " is not defined" ) {
+                        message = parts[1];
+                        other_info = RUR.runner.find_line_number(message);
+                        other_info += RUR.translate("<br>Perhaps you misspelled a word or forgot to define a function or a variable.");
+                    }
+                } catch (e1) {  // jshint ignore:line
                     other_info = "I could not analyze this error; you might want to contact my programmer.";
                 }
                 break;
             case "Internal Javascript error: SyntaxError":
             case "Internal Javascript error: TypeError":
                 error_name = "Invalid Python Code - " + error_name;
+                console.log(e.args);
                 message = '';
                 other_info = RUR.translate("I cannot help you with this problem.");
                 break;
@@ -243,7 +249,8 @@ RUR.runner.find_line_number = function(bad_code) {
         beginning of a program, it is more reliable to scan the source code
         for the offending code as identified by Brython and see if it occurs
         only once in the user's program */
-    var lines, found, i, lineno;
+
+    var lines, lineno;
     if (bad_code.indexOf("RUR.set_lineno_highlight([") != -1){
         bad_code = bad_code.replace("RUR.set_lineno_highlight([", "");
         lines = bad_code.split("]");
@@ -251,24 +258,12 @@ RUR.runner.find_line_number = function(bad_code) {
         return RUR.translate("Error found at or near line {number}.").supplant({number: lineno.toString()});
     }
     lines = editor.getValue().split("\n");
-    found = false;
-    lineno = false;
-    for (i=0; i<lines.length; i++) {
-        try {
-        } catch (e) {
-            return '';
+    for (lineno=0; lineno<lines.length; lineno++) {
+        if(lines[lineno].indexOf(bad_code) != -1){
+            return RUR.translate(
+                    "Error found at or near line {number}.").supplant(
+                        {number: (lineno+1).toString()});
         }
-         if(lines[i].indexOf(bad_code) != -1){
-            if (found){
-                return '';   // found the offending code twice; can not rely on this
-            } else {
-                found = true;
-                lineno = i+1;
-            }
-        }
-    }
-    if (lineno) {
-        return RUR.translate("Error found at or near line {number}.").supplant({number: lineno.toString()});
     }
     return '';
 };

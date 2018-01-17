@@ -28,8 +28,10 @@ RUR.storage._save_world = function (name){
     } else {
         RUR.storage.save_world(name);
     }
-    /* We make an assumption here that the onload code has not been run */
-    RUR.WORLD_BEFORE_ONLOAD = RUR.clone_world();
+    /* In editing world mode, the onload code should not have been run */
+    if (RUR.state.editing_world) {
+        RUR.WORLD_BEFORE_ONLOAD = RUR.clone_world();
+    }
 };
 
 RUR.storage.save_world = function (name){
@@ -47,8 +49,10 @@ RUR.storage.append_world_name = function (name){
     "use strict";
     var url = "user_world:"+ name;
     RUR.storage.appending_world_name_flag = true;
-    RUR.world_select.append_world({url:url, shortname:name, local_storage:true});
-    RUR.world_select.set_url(url);  // reload as updating select choices blanks the world.
+    RUR.world_selector.append_world({url:url, shortname:name, local_storage:true});
+    if (RUR.state.session_initialized){
+        RUR.world_selector.set_url(url);  // reload as updating select choices blanks the world.
+    }
     /* appends name to world selector and to list of possible worlds to delete */
     $('#delete-world h3').append(
         '<button class="blue-gradient inline-block" onclick="RUR.storage.delete_world(' +
@@ -63,12 +67,12 @@ RUR.storage.delete_world = function (name){
     $("select option[value='" + "user_world:" + name +"']").remove();
 
     try {
-        RUR.world_select.set_url(
-            RUR.world_select.url_from_shortname(
-                localStorage.getItem("world"))
+        RUR.world_selector.set_url(
+            RUR.world_selector.url_from_shortname(
+                localStorage.getItem("world_name"))
             );
     } catch (e) {
-        RUR.world_select.set_default();
+        RUR.world_selector.set_default();
     }
 
     for (i = localStorage.length - 1; i >= 0; i--) {

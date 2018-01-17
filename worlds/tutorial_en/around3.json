@@ -14,13 +14,14 @@
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 11,
+      "__id": 4,
       "possible_initial_positions": [
         [
           4,
           1
         ]
-      ]
+      ],
+      "model": "classic"
     }
   ],
   "walls": {
@@ -67,34 +68,34 @@
   "cols": 10,
   "tiles": {
     "1,1": [
-      "pale_grass"
+      "gravel"
     ],
     "1,2": [
-      "pale_grass"
+      "gravel"
     ],
     "1,3": [
-      "pale_grass"
+      "gravel"
     ],
     "1,4": [
-      "pale_grass"
+      "gravel"
     ],
     "1,5": [
-      "pale_grass"
+      "gravel"
     ],
     "1,6": [
-      "pale_grass"
+      "gravel"
     ],
     "1,7": [
-      "pale_grass"
+      "gravel"
     ],
     "1,8": [
-      "pale_grass"
+      "gravel"
     ],
     "1,9": [
-      "pale_grass"
+      "gravel"
     ],
     "1,10": [
-      "pale_grass"
+      "gravel"
     ],
     "2,2": [
       "grass"
@@ -121,10 +122,10 @@
       "grass"
     ],
     "2,10": [
-      "pale_grass"
+      "gravel"
     ],
     "3,1": [
-      "pale_grass"
+      "gravel"
     ],
     "3,2": [
       "grass"
@@ -151,10 +152,10 @@
       "grass"
     ],
     "3,10": [
-      "pale_grass"
+      "gravel"
     ],
     "4,2": [
-      "pale_grass"
+      "gravel"
     ],
     "4,3": [
       "grass"
@@ -178,13 +179,13 @@
       "grass"
     ],
     "4,10": [
-      "pale_grass"
+      "gravel"
     ],
     "5,1": [
       "bricks"
     ],
     "5,2": [
-      "pale_grass"
+      "gravel"
     ],
     "5,3": [
       "grass"
@@ -193,28 +194,28 @@
       "grass"
     ],
     "5,5": [
-      "pale_grass"
+      "gravel"
     ],
     "5,6": [
-      "pale_grass"
+      "gravel"
     ],
     "5,7": [
-      "pale_grass"
+      "gravel"
     ],
     "5,8": [
-      "pale_grass"
+      "gravel"
     ],
     "5,9": [
-      "pale_grass"
+      "gravel"
     ],
     "5,10": [
-      "pale_grass"
+      "gravel"
     ],
     "6,1": [
-      "pale_grass"
+      "gravel"
     ],
     "6,2": [
-      "pale_grass"
+      "gravel"
     ],
     "6,3": [
       "grass"
@@ -223,7 +224,7 @@
       "grass"
     ],
     "6,5": [
-      "pale_grass"
+      "gravel"
     ],
     "6,6": [
       "water"
@@ -241,7 +242,7 @@
       "water"
     ],
     "7,1": [
-      "pale_grass"
+      "gravel"
     ],
     "7,2": [
       "grass"
@@ -253,7 +254,7 @@
       "grass"
     ],
     "7,5": [
-      "pale_grass"
+      "gravel"
     ],
     "7,6": [
       "water"
@@ -271,7 +272,7 @@
       "water"
     ],
     "8,1": [
-      "pale_grass"
+      "gravel"
     ],
     "8,2": [
       "grass"
@@ -283,7 +284,7 @@
       "grass"
     ],
     "8,5": [
-      "pale_grass"
+      "gravel"
     ],
     "8,6": [
       "water"
@@ -301,7 +302,7 @@
       "water"
     ],
     "9,1": [
-      "pale_grass"
+      "gravel"
     ],
     "9,2": [
       "grass"
@@ -313,7 +314,7 @@
       "grass"
     ],
     "9,5": [
-      "pale_grass"
+      "gravel"
     ],
     "9,6": [
       "water"
@@ -331,19 +332,19 @@
       "water"
     ],
     "10,1": [
-      "pale_grass"
+      "gravel"
     ],
     "10,2": [
-      "pale_grass"
+      "gravel"
     ],
     "10,3": [
-      "pale_grass"
+      "gravel"
     ],
     "10,4": [
-      "pale_grass"
+      "gravel"
     ],
     "10,5": [
-      "pale_grass"
+      "gravel"
     ],
     "10,6": [
       "water"
@@ -361,17 +362,50 @@
       "water"
     ],
     "2,1": [
-      "pale_grass"
+      "gravel"
     ],
     "4,1": [
-      "pale_grass"
+      "gravel"
     ]
   },
-  "description": "Have Reeborg go around the world in the\ncounter-clockwise direction once, and stop\nat its starting position. Reeborg must not\nstep on the dark green grass.<br>\n<img src=\"/src/images/around3.gif\">\n<br>\n\nHint: Reeborg carries some tokens; you only need to use one.<br>\nThis world has been designed to work only with Python.\n",
-  "onload": "RUR.onload_set_programming_language(\"python\")\n",
-  "pre": "_path_followed = []\nset_trace_color(\"black\")\ndef move():\n    r = default_robot()\n    RUR._move_()\n    _path_followed.append((r.body.x, r.body.y))\n",
-  "post": "\n_correct_path = [(4, 2), (5, 2), (6, 2), (6, 1), (7, 1), (8, 1), \n             (9, 1), (10, 1), (10, 2), (10, 3), (10, 4), \n             (10, 5), (9, 5), (8, 5), (7, 5), (6, 5), (5, 5), \n             (5, 6), (5, 7), (5, 8), (5, 9), (5, 10), (4, 10), \n             (3, 10), (2, 10), (1, 10), (1, 9), (1, 8), (1, 7), \n             (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), \n             (2, 1), (3, 1), (4, 1)]\n\n\nif _correct_path != _path_followed:\n    raise ReeborgError(\"Reeborg did not follow the required path.\")\n    \nraise ReeborgOK(\"Well done!\")",
-  "objects": {
-    "1,1": {}
-  }
+  "description": [
+    "<h1>Around the world</h1>",
+    "Have Reeborg go around the world in the",
+    "counter-clockwise direction once, and stop",
+    "at its starting position. Reeborg must not",
+    "step on the grass. The correct path is",
+    "shown by the dashed white line.<br><br>",
+    "<em>Hint: Reeborg carries some tokens; you only need to use one.</em>",
+    "<br><br>Your program should also work for worlds <b>Around 1</b> and <b>Around 2</b>.",
+    "<h3>What you need to know</h3>",
+    "<ul><li>The functions <code>move()</code>, <code>turn_left()</code>, and <code>put()</code>.</li>",
+    "<li>Either the test <code>front_is_clear()</code> or <code>wall_in_front()</code>,",
+    "<code>right_is_clear()</code> or <code>wall_on_right()</code>, and <code>object_here()</code>.</li>",
+    "<li>How to use a <code>while</code> loop and <code>if/else</code> statements.</li>",
+    "<li>It might be useful to know how to use the negation of a test (<code>not</code> in Python).</li></ul>",
+    "Ideally, you should define your own functions to make your program easier to understand.",
+    "DIFFICULTY4",
+    ""
+  ],
+  "onload": [
+    "RUR.public['path'] = [[4,1], [4,2], [5,2], [6,2], [6,1],",
+    "    [7,1], [8,1], [9,1], [10,1], [10,2], [10,3], [10,4],",
+    "    [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [5,6],",
+    "    [5,7], [5,8], [5,9], [5,10], [4,10], [3,10], [2,10],",
+    "    [1,10], [1,9], [1,8], [1,7], [1,6], [1,5], [1,4],",
+    "    [1,3], [1,2], [1,1], [2,1], [3,1], [4,1]];",
+    "RUR.show_path(RUR.public['path'], 'white');",
+    "RUR.state.visible_grid = RUR.PATH_ONLY;",
+    ""
+  ],
+  "pre": [
+    "RUR.show_path()", 
+    ""
+  ],
+  "post": [
+    "RUR.check_path(RUR.public['path'],",
+    "     {'failure':\"Reeborg did not follow the required path.\", ",
+    "      'success': 'Well done!',",
+    "      'show_path': 'true', 'color': 'white'})"
+    ]
 }
