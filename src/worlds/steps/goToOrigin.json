@@ -2,12 +2,6 @@
   "walls": {},
   "small_tiles": false,
   "goal": {
-    "possible_final_positions": [
-      [
-        1,
-        1
-      ]
-    ],
     "position": {
       "image": "racing_flag",
       "x": 1,
