@@ -177,7 +177,9 @@ RUR.state.editing_world = false;
 
 RUR.state.extra_code_visible = false;
 
-RUR.state.user_progress = {}; // keep track of user progress (worlds solved).
+RUR.state.user_progress = {}; // names of worlds solved
+RUR.state.user_solutions = {}; // programs for worlds solved
+
 
 // This will keep track of the current font size if changed by the user.
 RUR.state.editors_font_size = undefined;
@@ -267,9 +269,9 @@ RUR.reset_pre_run_defaults = function () {
 
     RUR.current_maze = undefined; // special namespace when mazes are created
 
-    RUR.state.done_executed = false; // Used to monitor if done is used 
-                                     // preventing the evaluation of Post code.
-    RUR.state.post_code_executed = false;
+    RUR.state.done_executed = 0; // = false in both Python and Javascript
+                                // Used to monitor if done is used 
+                                // preventing the evaluation of Post code.
 
     RUR.print_cache = '';  // capturing the standard output from a user's program.
 
