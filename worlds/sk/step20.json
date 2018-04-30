@@ -416,7 +416,7 @@
     ]
   },
   "description": [
-    "<h1>Rain is falling.</h1>",
+    "<h1>Rain is falling</h1>",
     "<p>It's raining hard.  Water is going to come",
     "    in through the open windows unless",
     "    Reeborg closes them.</p>",
