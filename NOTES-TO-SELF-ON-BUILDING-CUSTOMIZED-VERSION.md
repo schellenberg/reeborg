@@ -27,3 +27,6 @@ http://reeborg.ca/reeborg.html?lang=en&mode=python&collection=worlds/menus/sk_me
 
 where the URL is replaced by:
 https://sk-opentexts.github.io/reeborg?
+
+
+Reminder to self -- should also remove the Clicky calls...
