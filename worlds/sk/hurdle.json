@@ -23,7 +23,11 @@
     }
   ],
   "description": [
-    "Reeborg needs to jump the hurdles! They can be any height, and any width. The finish location will always be at (12, 1)."
+    "<h1>Last Hurdle Jump</h1>",
+    "<p>Reeborg is jumping hurdles again. This time, the ",
+    "hurdles can be of any height, and of any width. Reeborg ",
+    "needs to keep jumping over them until it gets to the flag.</p>",
+    "DIFFICULTY3"
   ],
   "small_tiles": false,
   "rows": 10,
@@ -53,7 +57,7 @@
     "",
     "think(0)",
     "",
-    "width = 12 #random.randrange(8, 14)",
+    "width = random.randrange(8, 14)",
     "height = 10 #random.randrange(8, 14)",
     "RUR.set_world_size(width, height+1)",
     "",
