@@ -26,7 +26,7 @@
     "Reeborg needs to jump the hurdles! They can be any height, and any width. The finish location will always be at (12, 1)."
   ],
   "small_tiles": false,
-  "rows": 13,
+  "rows": 10,
   "cols": 12,
   "background_image": "worlds/images/stadium.png",
   "post": [
@@ -55,7 +55,7 @@
     "",
     "width = 12 #random.randrange(8, 14)",
     "height = 10 #random.randrange(8, 14)",
-    "# RUR.set_world_size(width, height+1)",
+    "RUR.set_world_size(width, height+1)",
     "",
     "RUR.public['path'] = [[1, 1]]",
     "RUR.set_model('light blue')   # robot with better contrast",
