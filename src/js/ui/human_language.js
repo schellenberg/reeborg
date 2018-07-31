@@ -98,14 +98,14 @@ function update_home_url (lang) {
     switch(lang) {
         case "fr":
         case "fr-en":
-            $("#logo").prop("href", "index_fr.html");
+            $("#logo").prop("href", "#");
             break;
         case "en":
         case "en-fr":
-            $("#logo").prop("href", "index_en.html");
+            $("#logo").prop("href", "#");
             break;
         default:
-            $("#logo").prop("href", "index_en.html");
+            $("#logo").prop("href", "#");
     }
 }
 
