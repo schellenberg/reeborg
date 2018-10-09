@@ -1,0 +1,71 @@
+{
+  "robots": [
+    {
+      "x": 1,
+      "y": 1,
+      "_prev_x": 1,
+      "_prev_y": 1,
+      "_prev_orientation": 0,
+      "objects": {},
+      "_orientation": 0,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 4,
+      "model": "classic",
+      "possible_initial_positions": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "description": [
+    "A simple, empty world, ready for Reeborg to explore."
+  ],
+  "small_tiles": false,
+  "rows": 1,
+  "cols": 10,
+  "objects": {
+    "1,1": {
+      "carrot": 3
+    },
+    "2,1": {
+      "carrot": 3
+    },
+    "3,1": {
+      "carrot": 3
+    },
+    "4,1": {
+      "carrot": 3
+    },
+    "5,1": {
+      "carrot": 3
+    },
+    "6,1": {
+      "carrot": 3
+    },
+    "7,1": {
+      "carrot": 3
+    },
+    "8,1": {
+      "carrot": 3
+    },
+    "9,1": {
+      "carrot": 3
+    },
+    "10,1": {
+      "carrot": 3
+    }
+  },
+  "editor": [
+    "repeat 8:",
+    "    if object_here():",
+    "        repeat 2:",
+    "            take()",
+    "    move()"
+  ]
+}

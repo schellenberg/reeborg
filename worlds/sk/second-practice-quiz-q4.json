@@ -1,0 +1,92 @@
+{
+  "robots": [
+    {
+      "x": 1,
+      "y": 1,
+      "_prev_x": 1,
+      "_prev_y": 1,
+      "_prev_orientation": 0,
+      "objects": {
+        "carrot": 99
+      },
+      "_orientation": 0,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 8,
+      "model": "classic",
+      "possible_initial_positions": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "description": [
+    "A simple, empty world, ready for Reeborg to explore."
+  ],
+  "small_tiles": false,
+  "rows": 4,
+  "cols": 4,
+  "tiles": {
+    "2,3": [
+      "water"
+    ],
+    "3,3": [
+      "water"
+    ],
+    "3,2": [
+      "water"
+    ],
+    "2,2": [
+      "water"
+    ],
+    "1,4": [
+      "pale_grass"
+    ],
+    "1,3": [
+      "pale_grass"
+    ],
+    "1,2": [
+      "pale_grass"
+    ],
+    "1,1": [
+      "pale_grass"
+    ],
+    "2,1": [
+      "pale_grass"
+    ],
+    "3,1": [
+      "pale_grass"
+    ],
+    "4,1": [
+      "pale_grass"
+    ],
+    "4,2": [
+      "pale_grass"
+    ],
+    "4,3": [
+      "pale_grass"
+    ],
+    "4,4": [
+      "pale_grass"
+    ],
+    "3,4": [
+      "pale_grass"
+    ],
+    "2,4": [
+      "pale_grass"
+    ]
+  },
+  "editor": [
+    "repeat 7:",
+    "    if front_is_clear():",
+    "        move()",
+    "    else:",
+    "        turn_left()",
+    "        put()"
+  ]
+}
