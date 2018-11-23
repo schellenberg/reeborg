@@ -1,6 +1,24 @@
 About Building a Custom Version of Reeborg's World
 ===================================================
 
+When I updated this Reeborg instance in Nov, 2018
+--------------------------------------------------
+
+- copied everything over from the main Reeborg repo, replacing any duplicate files
+- renamed reeborg.html to be index.html
+- searched through the new index.html and:
+    - removed clicky.js calls (near the bottom of the page)
+    - removed together.js (in a few places, just search for together)
+    - removed class and href from a id="logo" in the header tag
+    - changed RUR.DEFAULT_MENU_EN to be 
+        RUR.DEFAULT_MENU_EN = '/worlds/menus/sk_menu.json';
+        RUR.DEFAULT_MENU_FR = '/worlds/menus/sk_menu_fr.json';
+
+
+
+Old Changes (none of this should be required for me anymore)
+=============================================================
+
 Changes from the 'normal' Reeborg's world repo:
 ------------------------------------------------
 

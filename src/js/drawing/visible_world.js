@@ -25,7 +25,7 @@ RUR.vis_world.refresh_world_edited = function () {
 
 RUR.set_world_size = function (max_x, max_y) {
     "use strict";
-    var height, width, canvas, ctx, world;
+    var height, width, canvas, world;
     set_scale();
 
     if (max_x !== undefined && max_y !== undefined) {
@@ -295,8 +295,7 @@ function draw_grid_walls (ctx, edit){
 
 function draw_border (ctx) {
     "use strict";
-    var j, image, wall, x_offset, y_offset, world;
-    world = RUR.get_current_world();
+    var j, image, wall, x_offset, y_offset;
     wall = RUR.THINGS["east_border"];
     image = wall.image;
     x_offset = wall.x_offset;
@@ -526,7 +525,7 @@ function draw_animated_images (){
 
 function draw_anim (objects, ctx) {
     "use strict";
-    var i, j, i_j, coords, flag, k, n, image, obj, obj_here, elem,
+    var i, j, i_j, coords, flag, k, n, obj, obj_here,
         recording_state, remove_flag, images_to_remove=[];
 
     flag = false;
@@ -560,17 +559,17 @@ function draw_anim (objects, ctx) {
         }
     }
 
+    // removing object normally result in the recording of a
+    // frame since we normally want the display to be updated
+    // to reflect the removal. Here, we are updating the display,
+    // and we do not want to trigger new frames recording: at this
+    // stage, we are playing back the recorded frames.
+    recording_state = RUR.state.do_not_record;
+    RUR.state.do_not_record = true;
     for (k=0; k < images_to_remove.length; k++){
-        // removing object normally result in the recording of a
-        // frame since we normally want the display to be updated
-        // to reflect the removal. Here, we are updating the display,
-        // and we do not want to trigger new frames recording: at this
-        // stage, we are playing back the recorded frames.
-        recording_state = RUR.state.do_not_record;
-        RUR.state.do_not_record = true;
         __remove_animated_object(images_to_remove[k]);
-        RUR.state.do_not_record = false;
     }
+    RUR.state.do_not_record = recording_state;
     return flag;
 }
 
@@ -620,8 +619,7 @@ function draw_coloured_tile (colour, i, j, ctx) {
 }
 
 function draw_single_object (image, i, j, ctx, x_offset, y_offset) {
-    var x, y, offset=RUR.WALL_THICKNESS/2, grid_size=RUR.WALL_LENGTH,
-        world = RUR.get_current_world();
+    var x, y, offset=RUR.WALL_THICKNESS/2, grid_size=RUR.WALL_LENGTH;
     if (x_offset === undefined) {
         x_offset = 0;
     }
@@ -678,7 +676,7 @@ function compile_info () {
     // compiles the information about objects and goal found at each
     // grid location, so that we can determine what should be
     // drawn - if anything.
-    var coords, obj, quantity, world = RUR.get_current_world();
+    var world = RUR.get_current_world();
     RUR.vis_world.information = {};
     RUR.vis_world.goal_information = {};
     RUR.vis_world.goal_present = false;
@@ -743,7 +741,7 @@ function compile_partial_info (objects, information, type){
 
 function draw_info () {
     var i, j, coords, keys, key, info, ctx;
-    var scale = RUR.WALL_LENGTH, Y = RUR.HEIGHT, text_width;
+    var scale = RUR.WALL_LENGTH, Y = RUR.HEIGHT;
 
     if (RUR.state.do_not_draw_info) {
         return;
@@ -766,7 +764,6 @@ function draw_info () {
             j = parseInt(coords[1], 10);
             info = RUR.vis_world.information[coords][1];
             if (i <= RUR.MAX_X && j <= RUR.MAX_Y){
-                text_width = ctx.measureText(info).width/2;
                 ctx.fillStyle = RUR.vis_world.information[coords][2];
                 // information drawn to left side of object
                 ctx.fillText(info, (i+0.2)*scale, Y - (j)*scale);
@@ -782,7 +779,6 @@ function draw_info () {
             j = parseInt(coords[1], 10);
             info = RUR.vis_world.goal_information[coords][1];
             if (i <= RUR.MAX_X && j <= RUR.MAX_Y){
-                text_width = ctx.measureText(info).width/2;
                 ctx.fillStyle = RUR.vis_world.goal_information[coords][2];
                 // information drawn to right side of object
                 ctx.fillText(info, (i+0.8)*scale, Y - (j)*scale);
@@ -794,34 +790,66 @@ function draw_info () {
 
 function draw_correct_path (path, color) {
     "use strict";
-    var i, x, y, offset, prev_x, prev_y, ctx = RUR.OBJECTS_CTX; // below RUR.TRACE_CTX
+    var i, x, y, arrow_offset, offset, prev_x, prev_y, ctx = RUR.OBJECTS_CTX; // below RUR.TRACE_CTX
+    var grid_x, grid_y, prev_grid_x, prev_grid_y, current_segment, segments = new Set();
     ctx.strokeStyle = color;
     ctx.lineCap = "round";
 
     if(RUR.get_current_world().small_tiles) {
         offset = 12;
+        arrow_offset = 5;
         ctx.lineWidth = 1;
         ctx.setLineDash([2, 2]);
     } else {
         offset = 25;
-        ctx.lineWidth = 2;
+        arrow_offset = 8;
+        ctx.lineWidth = 1;
         ctx.setLineDash([4, 4]);
     }
+    grid_x = path[0][0];
+    grid_y = path[0][1];
 
-    x = path[0][0] * RUR.WALL_LENGTH + offset;
-    y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
+    x = grid_x * RUR.WALL_LENGTH + offset;
+    y = RUR.HEIGHT - (grid_y + 1) * RUR.WALL_LENGTH + offset;
 
     ctx.beginPath();
     ctx.moveTo(x, y);
+    prev_grid_x = grid_x;
+    prev_grid_y = grid_y;
+
+
     for (i=1; i < path.length; i++){
-        x = path[i][0] * RUR.WALL_LENGTH + offset;
-        y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
-        ctx.lineTo(x, y);
+        grid_x = path[i][0];
+        grid_y = path[i][1];
+        x = grid_x * RUR.WALL_LENGTH + offset;
+        y = RUR.HEIGHT - (grid_y + 1) * RUR.WALL_LENGTH + offset;
+        // We need to avoid redrawing over a previously drawn dashed path
+        // as this messes up the dash pattern.
+        // We first create string that identify uniquely any path segment, irrespective of
+        // the direction in which it is traversed
+        if (grid_x < prev_grid_x) {
+            current_segment = grid_x +"," + prev_grid_x + "," + grid_y + "," + grid_y;
+        } else if (grid_x > prev_grid_x) {
+            current_segment = prev_grid_x +"," + grid_x + "," + grid_y + "," + grid_y;
+        } else if (grid_y < prev_grid_y) {
+            current_segment = grid_x +"," + grid_x + "," + grid_y + "," + prev_grid_y;            
+        } else {
+            current_segment = grid_x +"," + grid_x + "," + prev_grid_y + "," + grid_y;            
+        }
+        if (segments.has(current_segment)) {
+            ctx.moveTo(x, y)
+        } else {
+            ctx.lineTo(x, y);
+            segments.add(current_segment);
+        }
+        prev_grid_x = grid_x;
+        prev_grid_y = grid_y;
     }
     ctx.stroke();
     ctx.setLineDash([]);
 
     // draw arrows.
+    ctx.lineWidth = 1;
     x = path[0][0] * RUR.WALL_LENGTH + offset;
     y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
     for (i=1; i < path.length; i++){
@@ -829,49 +857,81 @@ function draw_correct_path (path, color) {
         prev_y = y;
         x = path[i][0] * RUR.WALL_LENGTH + offset;
         y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
-        draw_arrow(x, y, prev_x, prev_y, ctx);
+        draw_arrow(x, y, prev_x, prev_y, ctx, arrow_offset);
     }
 }
 
 
-function draw_arrow(x, y, prev_x, prev_y, ctx) {
-    var len = ctx.lineWidth * 3;
+function draw_arrow(x, y, prev_x, prev_y, ctx, arrow_offset) {
+    var len = ctx.lineWidth * 4;
     ctx.beginPath();
     if (x == prev_x) { // vertical arrow
-        y = (y + prev_y)/2; 
-        ctx.moveTo(x, y);
         if (y > prev_y) {
+            x -= arrow_offset;
+        } else {
+            x += arrow_offset;
+        }
+        y = (y + prev_y)/2; 
+        if (y > prev_y) {
+            y += arrow_offset;
+            ctx.moveTo(x, y);
             ctx.lineTo(x-len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y-len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y - 2*arrow_offset);
+            ctx.stroke();            
         } else {
+            y -= arrow_offset;
+            ctx.moveTo(x, y);            
             ctx.lineTo(x-len, y+len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y + 2*arrow_offset);
+            ctx.stroke();              
         }
     } else {
-        x = (x + prev_x)/2;
-        ctx.moveTo(x, y);
         if (x > prev_x) {
+            y += arrow_offset;
+        } else {
+            y -= arrow_offset;
+        }
+        x = (x + prev_x)/2;
+        if (x > prev_x) {
+            x += arrow_offset;
+            ctx.moveTo(x, y);            
             ctx.lineTo(x-len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x-len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x - 2* arrow_offset, y);
+            ctx.stroke();  
         } else {
+            x -= arrow_offset
+            ctx.moveTo(x, y);
             ctx.lineTo(x+len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 2* arrow_offset, y);
+            ctx.stroke();              
         }
     }
 }

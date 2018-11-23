@@ -10,9 +10,9 @@
   <link rel="shortcut icon" href="src/images/favicon.ico" type="image/icon">
   <link rel="icon" href="src/images/favicon.ico" type="image/icon">
   <link defer href="src/css/jquery-ui.custom.min.css" rel="stylesheet">
-  <!--online<link defer href='http://fonts.googleapis.com/css?family=Roboto+Mono:700' rel='stylesheet' type='text/css'>/online-->
+  <!--online--><link defer href='http://fonts.googleapis.com/css?family=Roboto+Mono:700' rel='stylesheet' type='text/css'><!--/online-->
 
-   <!--offline--> <style>
+   <!--offline <style>
   @font-face {
     font-family: 'Roboto Mono';
     font-weight: 700;
@@ -26,10 +26,10 @@
         url('offline/roboto_mono/fonts/Roboto-Mono-700/Roboto-Mono-700.ttf') format('truetype'),
         url('offline/roboto_mono/fonts/Roboto-Mono-700/Roboto-Mono-700.svg#RobotoMono') format('svg');
   }
-  </style> <!--/offline-->
+  </style> /offline-->
 
-  <!--offline--> <link rel="stylesheet" href="offline/codemirror-5.8.0/lib/codemirror.css"> <!--/offline-->
-  <!--online<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.css">/online-->
+  <!--offline <link rel="stylesheet" href="offline/codemirror-5.8.0/lib/codemirror.css"> /offline-->
+  <!--online--><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.css"><!--/online-->
   <link defer rel="stylesheet" href="src/css/reeborg_world2.css">
   <!-- load after codemirror.css -->
   <title>Reeborg's World</title>
@@ -37,11 +37,12 @@
     var RUR = {};
     RUR.DEFAULT_MENU_EN = '/worlds/menus/sk_menu.json';
     RUR.DEFAULT_MENU_FR = '/worlds/menus/sk_menu_fr.json';
+    RUR.DEFAULT_MENU_CN = '/worlds/menus/select_collection_cn.json';
   </script>
 </head>
 <body>
   <header class="blue-gradient green-border">
-    <a id="logo" href="" class="fake-button">
+    <a id="logo">
       <img src="src/images/robot_e.png" alt="logo">
       <span id="site-name"></span>
     </a>
@@ -63,11 +64,14 @@
       <select id="human-language" title="Select UI language">
         <option value="en">English</option>
         <option value="fr">Français</option>
+        <option value="cn">中文</option>
         <optgroup label="------------">
           <option class="select-mixed" value="ko-en">한국어 + en</option>
           <option class="select-mixed" value="pl-en">Polski + en</option>
           <option class="select-mixed" value="fr-en">Français + en</option>
+          <option class="select-mixed" value="cn-en">中文 + en</option>
           <option class="select-mixed" value="en-fr">English + fr</option>
+          <option class="select-mixed" value="en-cn">English + 中文</option>
         </optgroup>
       </select>
     </div>
@@ -103,6 +107,7 @@
       <block type="_if_"></block>
       <block type="_if_else_"></block>
       <block type="_if_else_if_else_"></block>
+      <block type="controls_if"></block>
     </category>
     <category id="blockly-conditions" name="Conditions" colour="240">
       <block type="_at_goal_"></block>
@@ -565,35 +570,35 @@
       </li>
     </ul>
   </div>
-    <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.3.4/www/src/brython.js"></script>/online-->
-  <!--offline--> <script type="text/javascript" src="offline/brython/brython.js"></script> <!--/offline-->
+    <!--online--><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.6.2/brython.min.js"></script><!--/online-->
+  <!--offline <script type="text/javascript" src="offline/brython/brython.js"></script> /offline-->
 
-  <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.3.4/www/src/brython_stdlib.js"></script>/online-->
-  <!--offline--> <script type="text/javascript" src="offline/brython/brython_stdlib.js"></script> <!--/offline-->
+  <!--online--><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.6.2/brython_stdlib.js"></script><!--/online-->
+  <!--offline <script type="text/javascript" src="offline/brython/brython_stdlib.js"></script> /offline-->
 
-  <!--offline--> <script type="text/javascript" src="offline/jquery-2.1.0/jquery.min.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/jquery-2.1.0/jquery.min.js"></script> /offline-->
+  <!--online--><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/jqueryui-1.10.4/jquery-ui.min.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/jqueryui-1.10.4/jquery-ui.min.js"></script> /offline-->
+  <!--online--><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/lib/codemirror.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/lib/codemirror.js"></script> /offline-->
+  <!--online--><script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/javascript/javascript.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/javascript/javascript.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/mode/javascript/javascript.js"></script> /offline-->
+  <!--online--><script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/javascript/javascript.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/xml/xml.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/xml/xml.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/mode/xml/xml.js"></script> /offline-->
+  <!--online--><script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/xml/xml.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/css/css.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/css/css.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/mode/css/css.js"></script> /offline-->
+  <!--online--><script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/css/css.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/htmlmixed/htmlmixed.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/htmlmixed/htmlmixed.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/mode/htmlmixed/htmlmixed.js"></script> /offline-->
+  <!--online--><script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/htmlmixed/htmlmixed.min.js"></script><!--/online-->
 
-  <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/python/python.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/python/python.min.js"></script>/online-->
+  <!--offline <script type="text/javascript" src="offline/codemirror-5.8.0/mode/python/python.js"></script> /offline-->
+  <!--online--><script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/python/python.min.js"></script><!--/online-->
 
   <script type="text/javascript" src="src/blockly/blockly_compressed.js"></script>
   <script type="text/javascript" src="src/blockly/blocks_compressed.js"></script>
@@ -601,17 +606,14 @@
   <script type="text/javascript" src="src/blockly_msg/en.js"></script>
   <script type="text/javascript" src="src/blockly_msg/fr.js"></script>
   <script type="text/javascript" src="src/blockly_msg/ko.js"></script>
+  <script type="text/javascript" src="src/blockly_msg/cn.js"></script>
   <script type="text/javascript" defer src="src/blockly/python_compressed.js"></script>
 
   <script type="text/javascript" src="build/reeborg.js" defer></script>
   <script type="text/python3" src="src/python/init_reeborg.py"></script>
   <script defer type="text/javascript" src="src/libraries/filesaver.js"></script>
   <script defer type="text/javascript" src="src/libraries/diff_match_patch_uncompressed.js"></script>
-  <script>
-    TogetherJSConfig_cloneClicks = true;
-  </script>
-
-  <!--online<script defer type="text/javascript" src="https://togetherjs.com/togetherjs-min.js"></script>/online-->
+  
 
   <div id="more-menus" title="Additional options" style="display:none">
     <h3 id="help"></h3>
@@ -680,10 +682,6 @@
       <span id="load-blockly-text"></span>
     </p>
     <hr>
-
-    <!--online<p><button id="togetherjs" class="blue-gradient" onclick="TogetherJS(this); return false;"></button>/online-->
-    <!--online<span id="togetherjs-text"></span></p><hr>/online-->
-    <!--offline--> Offline version: TogetherJS disabled. <!--/offline-->
 
     <h3 id="python-only"></h3>
     <div id="python-additional-menu">
@@ -979,6 +977,5 @@
       <button id="kbd-redo" class="blue-gradient">REDO</button>
     </div>
   </div>
-
 </body>
 </html>

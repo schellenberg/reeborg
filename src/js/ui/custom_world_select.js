@@ -9,7 +9,7 @@ RUR.custom_world_select = {};
 
 RUR.custom_world_select.make = function (contents) {  // aka RUR._MakeCustomMenu_
     "use strict";
-    var i, url, last_menu;
+    var i;
 
     RUR.state.creating_menu = true;
     RUR.world_selector.empty_menu();
@@ -58,6 +58,11 @@ RUR.make_default_menu = function(language) {
         case 'en-fr':
             RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_FR);
             RUR.initial_defaults.initial_menu = RUR.BASE_URL + RUR.DEFAULT_MENU_FR;
+            break;
+        case 'cn':
+        case 'en-cn':
+            RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_CN);
+            RUR.initial_defaults.initial_menu = RUR.BASE_URL + RUR.DEFAULT_MENU_CN;
             break;
         default: 
             RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_EN);

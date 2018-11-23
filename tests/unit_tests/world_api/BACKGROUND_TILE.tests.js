@@ -82,7 +82,6 @@ test('adding and removing known solid object', function (assert) {
 });
 
 test('adding two and removing one tile', function (assert) {
-    var identical = require("../../../src/js/utils/identical.js").identical;
     require("../../../src/js/world_api/background_tile.js");
     assert.plan(2);
     RUR.CURRENT_WORLD = RUR.create_empty_world();
@@ -101,6 +100,7 @@ test('is/add/remove background_tiles', function (assert) {
     assert.plan(6);
     RUR.CURRENT_WORLD = RUR.create_empty_world();
     RUR.KNOWN_THINGS = ['thing'];    original_world = clone(RUR.CURRENT_WORLD);
+    RUR.untranslated['thing'] = true;
     assert.ok(RUR.CURRENT_WORLD.tiles === undefined, "confirm that key is not present initially.");
     assert.ok(RUR.is_background_tile("thing", 2, 3)===false, "start with no background_tiles.");
     RUR.add_background_tile("thing", 2, 3);
