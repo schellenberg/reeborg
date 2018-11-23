@@ -13,7 +13,7 @@ When I updated this Reeborg instance in Nov, 2018
     - changed RUR.DEFAULT_MENU_EN to be 
         RUR.DEFAULT_MENU_EN = '/worlds/menus/sk_menu.json';
         RUR.DEFAULT_MENU_FR = '/worlds/menus/sk_menu_fr.json';
-
+    - replaced all calls to CDNs to use https instead of http (since I'm hosting it on a server using https, so any http calls will be blocked)
 
 
 Old Changes (none of this should be required for me anymore)
