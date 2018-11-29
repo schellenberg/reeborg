@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 require("./../rur.js");
 require("./../world_api/things.js");
 
@@ -321,7 +321,7 @@ add_fence("fence_double");
 add_fence("fence_vertical");
 
 
-},{"./../rur.js":38,"./../world_api/background_tile.js":69,"./../world_api/bridges.js":70,"./../world_api/objects.js":74,"./../world_api/obstacles.js":75,"./../world_api/pushables.js":76,"./../world_api/things.js":78}],2:[function(require,module,exports){
+},{"./../rur.js":39,"./../world_api/background_tile.js":70,"./../world_api/bridges.js":71,"./../world_api/objects.js":75,"./../world_api/obstacles.js":76,"./../world_api/pushables.js":77,"./../world_api/things.js":79}],2:[function(require,module,exports){
 /* Dialog used by the Interactive world editor to add objects to the world.
 */
 
@@ -372,7 +372,7 @@ add_object_form = dialog_add_object.find("form").on("submit", function( event ) 
     set_nb_object();
 });
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10,"./../rur.js":38,"./../world_api/objects.js":74}],3:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10,"./../rur.js":39,"./../world_api/objects.js":75}],3:[function(require,module,exports){
 
 require("./../libs/jquery.ui.dialog.minmax.js");
 require("./../rur.js");
@@ -436,7 +436,7 @@ $(document).ready( function () {
 
 });
 
-},{"./../../lang/msg.js":85,"./../libs/jquery.ui.dialog.minmax.js":17,"./../rur.js":38}],4:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../libs/jquery.ui.dialog.minmax.js":17,"./../rur.js":39}],4:[function(require,module,exports){
 require("./../rur.js");
 require("./../programming_api/exceptions.js");
 require("./../utils/key_exist.js");
@@ -478,7 +478,7 @@ give_object = function () {
     give_number_result = parseInt($("#input-give-number").val(), 10);
     unlimited_number_result = $("#unlimited-number").prop("checked");
     if (unlimited_number_result){
-        query = Infinity;
+        query = "infinite";
     } else {
         query = give_number_result;
     }
@@ -520,7 +520,9 @@ RUR.give_object_to_robot = function (obj, nb, robot) {
     RUR.utils.ensure_key_for_obj_exists(robot, "objects");
 
     _nb = RUR.utils.filterInt(nb); // required for the menu-driven world editor
-    if (_nb >= 0) {
+    if (_nb == "infinite") {
+        robot.objects[obj] = _nb;
+    } else if (_nb >= 0) {
         if (_nb !== 0) {
             robot.objects[obj] = _nb;
         } else if (robot.objects[obj] !== undefined) {
@@ -531,7 +533,7 @@ RUR.give_object_to_robot = function (obj, nb, robot) {
     }
 };
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10,"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../utils/validator.js":66}],5:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10,"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../utils/validator.js":67}],5:[function(require,module,exports){
 require("./../drawing/visible_world.js");
 require("./../world_api/objects.js");
 require("./../rur.js");
@@ -579,7 +581,7 @@ goal_objects_form = dialog_goal_object.find("form").on("submit", function( event
     goal_objects();
 });
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10,"./../rur.js":38,"./../world_api/objects.js":74}],6:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10,"./../rur.js":39,"./../world_api/objects.js":75}],6:[function(require,module,exports){
 require("./../drawing/visible_world.js");
 var msg = require("./../../lang/msg.js");
 
@@ -618,7 +620,7 @@ select_colour = function () {
     RUR.vis_world.draw_all();
 };
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10}],7:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10}],7:[function(require,module,exports){
 require("./../drawing/visible_world.js");
 var msg = require("./../../lang/msg.js");
 var dialog;
@@ -656,7 +658,7 @@ set_background_image = function () {
     dialog.dialog("close");
 };
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10}],8:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10}],8:[function(require,module,exports){
 require("./../rur.js");
 require("./../drawing/visible_world.js"); // for RUR.set_world_size
 
@@ -783,7 +785,7 @@ set_dimension_form = RUR.dialog_set_dimensions.find("form").on("submit", functio
     set_dimension();
 });
 
-},{"./../../lang/msg.js":85,"./../drawing/visible_world.js":10,"./../rur.js":38}],9:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../drawing/visible_world.js":10,"./../rur.js":39}],9:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../utils/validator.js");
@@ -1272,7 +1274,7 @@ RUR.show_all_robots = function () {
 };
 
 
-},{"./../../lang/msg.js":85,"./../rur.js":38,"./../utils/validator.js":66}],10:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../rur.js":39,"./../utils/validator.js":67}],10:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../world_api/things.js"); // why ?
@@ -2069,34 +2071,66 @@ function draw_info () {
 
 function draw_correct_path (path, color) {
     "use strict";
-    var i, x, y, offset, prev_x, prev_y, ctx = RUR.OBJECTS_CTX; // below RUR.TRACE_CTX
+    var i, x, y, arrow_offset, offset, prev_x, prev_y, ctx = RUR.OBJECTS_CTX; // below RUR.TRACE_CTX
+    var grid_x, grid_y, prev_grid_x, prev_grid_y, current_segment, segments = new Set();
     ctx.strokeStyle = color;
     ctx.lineCap = "round";
 
     if(RUR.get_current_world().small_tiles) {
         offset = 12;
+        arrow_offset = 5;
         ctx.lineWidth = 1;
         ctx.setLineDash([2, 2]);
     } else {
         offset = 25;
-        ctx.lineWidth = 2;
+        arrow_offset = 8;
+        ctx.lineWidth = 1;
         ctx.setLineDash([4, 4]);
     }
+    grid_x = path[0][0];
+    grid_y = path[0][1];
 
-    x = path[0][0] * RUR.WALL_LENGTH + offset;
-    y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
+    x = grid_x * RUR.WALL_LENGTH + offset;
+    y = RUR.HEIGHT - (grid_y + 1) * RUR.WALL_LENGTH + offset;
 
     ctx.beginPath();
     ctx.moveTo(x, y);
+    prev_grid_x = grid_x;
+    prev_grid_y = grid_y;
+
+
     for (i=1; i < path.length; i++){
-        x = path[i][0] * RUR.WALL_LENGTH + offset;
-        y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
-        ctx.lineTo(x, y);
+        grid_x = path[i][0];
+        grid_y = path[i][1];
+        x = grid_x * RUR.WALL_LENGTH + offset;
+        y = RUR.HEIGHT - (grid_y + 1) * RUR.WALL_LENGTH + offset;
+        // We need to avoid redrawing over a previously drawn dashed path
+        // as this messes up the dash pattern.
+        // We first create string that identify uniquely any path segment, irrespective of
+        // the direction in which it is traversed
+        if (grid_x < prev_grid_x) {
+            current_segment = grid_x +"," + prev_grid_x + "," + grid_y + "," + grid_y;
+        } else if (grid_x > prev_grid_x) {
+            current_segment = prev_grid_x +"," + grid_x + "," + grid_y + "," + grid_y;
+        } else if (grid_y < prev_grid_y) {
+            current_segment = grid_x +"," + grid_x + "," + grid_y + "," + prev_grid_y;            
+        } else {
+            current_segment = grid_x +"," + grid_x + "," + prev_grid_y + "," + grid_y;            
+        }
+        if (segments.has(current_segment)) {
+            ctx.moveTo(x, y)
+        } else {
+            ctx.lineTo(x, y);
+            segments.add(current_segment);
+        }
+        prev_grid_x = grid_x;
+        prev_grid_y = grid_y;
     }
     ctx.stroke();
     ctx.setLineDash([]);
 
     // draw arrows.
+    ctx.lineWidth = 1;
     x = path[0][0] * RUR.WALL_LENGTH + offset;
     y = RUR.HEIGHT - (path[0][1] + 1) * RUR.WALL_LENGTH + offset;
     for (i=1; i < path.length; i++){
@@ -2104,54 +2138,86 @@ function draw_correct_path (path, color) {
         prev_y = y;
         x = path[i][0] * RUR.WALL_LENGTH + offset;
         y = RUR.HEIGHT - (path[i][1] + 1) * RUR.WALL_LENGTH + offset;
-        draw_arrow(x, y, prev_x, prev_y, ctx);
+        draw_arrow(x, y, prev_x, prev_y, ctx, arrow_offset);
     }
 }
 
 
-function draw_arrow(x, y, prev_x, prev_y, ctx) {
-    var len = ctx.lineWidth * 3;
+function draw_arrow(x, y, prev_x, prev_y, ctx, arrow_offset) {
+    var len = ctx.lineWidth * 4;
     ctx.beginPath();
     if (x == prev_x) { // vertical arrow
-        y = (y + prev_y)/2; 
-        ctx.moveTo(x, y);
         if (y > prev_y) {
+            x -= arrow_offset;
+        } else {
+            x += arrow_offset;
+        }
+        y = (y + prev_y)/2; 
+        if (y > prev_y) {
+            y += arrow_offset;
+            ctx.moveTo(x, y);
             ctx.lineTo(x-len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y-len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y - 2*arrow_offset);
+            ctx.stroke();            
         } else {
+            y -= arrow_offset;
+            ctx.moveTo(x, y);            
             ctx.lineTo(x-len, y+len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y + 2*arrow_offset);
+            ctx.stroke();              
         }
     } else {
-        x = (x + prev_x)/2;
-        ctx.moveTo(x, y);
         if (x > prev_x) {
+            y += arrow_offset;
+        } else {
+            y -= arrow_offset;
+        }
+        x = (x + prev_x)/2;
+        if (x > prev_x) {
+            x += arrow_offset;
+            ctx.moveTo(x, y);            
             ctx.lineTo(x-len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x-len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x - 2* arrow_offset, y);
+            ctx.stroke();  
         } else {
+            x -= arrow_offset
+            ctx.moveTo(x, y);
             ctx.lineTo(x+len, y-len);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(x+len, y+len);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 2* arrow_offset, y);
+            ctx.stroke();              
         }
     }
 }
 
-},{"./../rur.js":38,"./../translator.js":40,"./../world_api/things.js":78}],11:[function(require,module,exports){
+},{"./../rur.js":39,"./../translator.js":41,"./../world_api/things.js":79}],11:[function(require,module,exports){
 function betterTab(cm) {
   if (cm.somethingSelected()) {
     cm.indentSelection("add");
@@ -2388,7 +2454,7 @@ $("#update-blockly-content-btn").on("click", function(evt) {
     }
 });
 
-},{"./../../lang/msg.js":85,"./../programming_api/blockly.js":25,"./../rur.js":38,"./create.js":11}],13:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../programming_api/blockly.js":25,"./../rur.js":39,"./create.js":11}],13:[function(require,module,exports){
 require("./../rur.js");
 //TODO: review requirements
 require("./../recorder/recorder.js");
@@ -2511,7 +2577,7 @@ RUR.load_world_file = function (url, shortname) {
     }
 };
 
-},{"./../editors/update.js":12,"./../permalink/permalink.js":21,"./../programming_api/exceptions.js":28,"./../recorder/recorder.js":33,"./../rur.js":38,"./../translator.js":40,"./../ui/stop.js":53,"./../ui/world_select.js":57,"./../utils/supplant.js":65,"./../world_utils/import_world.js":82}],14:[function(require,module,exports){
+},{"./../editors/update.js":12,"./../permalink/permalink.js":21,"./../programming_api/exceptions.js":28,"./../recorder/recorder.js":34,"./../rur.js":39,"./../translator.js":41,"./../ui/stop.js":54,"./../ui/world_select.js":58,"./../utils/supplant.js":66,"./../world_utils/import_world.js":83}],14:[function(require,module,exports){
 /*  Handler of special on-screen keyboard
 */
 
@@ -2934,7 +3000,7 @@ function init() {
     });
     msg.record_id("kbd-redo", "REDO");
 }
-},{"./../../lang/msg.js":85,"./../dialogs/create.js":3,"./../rur.js":38,"./../translator.js":40,"./../ui/editors_tabs.js":44}],15:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../dialogs/create.js":3,"./../rur.js":39,"./../translator.js":41,"./../ui/editors_tabs.js":45}],15:[function(require,module,exports){
 /* Menu driven world editor */
 require("./../rur.js");
 require("./../translator.js");
@@ -3505,7 +3571,7 @@ $(document).ready(function() {
     });
 });
 
-},{"./../default_tiles/tiles.js":1,"./../dialogs/add_object.js":2,"./../dialogs/create.js":3,"./../dialogs/give_object.js":4,"./../dialogs/goal_object.js":5,"./../dialogs/select_colour.js":6,"./../dialogs/set_background_image.js":7,"./../dialogs/set_dimensions.js":8,"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../editors/update.js":12,"./../listeners/canvas.js":18,"./../programming_api/exceptions.js":28,"./../robot/robot.js":35,"./../rur.js":38,"./../translator.js":40,"./../ui/edit_robot_menu.js":43,"./../utils/identical.js":59,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../world_api/objects.js":74,"./../world_api/robot.js":77,"./../world_api/walls.js":79,"./../world_get/world_get.js":80}],16:[function(require,module,exports){
+},{"./../default_tiles/tiles.js":1,"./../dialogs/add_object.js":2,"./../dialogs/create.js":3,"./../dialogs/give_object.js":4,"./../dialogs/goal_object.js":5,"./../dialogs/select_colour.js":6,"./../dialogs/set_background_image.js":7,"./../dialogs/set_dimensions.js":8,"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../editors/update.js":12,"./../listeners/canvas.js":18,"./../programming_api/exceptions.js":28,"./../robot/robot.js":36,"./../rur.js":39,"./../translator.js":41,"./../ui/edit_robot_menu.js":44,"./../utils/identical.js":60,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../world_api/objects.js":75,"./../world_api/robot.js":78,"./../world_api/walls.js":80,"./../world_get/world_get.js":81}],16:[function(require,module,exports){
 /* require this module that will automatically modify a global object*/
 require("./utils/cors.js");
 
@@ -3547,8 +3613,8 @@ require("./utils/path_utils.js");
 require("./world_api/decorative_objects.js");
 
 brython({debug:1, pythonpath:[RUR.BASE_URL + '/src/python']});
-if (__BRYTHON__.__MAGIC__ != "3.3.4") {
-    alert("Expecting Brython version 3.3.4 and got " + __BRYTHON__.__MAGIC__);
+if (__BRYTHON__.__MAGIC__ != "3.6.2") {
+    alert("Expecting Brython version 3.6.2 and got " + __BRYTHON__.__MAGIC__);
 }
 
 function probably_invalid(value) {
@@ -3714,17 +3780,23 @@ function set_initial_language(url_query) {
 
 function set_initial_menu(url_query) {
     var last_menu;
+    var last_lang;
 
-    RUR.state.current_menu = decodeURIComponent(url_query.queryKey.menu);
-    last_menu = localStorage.getItem("world_menu");
+    last_lang = localStorage.getItem("human_language");
+    if (last_lang !== RUR.state.human_language) {
+        RUR.state.current_menu = RUR.initial_defaults.initial_menu;
+    } else {
+        RUR.state.current_menu = decodeURIComponent(url_query.queryKey.menu);
+        last_menu = localStorage.getItem("world_menu");
 
-    if (probably_invalid(RUR.state.current_menu)) {
-        if (!probably_invalid(last_menu)) {
-            RUR.state.current_menu = last_menu;
-        } else {
-            RUR.state.current_menu = RUR.initial_defaults.initial_menu;
+        if (probably_invalid(RUR.state.current_menu)) {
+            if (!probably_invalid(last_menu)) {
+                RUR.state.current_menu = last_menu;
+            } else {
+                RUR.state.current_menu = RUR.initial_defaults.initial_menu;
+            }
         }
-    }   
+    }
 
     RUR.state.creating_menu = true;
     RUR.load_world_file(RUR.state.current_menu);
@@ -3751,7 +3823,7 @@ function _restore_blockly () {
     xml_text = localStorage.getItem("blockly");
     if (xml_text) {
         xml = Blockly.Xml.textToDom(xml_text);
-        Blockly.Xml.domToWorkspace(RUR.blockly.workspace, xml);
+        Blockly.Xml.domToWorkspace(xml, RUR.blockly.workspace);
     }
 }
 
@@ -3785,7 +3857,7 @@ function get_red_green () {
     }
 }
 
-},{"./file_io/file_io.js":13,"./gui_tools/world_editor.js":15,"./listeners/memorize_world.js":19,"./listeners/onclick.js":20,"./permalink/permalink.js":21,"./rur.js":38,"./storage/storage.js":39,"./ui/add_listeners.js":41,"./ui/keyboard_shortcuts.js":47,"./utils/cors.js":58,"./utils/maze.js":61,"./utils/path_utils.js":62,"./utils/search.js":64,"./world_api/decorative_objects.js":72}],17:[function(require,module,exports){
+},{"./file_io/file_io.js":13,"./gui_tools/world_editor.js":15,"./listeners/memorize_world.js":19,"./listeners/onclick.js":20,"./permalink/permalink.js":21,"./rur.js":39,"./storage/storage.js":40,"./ui/add_listeners.js":42,"./ui/keyboard_shortcuts.js":48,"./utils/cors.js":59,"./utils/maze.js":62,"./utils/path_utils.js":63,"./utils/search.js":65,"./world_api/decorative_objects.js":73}],17:[function(require,module,exports){
 /*
  * jQuery UI Dialog 1.8.16
  * w/ Minimize & Maximize Support
@@ -4922,7 +4994,7 @@ RUR.calculate_grid_position = function () {
     return [x, y];
 };
 
-},{"./../rur.js":38}],19:[function(require,module,exports){
+},{"./../rur.js":39}],19:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../storage/storage.js");
@@ -4986,7 +5058,7 @@ save_world = function () {
     $('#delete-world').show();
 };
 
-},{"./../../lang/msg.js":85,"./../rur.js":38,"./../storage/storage.js":39}],20:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../rur.js":39,"./../storage/storage.js":40}],20:[function(require,module,exports){
 /* Sets up what happens when the user clicks on various html elements.
 */
 
@@ -5242,7 +5314,7 @@ $(document).ready(function() {
 });
 
 
-},{"./../../lang/msg.js":85,"./../editors/create.js":11,"./../editors/update.js":12,"./../programming_api/blockly.js":25,"./../rur.js":38,"./../translator.js":40}],21:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../editors/create.js":11,"./../editors/update.js":12,"./../programming_api/blockly.js":25,"./../rur.js":39,"./../translator.js":41}],21:[function(require,module,exports){
 require("./../rur.js");
 
 function parseUri (str) {
@@ -5309,7 +5381,7 @@ RUR.permalink.update_URI = function() {
     window.history.pushState("dummy", "dummy", permalink);
 };
 
-},{"./../rur.js":38}],22:[function(require,module,exports){
+},{"./../rur.js":39}],22:[function(require,module,exports){
 require("../rur.js");
 require("../ui/stop.js");
 
@@ -5341,7 +5413,7 @@ function loop () {
     RUR._TIMER = setTimeout(loop, RUR.PLAYBACK_TIME_PER_FRAME);
 }
 
-},{"../rur.js":38,"../ui/stop.js":53}],23:[function(require,module,exports){
+},{"../rur.js":39,"../ui/stop.js":54}],23:[function(require,module,exports){
 
 RUR._play_sound = function (sound_id) {
     "use strict";
@@ -5384,7 +5456,7 @@ RUR.color_condition = 240;
 RUR.done_colour = "#aa0000";
 
 /****  Begin over-riding Blockly's default */
-Blockly.Blocks.loops.HUE = 230;
+Blockly.Msg["LOOPS_HUE"] = 230;
 
 Blockly.JavaScript['text_print'] = function(block) {
   var argument0 = Blockly.JavaScript.valueToCode(block, 'TEXT',
@@ -5417,12 +5489,6 @@ Blockly.JavaScript.INDENT = '    ';
 
 
 RUR.blockly.init = function () {
-
-    // override some defaults
-    Blockly.Msg.CONTROLS_IF_MSG_THEN = "    " + Blockly.Msg.CONTROLS_IF_MSG_THEN;
-    Blockly.Msg.CONTROLS_REPEAT_INPUT_DO = "    " + Blockly.Msg.CONTROLS_REPEAT_INPUT_DO;
-    Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO = "    " + Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO;
-
 
     Blockly.Blocks['_sound_'] = {
       init: function() {
@@ -5699,7 +5765,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("star"))
-            .appendField(new Blockly.FieldImage("/src/images/star.png", 15, 15, RUR.translate("star")));
+            .appendField(new Blockly.FieldImage("src/images/star.png", 15, 15, RUR.translate("star")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5715,7 +5781,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("token"))
-            .appendField(new Blockly.FieldImage("/src/images/token.png", 15, 15, RUR.translate("token")));
+            .appendField(new Blockly.FieldImage("src/images/token.png", 15, 15, RUR.translate("token")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5731,7 +5797,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("apple"))
-            .appendField(new Blockly.FieldImage("/src/images/apple.png", 15, 15, RUR.translate("apple")));
+            .appendField(new Blockly.FieldImage("src/images/apple.png", 15, 15, RUR.translate("apple")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5747,7 +5813,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("carrot"))
-            .appendField(new Blockly.FieldImage("/src/images/carrot.png", 15, 15, RUR.translate("carrot")));
+            .appendField(new Blockly.FieldImage("src/images/carrot.png", 15, 15, RUR.translate("carrot")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5763,7 +5829,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("dandelion"))
-            .appendField(new Blockly.FieldImage("/src/images/dandelion.png", 15, 15, RUR.translate("dandelion")));
+            .appendField(new Blockly.FieldImage("src/images/dandelion.png", 15, 15, RUR.translate("dandelion")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5779,7 +5845,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("daisy"))
-            .appendField(new Blockly.FieldImage("/src/images/daisy.png", 15, 15, RUR.translate("daisy")));
+            .appendField(new Blockly.FieldImage("src/images/daisy.png", 15, 15, RUR.translate("daisy")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5795,7 +5861,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("triangle"))
-            .appendField(new Blockly.FieldImage("/src/images/triangle.png", 15, 15, RUR.translate("triangle")));
+            .appendField(new Blockly.FieldImage("src/images/triangle.png", 15, 15, RUR.translate("triangle")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5811,7 +5877,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("square"))
-            .appendField(new Blockly.FieldImage("/src/images/square.png", 15, 15, RUR.translate("square")));
+            .appendField(new Blockly.FieldImage("src/images/square.png", 15, 15, RUR.translate("square")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5827,7 +5893,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("strawberry"))
-            .appendField(new Blockly.FieldImage("/src/images/strawberry.png", 15, 15, RUR.translate("strawberry")));
+            .appendField(new Blockly.FieldImage("src/images/strawberry.png", 15, 15, RUR.translate("strawberry")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5843,7 +5909,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("leaf"))
-            .appendField(new Blockly.FieldImage("/src/images/leaf.png", 15, 15, RUR.translate("leaf")));
+            .appendField(new Blockly.FieldImage("src/images/leaf.png", 15, 15, RUR.translate("leaf")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5859,7 +5925,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("banana"))
-            .appendField(new Blockly.FieldImage("/src/images/banana.png", 15, 15, RUR.translate("banana")));
+            .appendField(new Blockly.FieldImage("src/images/banana.png", 15, 15, RUR.translate("banana")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5875,7 +5941,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("tulip"))
-            .appendField(new Blockly.FieldImage("/src/images/tulip.png", 15, 15, RUR.translate("tulip")));
+            .appendField(new Blockly.FieldImage("src/images/tulip.png", 15, 15, RUR.translate("tulip")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -5891,7 +5957,7 @@ RUR.blockly.init = function () {
       init: function() {
         this.appendDummyInput()
             .appendField(RUR.translate("beeper"))
-            .appendField(new Blockly.FieldImage("/src/images/beeper0.png", 15, 15, RUR.translate("beeper")));
+            .appendField(new Blockly.FieldImage("src/images/beeper0.png", 15, 15, RUR.translate("beeper")));
         this.setOutput(true, "String");
         this.setColour(0);
       }
@@ -6111,10 +6177,10 @@ RUR.blockly.getValue = function () {
 RUR.blockly.setValue = function (xml_text) {
     var xml = Blockly.Xml.textToDom(xml_text);
     RUR.blockly.workspace.clear();
-    Blockly.Xml.domToWorkspace(RUR.blockly.workspace, xml);
+    Blockly.Xml.domToWorkspace(xml, RUR.blockly.workspace);
 };
 
-},{"./../rur.js":38,"./../translator.js":40}],26:[function(require,module,exports){
+},{"./../rur.js":39,"./../translator.js":41}],26:[function(require,module,exports){
 /*  The purpose of this module is to act as an intermediary between end user
 modules in various languages (e.g. reeborg_en.py or reeborg_fr.js) and
 the other modules.  This way, in theory, (most) refactoring can take place in the
@@ -6381,7 +6447,7 @@ RUR._UR.wall_on_right_ = function (robot) {
     return RUR.control.wall_on_right(robot);
 };
 
-},{"./../drawing/visible_robot.js":9,"./../editors/update.js":12,"./../file_io/file_io.js":13,"./../rur.js":38,"./../translator.js":40,"./../ui/custom_world_select.js":42,"./../world_api/background_tile.js":69,"./control.js":27,"./output.js":29}],27:[function(require,module,exports){
+},{"./../drawing/visible_robot.js":9,"./../editors/update.js":12,"./../file_io/file_io.js":13,"./../rur.js":39,"./../translator.js":41,"./../ui/custom_world_select.js":43,"./../world_api/background_tile.js":70,"./control.js":27,"./output.js":29}],27:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../translator.js");
@@ -6874,7 +6940,7 @@ RUR.control.sound = function(on){
     RUR.state.sound_on = true;
 };
 
-},{"./../default_tiles/tiles.js":1,"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../world_api/background_tile.js":69,"./../world_api/composition.js":71,"./../world_api/is_fatal.js":73,"./../world_api/obstacles.js":75,"./../world_api/pushables.js":76,"./../world_api/robot.js":77,"./../world_api/walls.js":79,"./../world_get/world_get.js":80,"./exceptions.js":28,"./output.js":29}],28:[function(require,module,exports){
+},{"./../default_tiles/tiles.js":1,"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../world_api/background_tile.js":70,"./../world_api/composition.js":72,"./../world_api/is_fatal.js":74,"./../world_api/obstacles.js":76,"./../world_api/pushables.js":77,"./../world_api/robot.js":78,"./../world_api/walls.js":80,"./../world_get/world_get.js":81,"./exceptions.js":28,"./output.js":29}],28:[function(require,module,exports){
 
 require("./../rur.js");
 
@@ -6888,10 +6954,12 @@ RUR.ReeborgError = function (message) {
             (RUR.state.evaluating_onload && RUR.state.onload_programming_language == "python")
         ){
         try { // see comment above
-            if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
-                return ReeborgError_en(message);
+            if (["en", "fr-en", "ko-en", "cn-en"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.ReeborgError_en)(message);
+            } else if (["cn", "en-cn"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.ReeborgError_cn)(message);
             } else {
-                return ReeborgError_fr(message);
+                return __BRYTHON__.$call(window.ReeborgError_fr)(message);                
             }
         } catch (e) {}
     }
@@ -6904,10 +6972,12 @@ RUR.ReeborgError = function (message) {
 RUR.ReeborgOK = function (message) {
     if (RUR.state.programming_language == "python"){
         try { // see comment above
-            if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
-                return ReeborgOK_en(message);
+            if (["en", "fr-en", "ko-en", "cn-en"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.ReeborgOK_en)(message);
+            } else if (["cn", "en-cn"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.ReeborgOK_cn)(message);
             } else {
-                return ReeborgOK_fr(message);
+                return __BRYTHON__.$call(window.ReeborgOK_fr)(message);
             }
         } catch (e) {}
     }
@@ -6920,10 +6990,12 @@ RUR.ReeborgOk = RUR.ReeborgOK; // preventing an annoying typo...
 
 RUR.WallCollisionError = function (message) {
     if (RUR.state.programming_language == "python"){
-        if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
-            return WallCollisionError_en(message);
+        if (["en", "fr-en", "ko-en", "cn-en"].indexOf(RUR.state.human_language) != -1) {
+            return __BRYTHON__.$call(window.WallCollisionError_en)(message);
+        } else if (["cn", "en-cn"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.WallCollisionError_cn)(message);
         } else {
-            return WallCollisionError_fr(message);
+            return __BRYTHON__.$call(window.WallCollisionError_fr)(message);            
         }
     }
     this.name = "WallCollisionError";
@@ -6934,10 +7006,12 @@ RUR.WallCollisionError = function (message) {
 
 RUR.MissingObjectError = function (message) {
     if (RUR.state.programming_language == "python"){
-        if (["en", "fr-en", "ko-en"].indexOf(RUR.state.human_language) != -1) {
-            return MissingObjectError_en(message);
+        if (["en", "fr-en", "ko-en", "cn-en"].indexOf(RUR.state.human_language) != -1) {
+            return __BRYTHON__.$call(window.MissingObjectError_en)(message);
+        } else if (["cn", "en-cn"].indexOf(RUR.state.human_language) != -1) {
+                return __BRYTHON__.$call(window.MissingObjectError_cn)(message);
         } else {
-            return MissingObjectError_fr(message);
+            return __BRYTHON__.$call(window.MissingObjectError_fr)(message);
         }
     }
     this.name = "MissingObjectError";
@@ -6945,7 +7019,7 @@ RUR.MissingObjectError = function (message) {
     this.reeborg_shouts = message;
 };
 
-},{"./../rur.js":38}],29:[function(require,module,exports){
+},{"./../rur.js":39}],29:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../translator.js");
@@ -7144,7 +7218,166 @@ RUR.show_detailed_diff = function (expected, actual, options) {
 
     return expected_section + actual_section + differences_section;
 };
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40}],30:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41}],30:[function(require,module,exports){
+require("./../rur.js");
+require("./commands.js");
+require("./../world_api/robot.js");
+
+/* See reeborg_en.js for an explanation about the purpose of this file. */
+
+RUR.reset_definitions_cn = function () {
+
+    window.到达目的地 = RUR._at_goal_;
+    window.砌墙 = RUR._build_wall_;
+    window.携带的物品 = RUR._carries_object_;
+    window.此处的颜色 = RUR._color_here_;
+    window.默认机器人 = function () {
+        var r = Object.create(机器人.prototype);
+        r.body = RUR._default_robot_body_();
+        return r;
+    };
+    window.help_js = RUR._inspect_;
+    window.完成 = RUR._done_;
+    window.前方通畅 = RUR._front_is_clear_;
+    window.面向北方 = RUR._is_facing_north_;
+    window.前进 = RUR._move_;
+    window.新机器人图片 = RUR._new_robot_images_;
+    window.此处的物品 = RUR._object_here_;
+    window.暂停 = RUR._pause_;
+    window.粉刷格子 = RUR._paint_square_;
+    window.此处的坐标 = function () {
+        var body = RUR._default_robot_body_();
+        return [body.x, body.y];
+    };
+    window.前方的坐标 = function () {
+        var pos, body = RUR._default_robot_body_();
+        pos = RUR.get_position_in_front(body);
+        if (RUR.is_valid_position(pos["x"], pos["y"])) {
+            return [pos["x"], pos["y"]];
+        } else {
+            return undefined;
+        }
+    };
+    window.打印超文本 = window.print_html = RUR._print_html_;
+    window.放下 = RUR._put_;
+    window.抛出 = RUR._toss_;
+    window.记录 = RUR._recording_;
+    window.移除机器人 = RUR._remove_robots_;
+    window.右侧通畅 = RUR._right_is_clear_;
+    window.设置最大步骤 = RUR._set_max_nb_steps_;
+    window.设置路径颜色 = RUR._set_trace_color_;
+    window.音效 = RUR._sound_;
+    window.拾起 = RUR._take_;
+    window.思考 = RUR._think_;
+    window.左转 = RUR._turn_left_;
+    window.前方有墙 = RUR._wall_in_front_;
+    window.右侧有墙 = RUR._wall_on_right_;
+    window.write = RUR._write_;
+    window.writeln = RUR._write_ln;
+    window.创建定制菜单 = RUR._MakeCustomMenu_;
+    window.世界 = RUR._World_;
+
+    // The following are for OOP programming in Javascript
+    var 机器人 = window.机器人 = function (x, y, orientation, tokens)  {
+        this.body = RUR.robot.create_robot(x, y, orientation, tokens);
+        RUR.add_robot(this.body);
+    };
+
+    机器人.prototype.到达目的地 = function () {
+        return RUR._UR.at_goal_(this.body);
+    };
+
+    机器人.prototype.砌墙 = function () {
+        RUR._UR.build_wall_(this.body);
+    };
+
+    机器人.prototype.携带的物品 = function () {
+        return RUR._UR.carries_object_(this.body);
+    };
+
+    机器人.prototype.此处的颜色 = function() {
+        return RUR._UR.color_here_(this.body);
+    };
+
+    机器人.prototype.前方通畅 = function () {
+        return RUR._UR.front_is_clear_(this.body);
+    };
+
+    机器人.prototype.面向北方 = function () {
+        return RUR._UR.is_facing_north_(this.body);
+    };
+
+    机器人.prototype.前进 = function () {
+        RUR._UR.move_(this.body);
+    };
+
+    机器人.prototype.此处的物品 = function (obj) {
+        return RUR._UR.object_here_(this.body, obj);
+    };
+
+    机器人.prototype.粉刷格子 = function (color) {
+        RUR._UR.paint_square_(color, this.body);
+    };
+
+    机器人.prototype.此处的坐标 = function () {
+        return [this.body.x, this.body.y];
+    };
+
+    机器人.prototype.前方的坐标 = function () {
+        pos = RUR.get_position_in_front(this.body);
+        if (RUR.is_valid_position(pos["x"], pos["y"])) {
+            return [pos["x"], pos["y"]];
+        }
+        else {
+            return undefined;
+        }
+    };
+
+    机器人.prototype.放下 = function () {
+        RUR._UR.put_(this.body);
+    };
+
+    机器人.prototype.抛出 = function () {
+        RUR._UR.toss_(this.body);
+    };
+
+    机器人.prototype.右侧通畅 = function () {
+        return RUR._UR.right_is_clear_(this.body);
+    };
+
+    机器人.prototype.设置模型 = function(model) {
+        RUR._UR.set_model_(this.body, model);
+    };
+
+    机器人.prototype.设置路径颜色 = function (robot, color) {
+        RUR._UR.set_trace_color_(robot, color);
+    };
+
+    机器人.prototype.设置路径风格 = function (robot, style) {
+        RUR._UR.set_trace_style_(robot, style);
+    };
+
+    机器人.prototype.拾起 = function () {
+        RUR._UR.take_(this.body);
+    };
+
+    机器人.prototype.左转 = function () {
+        RUR._UR.turn_left_(this.body);
+    };
+
+    机器人.prototype.前方有墙 = function () {
+        return RUR._UR.wall_in_front_(this.body);
+    };
+
+    机器人.prototype.右侧有墙 = function () {
+        return RUR._UR.wall_on_right_(this.body);
+    };
+
+    // make prototype available with known English name in RUR namespace
+    RUR.UsedRobot = 机器人;
+};
+
+},{"./../rur.js":39,"./../world_api/robot.js":78,"./commands.js":26}],31:[function(require,module,exports){
 require("./../rur.js");
 require("./commands.js");
 require("./../world_api/robot.js");
@@ -7339,7 +7572,7 @@ RUR.reset_definitions_en = function () {
     window.facing_north = is_facing_north;
 };
 
-},{"./../rur.js":38,"./../world_api/robot.js":77,"./commands.js":26}],31:[function(require,module,exports){
+},{"./../rur.js":39,"./../world_api/robot.js":78,"./commands.js":26}],32:[function(require,module,exports){
 require("./../rur.js");
 require("./commands.js");
 require("./../world_api/robot.js");
@@ -7519,7 +7752,7 @@ RUR.reset_definitions_fr = function () {
     RUR.UsedRobot = RobotUsage;
 };
 
-},{"./../rur.js":38,"./../world_api/robot.js":77,"./commands.js":26}],32:[function(require,module,exports){
+},{"./../rur.js":39,"./../world_api/robot.js":78,"./commands.js":26}],33:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../programming_api/exceptions.js");
@@ -7714,7 +7947,7 @@ will be ignored no matter what its content is.
 };
 
 
-},{"./../playback/show_immediate.js":24,"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../utils/identical.js":59,"./../utils/supplant.js":65}],33:[function(require,module,exports){
+},{"./../playback/show_immediate.js":24,"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../utils/identical.js":60,"./../utils/supplant.js":66}],34:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../drawing/visible_world.js");
@@ -8022,7 +8255,7 @@ RUR.rec.check_goal = function (frame) {
     return goal_status;
 };
 
-},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../playback/play_sound.js":23,"./../programming_api/exceptions.js":28,"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../ui/pause.js":48,"./../ui/stop.js":53,"./../ui/user_progress.js":56,"./../utils/identical.js":59,"./../world_get/world_get.js":80}],34:[function(require,module,exports){
+},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../playback/play_sound.js":23,"./../programming_api/exceptions.js":28,"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../ui/pause.js":49,"./../ui/stop.js":54,"./../ui/user_progress.js":57,"./../utils/identical.js":60,"./../world_get/world_get.js":81}],35:[function(require,module,exports){
 require("./../rur.js");
 require("./../editors/create.js"); // to ensure editor is defined
 require("./../world_utils/import_world.js"); // for process_onload
@@ -8061,7 +8294,7 @@ RUR.reset_world = function() {
     RUR.world_utils.process_onload();
 };
 
-},{"./../drawing/visible_robot.js":9,"./../editors/create.js":11,"./../rur.js":38,"./../world_utils/import_world.js":82}],35:[function(require,module,exports){
+},{"./../drawing/visible_robot.js":9,"./../editors/create.js":11,"./../rur.js":39,"./../world_utils/import_world.js":83}],36:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../translator.js");
@@ -8172,7 +8405,7 @@ assign_id = function () {
     return RUR.robot.__ID;
 };
 
-},{"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../translator.js":40,"./../utils/validator.js":66}],36:[function(require,module,exports){
+},{"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/validator.js":67}],37:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../translator.js");
@@ -8475,7 +8708,7 @@ RUR.runner.check_func_parentheses = function(line_of_code) {
     return false;  // no missing parentheses
 };
 
-},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../editors/update.js":12,"./../programming_api/blockly.js":25,"./../recorder/recorder.js":33,"./../rur.js":38,"./../translator.js":40,"./../utils/supplant.js":65,"./world_init.js":37}],37:[function(require,module,exports){
+},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../editors/update.js":12,"./../programming_api/blockly.js":25,"./../recorder/recorder.js":34,"./../rur.js":39,"./../translator.js":41,"./../utils/supplant.js":66,"./world_init.js":38}],38:[function(require,module,exports){
 require("./../drawing/visible_world.js");
 require("./../rur.js");
 
@@ -8600,7 +8833,7 @@ RUR.world_init = function () {
                               // small_tiles was set in the meantime
 };
 
-},{"./../drawing/visible_world.js":10,"./../rur.js":38}],38:[function(require,module,exports){
+},{"./../drawing/visible_world.js":10,"./../rur.js":39}],39:[function(require,module,exports){
 /** @namespace RUR
  * @desc The namespace reserved for all the Reeborg World methods.
  * All the method documented here **must** be prefixed by `RUR`.
@@ -9197,7 +9430,7 @@ RUR.hide_end_dialogs = function () {
         autoOpen:false, width:500, dialogClass: "alert",
         position:{my: "left", at: "left", of: $("#editor-panel")}});
 };
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /* This file documents methods used to save worlds to and retrieve them
    from a browser's local storage.
 
@@ -9284,14 +9517,16 @@ RUR.storage.delete_world = function (name){
     $('#delete-world').hide();
 };
 
-},{"./../rur.js":38,"./../translator.js":40,"./../ui/world_select.js":57}],40:[function(require,module,exports){
+},{"./../rur.js":39,"./../translator.js":41,"./../ui/world_select.js":58}],41:[function(require,module,exports){
 require("./rur.js");
 var uien = require("./../lang/ui_en.js"),
     uifr = require("./../lang/ui_fr.js"),
     uiko = require("./../lang/ui_ko.js"),
     uipl = require("./../lang/ui_pl.js"),
+    uicn = require("./../lang/ui_cn.js"),
     en = require("./../lang/en.js"),
-    fr = require("./../lang/fr.js");
+    fr = require("./../lang/fr.js"),
+    cn = require("./../lang/cn.js");
 
 RUR.ui_en = uien.ui_en;
 RUR.en_to_en = uien.en_to_en;
@@ -9301,11 +9536,14 @@ RUR.ui_ko = uiko.ui_ko;
 RUR.ko_to_en = uiko.ko_to_en;
 RUR.ui_pl = uipl.ui_pl;
 RUR.pl_to_en = uipl.pl_to_en;
+RUR.ui_cn = uicn.ui_cn;
+RUR.cn_to_en = uicn.cn_to_en;
 
 RUR.en = en.en;
 RUR.fr = fr.fr;
+RUR.cn = cn.cn;
 
-RUR.untranslated = {"en":true, "fr":true};
+RUR.untranslated = {"en":true, "fr":true, "cn":true};
 
 function merge_dicts (base, other) {
     var key;
@@ -9360,7 +9598,7 @@ RUR.translate_to_english = function (s) {
     }
 };
 
-},{"./../lang/en.js":83,"./../lang/fr.js":84,"./../lang/ui_en.js":86,"./../lang/ui_fr.js":87,"./../lang/ui_ko.js":88,"./../lang/ui_pl.js":89,"./rur.js":38}],41:[function(require,module,exports){
+},{"./../lang/cn.js":84,"./../lang/en.js":85,"./../lang/fr.js":86,"./../lang/ui_cn.js":88,"./../lang/ui_en.js":89,"./../lang/ui_fr.js":90,"./../lang/ui_ko.js":91,"./../lang/ui_pl.js":92,"./rur.js":39}],42:[function(require,module,exports){
 /* To ensure that all elements are found before listeners are added,
    we attempt to keep all of the relevant activation functions
    in this single module whose main function is only executed when
@@ -9467,7 +9705,7 @@ $(document).ready(function () {
 
     RUR.state.ui_ready = true;
 });
-},{"../rur.js":38,"./editors_tabs.js":44,"./frame_slider.js":45,"./human_language.js":46,"./pause.js":48,"./programming_mode.js":49,"./reload.js":50,"./run.js":51,"./step.js":52,"./stop.js":53,"./toggle_highlight.js":54,"./toggle_watch.js":55,"./world_select.js":57}],42:[function(require,module,exports){
+},{"../rur.js":39,"./editors_tabs.js":45,"./frame_slider.js":46,"./human_language.js":47,"./pause.js":49,"./programming_mode.js":50,"./reload.js":51,"./run.js":52,"./step.js":53,"./stop.js":54,"./toggle_highlight.js":55,"./toggle_watch.js":56,"./world_select.js":58}],43:[function(require,module,exports){
 /* In this module, we make it possible for a user to define their
    own world menu selection. We also include some default world menus. */
 require("./../rur.js");
@@ -9529,6 +9767,11 @@ RUR.make_default_menu = function(language) {
             RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_FR);
             RUR.initial_defaults.initial_menu = RUR.BASE_URL + RUR.DEFAULT_MENU_FR;
             break;
+        case 'cn':
+        case 'en-cn':
+            RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_CN);
+            RUR.initial_defaults.initial_menu = RUR.BASE_URL + RUR.DEFAULT_MENU_CN;
+            break;
         default: 
             RUR.load_world_file(RUR.BASE_URL + RUR.DEFAULT_MENU_EN);
             RUR.initial_defaults.initial_menu = RUR.BASE_URL + RUR.DEFAULT_MENU_EN;
@@ -9536,7 +9779,7 @@ RUR.make_default_menu = function(language) {
 
 };
 
-},{"./../rur.js":38,"./../storage/storage.js":39,"./../translator.js":40,"./world_select.js":57}],43:[function(require,module,exports){
+},{"./../rur.js":39,"./../storage/storage.js":40,"./../translator.js":41,"./world_select.js":58}],44:[function(require,module,exports){
 
 require("./../rur.js");
 
@@ -9551,7 +9794,7 @@ exports.toggle = function () {
     }
 };
 
-},{"./../rur.js":38}],44:[function(require,module,exports){
+},{"./../rur.js":39}],45:[function(require,module,exports){
 require("../rur.js");
 require("./../editors/create.js");
 var record_id = require("./../../lang/msg.js").record_id;
@@ -9703,7 +9946,7 @@ RUR.get_library_from_world = function () {
     return '';
 };
 
-},{"../rur.js":38,"./../../lang/msg.js":85,"./../editors/create.js":11}],45:[function(require,module,exports){
+},{"../rur.js":39,"./../../lang/msg.js":87,"./../editors/create.js":11}],46:[function(require,module,exports){
 require("./../rur.js");
 require("./../runner/runner.js");
 
@@ -9755,10 +9998,11 @@ RUR.listeners['frame-selector'] = function () {
     RUR.rec.display_frame();
 };
 
-},{"./../runner/runner.js":36,"./../rur.js":38}],46:[function(require,module,exports){
+},{"./../runner/runner.js":37,"./../rur.js":39}],47:[function(require,module,exports){
 require("./../rur.js");
 require("./../programming_api/reeborg_en.js");
 require("./../programming_api/reeborg_fr.js");
+require("./../programming_api/reeborg_cn.js");
 require("./../programming_api/blockly.js");
 require("./../ui/custom_world_select.js");
 require("./../permalink/permalink.js");
@@ -9794,6 +10038,13 @@ function update_translations(lang) {
             blockly_init_fr();
             $("#mixed-language-info").hide();
             break;
+        case "cn":
+            RUR.translation = RUR.ui_cn;
+            merge_dicts(RUR.translation, RUR.cn);
+            RUR.translation_to_english = RUR.cn_to_en;
+            blockly_init_cn();
+            $("#mixed-language-info").hide();
+            break;
         case "en-fr":
             RUR.translation = RUR.ui_en;
             merge_dicts(RUR.translation, RUR.fr);
@@ -9818,6 +10069,18 @@ function update_translations(lang) {
             RUR.translation_to_english = RUR.pl_to_en;
             blockly_init_en(); // to be updated
             break;
+        case "en-cn":
+            RUR.translation = RUR.ui_en;
+            merge_dicts(RUR.translation, RUR.cn);
+            RUR.translation_to_english = RUR.en_to_en;
+            blockly_init_cn();
+            break;
+        case "cn-en":
+            RUR.translation = RUR.ui_cn;
+            merge_dicts(RUR.translation, RUR.en);
+            RUR.translation_to_english = RUR.cn_to_en;
+            blockly_init_en();
+            break;
         default:
             RUR.translation = RUR.ui_en;
             merge_dicts(RUR.translation, RUR.en);
@@ -9836,6 +10099,12 @@ function update_commands (lang) {
             RUR.reset_definitions = RUR.reset_definitions_fr;
             RUR.library_name = "biblio";
             RUR.from_import = "from reeborg_fr import *";
+            break;
+        case "cn":
+        case "en-cn":
+            RUR.reset_definitions = RUR.reset_definitions_cn;
+            RUR.library_name = "库";
+            RUR.from_import = "from reeborg_cn import *";
             break;
         case "en":
         case "fr-en":
@@ -9857,6 +10126,10 @@ function update_home_url (lang) {
         case "fr":
         case "fr-en":
             $("#logo").prop("href", "index_fr.html");
+            break;
+        case "cn":
+        case "cn-en":
+            $("#logo").prop("href", "index_cn.html");
             break;
         case "en":
         case "en-fr":
@@ -9898,7 +10171,7 @@ RUR.listeners['human-language'] = function() {
     }
 };
 
-},{"./../../lang/msg.js":85,"./../permalink/permalink.js":21,"./../programming_api/blockly.js":25,"./../programming_api/reeborg_en.js":30,"./../programming_api/reeborg_fr.js":31,"./../rur.js":38,"./../ui/custom_world_select.js":42}],47:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../permalink/permalink.js":21,"./../programming_api/blockly.js":25,"./../programming_api/reeborg_cn.js":30,"./../programming_api/reeborg_en.js":31,"./../programming_api/reeborg_fr.js":32,"./../rur.js":39,"./../ui/custom_world_select.js":43}],48:[function(require,module,exports){
 /*  Original idea from Dan Schellenberg for saving and loading a solution
     using standard keyboard shortcuts using the world's name as base file name 
     and, if using Python, include the code from the library in the saved file.
@@ -10025,7 +10298,7 @@ $(document).ready(function() {
 
 
 
-},{"../listeners/onclick.js":20,"../rur.js":38,"./../translator.js":40,"./user_progress.js":56}],48:[function(require,module,exports){
+},{"../listeners/onclick.js":20,"../rur.js":39,"./../translator.js":41,"./user_progress.js":57}],49:[function(require,module,exports){
 require("./../rur.js");
 require("./../playback/play.js");
 var record_id = require("./../../lang/msg.js").record_id;
@@ -10049,7 +10322,7 @@ RUR.pause = function (ms) {
     }
 };
 
-},{"./../../lang/msg.js":85,"./../playback/play.js":22,"./../rur.js":38}],49:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../playback/play.js":22,"./../rur.js":39}],50:[function(require,module,exports){
 require("./../rur.js");
 require("./reload.js");
 require("./../gui_tools/special_keyboard.js");
@@ -10381,7 +10654,7 @@ function hide_console() {
     $("#reload2").hide();
 }
 
-},{"./../../lang/msg.js":85,"./../editors/create.js":11,"./../gui_tools/special_keyboard.js":14,"./../permalink/permalink.js":21,"./../rur.js":38,"./reload.js":50}],50:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../editors/create.js":11,"./../gui_tools/special_keyboard.js":14,"./../permalink/permalink.js":21,"./../rur.js":39,"./reload.js":51}],51:[function(require,module,exports){
 require("./../rur.js");
 require("./../recorder/reset.js");
 var record_id = require("./../../lang/msg.js").record_id;
@@ -10438,7 +10711,7 @@ RUR.reload2 = function() {
     }
 };
 
-},{"./../../lang/msg.js":85,"./../recorder/reset.js":34,"./../rur.js":38}],51:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../recorder/reset.js":35,"./../rur.js":39}],52:[function(require,module,exports){
 
 require("./../rur.js");
 require("./reload.js");
@@ -10480,7 +10753,7 @@ function run() {
     $("#thought").hide();
 }
 
-},{"./../../lang/msg.js":85,"./../playback/play.js":22,"./../runner/runner.js":36,"./../rur.js":38,"./reload.js":50}],52:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../playback/play.js":22,"./../runner/runner.js":37,"./../rur.js":39,"./reload.js":51}],53:[function(require,module,exports){
 
 require("./../rur.js");
 require("./../runner/runner.js");
@@ -10530,7 +10803,7 @@ RUR.listeners.reverse_step = function () {
 };
 
 
-},{"./../../lang/msg.js":85,"./../recorder/recorder.js":33,"./../runner/runner.js":36,"./../rur.js":38}],53:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../recorder/recorder.js":34,"./../runner/runner.js":37,"./../rur.js":39}],54:[function(require,module,exports){
 
 require("./../rur.js");
 var record_id = require("./../../lang/msg.js").record_id;
@@ -10547,7 +10820,7 @@ RUR.stop = function () {
     $("#reload").removeAttr("disabled");
 };
 
-},{"./../../lang/msg.js":85,"./../rur.js":38}],54:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../rur.js":39}],55:[function(require,module,exports){
 require("./../rur.js");
 var record_id = require("./../../lang/msg.js").record_id;
 
@@ -10565,7 +10838,7 @@ RUR.toggle_highlight = function () {  // keep part of RUR for Python
     }
 };
 
-},{"./../../lang/msg.js":85,"./../rur.js":38}],55:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../rur.js":39}],56:[function(require,module,exports){
 
 require("./../rur.js");
 var record_id = require("./../../lang/msg.js").record_id;
@@ -10588,7 +10861,7 @@ toggle_watch_variables = function () {
     }
 };
 
-},{"./../../lang/msg.js":85,"./../rur.js":38}],56:[function(require,module,exports){
+},{"./../../lang/msg.js":87,"./../rur.js":39}],57:[function(require,module,exports){
 /* Attempt at creating a way for users to follow their progress */
 
 require("../rur.js");
@@ -10997,7 +11270,7 @@ retrieve_user_solution = function () {
     }
 }
 
-},{"../listeners/onclick.js":20,"../rur.js":38,"../utils/key_exist.js":60,"./../../lang/msg.js":85,"./../translator.js":40}],57:[function(require,module,exports){
+},{"../listeners/onclick.js":20,"../rur.js":39,"../utils/key_exist.js":61,"./../../lang/msg.js":87,"./../translator.js":41}],58:[function(require,module,exports){
 /*  Purpose of this file: abstract handling of menus so that all jQuery
     dependencies (and possibly obscure syntax in some cases) can be pulled
     away from other files.
@@ -11130,7 +11403,7 @@ RUR.world_selector.append_world = function (arg) {
     }
 };
 
-},{"../permalink/permalink.js":21,"../rur.js":38,"./../../lang/msg.js":85,"./user_progress.js":56}],58:[function(require,module,exports){
+},{"../permalink/permalink.js":21,"../rur.js":39,"./../../lang/msg.js":87,"./user_progress.js":57}],59:[function(require,module,exports){
 ;
 // from http://stackoverflow.com/questions/15005500/loading-cross-domain-html-page-with-jquery-ajax
 
@@ -11142,7 +11415,7 @@ $.ajaxPrefilter( function (options) {
   }
 });
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /*
     Original script title: "Object.identical.js"; version 1.12
     Copyright (c) 2011, Chris O'Brien, prettycode.org
@@ -11193,7 +11466,7 @@ exports.identical = identical = function (a, b) {
 };
 
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 require("./../rur.js");
 /* short functions to make the rest of the code easier
    to read */
@@ -11216,7 +11489,7 @@ RUR.utils.ensure_key_for_array_exists = function(obj, key){
     }
 };
 
-},{"./../rur.js":38}],61:[function(require,module,exports){
+},{"./../rur.js":39}],62:[function(require,module,exports){
 require("./../rur.js");
 var random = require("./../utils/random.js");
 var shuffle = random.shuffle;
@@ -11715,7 +11988,7 @@ function walk(x, y, vis){
     }
 } // end recursive call, effectively backtrack
 
-},{"./../rur.js":38,"./../utils/random.js":63}],62:[function(require,module,exports){
+},{"./../rur.js":39,"./../utils/random.js":64}],63:[function(require,module,exports){
 /* Path utilities useful for world creators */
 
 require("./../rur.js");
@@ -11910,7 +12183,7 @@ RUR.show_path = function (path, color) {
     RUR.record_frame("show_path");
 };
 
-},{"./../drawing/visible_world.js":10,"./../rur.js":38,"./../ui/user_progress.js":56}],63:[function(require,module,exports){
+},{"./../drawing/visible_world.js":10,"./../rur.js":39,"./../ui/user_progress.js":57}],64:[function(require,module,exports){
 function randint(max) {
     // returns integer between 0 and max-1
     return Math.max(0, Math.floor(Math.random() * max));
@@ -11928,7 +12201,7 @@ exports.shuffle = function (arr) {
         arr[j] = temp;
     }
 }
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 require("./../rur.js");
 require("./../world_api/is_fatal.js");
 require("./../world_api/walls.js");
@@ -12338,7 +12611,7 @@ RUR.create_graph = function(options) {
     return new RUR.Graph(options);
 };
 
-},{"./../programming_api/commands.js":26,"./../rur.js":38,"./../utils/random.js":63,"./../world_api/is_fatal.js":73,"./../world_api/walls.js":79}],65:[function(require,module,exports){
+},{"./../programming_api/commands.js":26,"./../rur.js":39,"./../utils/random.js":64,"./../world_api/is_fatal.js":74,"./../world_api/walls.js":80}],66:[function(require,module,exports){
 // adapted from http://javascript.crockford.com/remedial.html
 
 // will modify a global object - no need to export anything.
@@ -12353,7 +12626,7 @@ String.prototype.supplant = function (o) {
     );
 };
 
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 
 require("./../rur.js");
 
@@ -12398,19 +12671,23 @@ RUR.is_valid_position = function(x, y) {
 https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/parseInt
 
 It is a stricter way than parseInt to extract integer values, and supports
-Infinity as a valid integer.
+the string "infinite" as a valid integer. We do not use the Javascript
+object Infinity as it cannot be serialized using JSON.
 
 See tests/unit_tests/utils/filterint.tests.js for tests illustrating sample
 uses.
 */
 RUR.utils.filterInt = function (value) {
-  if(/^(\-|\+)?([0-9]+|Infinity)$/.test(value)){
+  if (value == "infinite") {
+    return value;
+  }
+  if(/^(\-|\+)?([0-9]+)$/.test(value)){
     return Number(value);
   }
   return undefined;
 };
 
-},{"./../rur.js":38}],67:[function(require,module,exports){
+},{"./../rur.js":39}],68:[function(require,module,exports){
 /* This file contains methods used to create animated images by creating
    the appropriate selection sequence from a list of images.
  */
@@ -12517,7 +12794,7 @@ function _sync (obj, nb, id) {
     return obj["image" + RUR._SYNC_VALUE[obj.name]];
 }
 
-},{"./../rur.js":38}],68:[function(require,module,exports){
+},{"./../rur.js":39}],69:[function(require,module,exports){
 /*  This file contains generic methods called by more specialized methods
     used to create worlds.
 
@@ -12993,7 +13270,7 @@ RUR._set_nb_artefact = function (args) {
     }
 };
 
-},{"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../utils/validator.js":66}],69:[function(require,module,exports){
+},{"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../utils/validator.js":67}],70:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../utils/key_exist.js");
@@ -13256,7 +13533,7 @@ RUR.is_background_tile = function (name, x, y) {
 
 
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68}],70:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69}],71:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../utils/key_exist.js");
@@ -13401,7 +13678,7 @@ RUR.get_bridge_protections = function (x, y) {
     }
 };
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68}],71:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69}],72:[function(require,module,exports){
 require("./../rur.js");
 require("./../utils/key_exist.js");
 require("./../utils/validator.js");
@@ -13484,7 +13761,7 @@ function do_transformations (actions, x, y) {
     }
 }
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68,"./background_tile.js":69,"./obstacles.js":75}],72:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69,"./background_tile.js":70,"./obstacles.js":76}],73:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../utils/key_exist.js");
@@ -13608,7 +13885,7 @@ RUR.is_decorative_object = function (name, x, y) {
 };
 
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68}],73:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69}],74:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./background_tile.js");
@@ -13740,7 +14017,7 @@ RUR.is_detectable_position = function (x, y){
     return false;
 };
 
-},{"./../rur.js":38,"./../translator.js":40,"./background_tile.js":69,"./bridges.js":70,"./obstacles.js":75}],74:[function(require,module,exports){
+},{"./../rur.js":39,"./../translator.js":41,"./background_tile.js":70,"./bridges.js":71,"./obstacles.js":76}],75:[function(require,module,exports){
 require("./../rur.js");
 require("./../utils/key_exist.js");
 require("./../utils/validator.js");
@@ -13952,7 +14229,7 @@ RUR.add_object_at_position = function(name, x, y, number) { // Vincent Maille's 
     RUR.add_object(name, x, y, {number:number});
 };
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68}],75:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69}],76:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../utils/key_exist.js");
@@ -14104,7 +14381,7 @@ RUR.is_solid_obstacle = function (x, y) {
     return false;
 };
 
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/validator.js":66,"./artefact.js":68}],76:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/validator.js":67,"./artefact.js":69}],77:[function(require,module,exports){
 require("./../rur.js");
 require("./../utils/key_exist.js");
 require("./../utils/validator.js");
@@ -14247,7 +14524,7 @@ RUR._push_pushable = function (name, from_x, from_y, to_x, to_y) {
     RUR.add_pushable(name, to_x, to_y);
     RUR.state.do_not_record = recording_state;
 };
-},{"./../recorder/record_frame.js":32,"./../rur.js":38,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../utils/validator.js":66,"./artefact.js":68}],77:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../utils/validator.js":67,"./artefact.js":69}],78:[function(require,module,exports){
 require("./../rur.js");
 require("./../recorder/record_frame.js");
 
@@ -14689,7 +14966,7 @@ RUR.set_random_orientation = function (robot_body) {
 
     RUR.record_frame("set_random_orientation", robot_body.__id);
 };
-},{"./../recorder/record_frame.js":32,"./../rur.js":38}],78:[function(require,module,exports){
+},{"./../recorder/record_frame.js":33,"./../rur.js":39}],79:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./animated_images.js");
@@ -14993,7 +15270,7 @@ RUR.add_new_object_type = function (name, url, url_goal) {
 };
 RUR.add_object_image = RUR.add_new_object_type;
 
-},{"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../translator.js":40,"./../utils/supplant.js":65,"./animated_images.js":67}],79:[function(require,module,exports){
+},{"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/supplant.js":66,"./animated_images.js":68}],80:[function(require,module,exports){
 require("./../rur.js");
 require("./../translator.js");
 require("./../programming_api/exceptions.js");
@@ -15224,7 +15501,7 @@ function convert_position (orientation, x, y) {
     return {name:_orientation, x:_x, y:_y};
 }
 
-},{"./../programming_api/exceptions.js":28,"./../recorder/record_frame.js":32,"./../rur.js":38,"./../translator.js":40,"./../utils/key_exist.js":60,"./../utils/supplant.js":65,"./../utils/validator.js":66,"./artefact.js":68}],80:[function(require,module,exports){
+},{"./../programming_api/exceptions.js":28,"./../recorder/record_frame.js":33,"./../rur.js":39,"./../translator.js":41,"./../utils/key_exist.js":61,"./../utils/supplant.js":66,"./../utils/validator.js":67,"./artefact.js":69}],81:[function(require,module,exports){
 /* Obtain specific information about the world, either at a given
    position, or for the world in general.
 */
@@ -15712,7 +15989,7 @@ RUR.show_description = function () {
     }
 };
 
-},{"./../default_tiles/tiles.js":1,"./../dialogs/create.js":3,"./../listeners/canvas.js":18,"./../programming_api/exceptions.js":28,"./../rur.js":38,"./../translator.js":40,"./../utils/supplant.js":65,"./../world_api/background_tile.js":69,"./../world_api/things.js":78}],81:[function(require,module,exports){
+},{"./../default_tiles/tiles.js":1,"./../dialogs/create.js":3,"./../listeners/canvas.js":18,"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/supplant.js":66,"./../world_api/background_tile.js":70,"./../world_api/things.js":79}],82:[function(require,module,exports){
 require("./../rur.js");
 
 /* The following is used in a few places, including in unit and
@@ -15736,7 +16013,7 @@ RUR.create_empty_world = function (blank_canvas) {
     return world;
 };
 RUR.set_current_world(RUR.create_empty_world());
-},{"./../rur.js":38}],82:[function(require,module,exports){
+},{"./../rur.js":39}],83:[function(require,module,exports){
 require("./../translator.js");
 require("./../rur.js");
 require("./../robot/robot.js");
@@ -15963,7 +16240,44 @@ function convert_old_worlds () {
 
 }
 
-},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../programming_api/exceptions.js":28,"./../robot/robot.js":35,"./../rur.js":38,"./../translator.js":40,"./../ui/edit_robot_menu.js":43,"./../world_api/animated_images.js":67,"./create_empty_world.js":81}],83:[function(require,module,exports){
+},{"./../drawing/visible_world.js":10,"./../editors/create.js":11,"./../programming_api/exceptions.js":28,"./../robot/robot.js":36,"./../rur.js":39,"./../translator.js":41,"./../ui/edit_robot_menu.js":44,"./../world_api/animated_images.js":68,"./create_empty_world.js":82}],84:[function(require,module,exports){
+// Only create a new version of this file for a target language
+// if the corresponding functions are
+// defined in reeborg_xx.js and reeborg_xx.py
+
+exports.cn = cn = {};
+
+cn["at_goal"] = "到达目的地";
+cn["front_is_clear"] = "前方通畅";
+cn["right_is_clear"] = "右侧通畅";
+cn["wall_in_front"] = "前方有墙";
+cn["wall_on_right"] = "右侧有墙";
+cn["object_here"] = "此处的物品";
+cn["carries_object"] = "携带的物品";
+cn["is_facing_north"] = "面向北方";
+
+cn["move"] = "前进";
+cn["turn_left"] = "左转";
+cn["take"] = "拾起";
+cn["put"] = "放下";
+cn["toss"] = "抛出";
+cn["build_wall"] = "砌墙";
+cn["pause"] = "暂停";
+cn["done"] = "完成";
+cn["think"] = "思考";
+cn["think(100)"] = "思考(100)";
+cn["sound"] = "音效";
+cn["sound(True)"] = "音效(是)";
+cn["sound(true)"] = "音效(否)";
+cn["World"] = "世界";
+cn["UsedRobot"] = "机器人";
+cn["new UsedRobot"] = "new 机器人";
+cn["no_highlight"] = "禁止高亮";
+cn["write"] = "write";
+
+cn["from library import ?"] = "from library import ?";
+
+},{}],85:[function(require,module,exports){
 // Only create a new version of this file for a target language
 // if the corresponding functions are
 // defined in reeborg_xx.js and reeborg_xx.py
@@ -16000,7 +16314,7 @@ en["write"] = "write";
 
 en["from library import ?"] = "from library import ?";
 
-},{}],84:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 // Only create a new version of this file for a target language
 // if the corresponding functions are
 // defined in reeborg_xx.js and reeborg_xx.py
@@ -16037,7 +16351,7 @@ fr["write"] = "ecrit";
 
 fr["from library import ?"] = "from biblio import ?";
 
-},{}],85:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 var _recorded_ids = [];
 var _text_elements = [];
 var _elements_names = [];
@@ -16201,7 +16515,409 @@ record_title("ui-dialog-title-World-info", "Click on the world to get some addit
 
 record_id("kbd-repeat-not-keyword", "<code>repeat</code> is not a true Python keyword.");
 
-},{}],86:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
+// the following is used in a few places below
+var mac_user_save_files_cn = ' <b>Mac 用户：</b> 请参考<a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">已知的问题</a>。';
+
+exports.ui_cn = ui_cn = {};
+exports.cn_to_en = cn_to_en = {};
+
+ui_cn["cn-en"] = "混合模式：中文界面，英文编程。<br>" +
+    "Mixed mode: User Interface in Chinese; programming language in English.<br>";
+
+ui_cn["SITE NAME"] = "乐跑的世界";
+ui_cn["WORLD INFO"] = "世界信息";
+ui_cn["EDITOR VISIBLE"] = "保持编辑器可见";
+
+ui_cn["apple"] = "苹果";
+cn_to_en["苹果"] = "apple";
+ui_cn["banana"] = "香蕉";
+cn_to_en["香蕉"] = "banana";
+ui_cn["beeper"] = "喇叭";
+cn_to_en["喇叭"] = "beeper";
+ui_cn["box"] = "箱子";
+cn_to_en["箱子"] = "box";
+ui_cn["bridge"] = "桥";
+cn_to_en["桥"] = "bridge";
+ui_cn["carrot"] = "胡萝卜";
+cn_to_en["胡萝卜"] = "carrot";
+ui_cn["daisy"] = "菊花";
+cn_to_en["菊花"] = "daisy";
+ui_cn["dandelion"] = "蒲公英";
+cn_to_en["蒲公英"] = "dandelion";
+ui_cn["leaf"] = "树叶";
+cn_to_en["树叶"] = "leaf";
+ui_cn.square = "方块";
+cn_to_en["方块"] = "square";
+ui_cn.star = "星星";
+cn_to_en["星星"] = "star";
+ui_cn["strawberry"] = "草莓";
+cn_to_en["草莓"] = "strawberry";
+ui_cn.token = "笑脸";
+cn_to_en["笑脸"] = "token";
+ui_cn["tokens are Reeborg's favourite thing."] = "笑脸是乐跑最喜欢的物品。";
+ui_cn.triangle = "三角形";
+cn_to_en["三角形"] = "triangle";
+ui_cn["tulip"] = "郁金香";
+cn_to_en["郁金香"] = "tulip";
+ui_cn["bucket"] = "桶";
+cn_to_en["桶"] = "bucket";
+ui_cn["bulb"] = "球茎";
+cn_to_en["球茎"] = "bulb";
+ui_cn["bricks"] = "砖";
+cn_to_en["砖"] = "bricks";
+
+ui_cn["mud"] = "泥";
+cn_to_en["泥"] = "mud";
+ui_cn["soil"] = "土壤";
+cn_to_en["土壤"] = "soil";
+ui_cn["water"] = "水";
+cn_to_en["水"] = "water";
+ui_cn["grass"] = "草";
+cn_to_en["草"] = "grass";
+ui_cn["gravel"] = "砾石";
+cn_to_en["砾石"] = "gravel";
+ui_cn["ice"] = "冰";
+cn_to_en["冰"] = "ice";
+ui_cn["fire"] = "火";
+cn_to_en["火"] = "fire";
+
+ui_cn["infinite"] = "无穷";
+
+ui_cn["fence_right"] = "右侧篱笆";
+cn_to_en["右侧篱笆"] = "fence_right";
+ui_cn["fence_left"] = "左侧篱笆";
+cn_to_en["左侧篱笆"] = "fence_left";
+ui_cn["fence_vertical"] = "垂直篱笆";
+cn_to_en["垂直篱笆"] = "fence_vertical";
+ui_cn["fence_double"] = "双侧篱笆";
+cn_to_en["双侧篱笆"] = "fence_double";
+
+ui_cn["Invalid Javascript code in Onload editor"] = "Onload 编辑器里有无效的 JavaScript 代码。";
+ui_cn["Invalid Python code in Onload editor"] = "Onload 编辑器里有无效的 Python 代码。";
+
+ui_cn["Too many steps:"] = "太多步骤了：{max_steps}<br>使用 <code>set_max_nb_steps(nb)</code> 来提高上线。";
+ui_cn["<li class='success'>Reeborg is at the correct x position.</li>"] = "<li class='success'>乐跑的 x 坐标正确。</li>";
+ui_cn["<li class='failure'>Reeborg is at the wrong x position.</li>"] = "<li class='failure'>乐跑的 x 坐标不正确。</li>";
+ui_cn["<li class='success'>Reeborg is at the correct y position.</li>"] = "<li class='success'>乐跑的 y 坐标正确。</li>";
+ui_cn["<li class='failure'>Reeborg is at the wrong y position.</li>"] = "<li class='failure'>乐跑的 y 坐标不正确。</li>";
+ui_cn["<li class='success'>All objects are at the correct location.</li>"] = "<li class='success'>所有的物品都在正确的位置。</li>";
+ui_cn["<li class='failure'>One or more objects are not at the correct location.</li>"] = "<li class='failure'>一个或多个物品不在正确的位置。</li>";
+ui_cn["<li class='success'>All walls have been built correctly.</li>"] = "<li class='success'>所有的墙都砌在了正确的位置。</li>";
+ui_cn["<li class='failure'>One or more walls missing or built at wrong location.</li>"] = "<li class='failure'>一个或多个墙缺失或不在正确的位置。</li>";
+ui_cn["Last instruction completed!"] = "已完成最后一条指令！";
+ui_cn["<p class='center'>Instruction <code>done()</code> executed.</p>"] = "<p class='center'><code>完成()</code> 指令执行完毕。</p>";
+
+ui_cn["Unknown object"] = "未知物品：<code>{obj}</code>";
+ui_cn["No object found here"] = "这里没有物品：<code>{obj}</code>";
+ui_cn["object"] = "物品";
+ui_cn["I don't have any object to put down!"] = "我没有<code>{obj}</code>可以放下！";
+ui_cn["There is already a wall here!"] = "这里已经有墙了！";
+ui_cn["There is no wall to remove!"] = "这里没有墙可以移除！";
+ui_cn["Ouch! I hit a wall!"] = "啊呀！我撞到墙了！";
+ui_cn["Done!"] = "完成！";
+ui_cn["There is no position as a goal in this world!"] = "这个世界里没有目的地坐标！";
+ui_cn["There is no goal in this world!"] = "这个世界里没有目标！";
+ui_cn["I carry too many different objects. I don't know which one to put down!"] = "我带了很多不同的物品，不知道要放下哪个！";
+ui_cn["Many objects are here; I do not know which one to take!"] = "这里有很多不同的物品，我不知道要拾起哪个！";
+
+ui_cn.east = "东";
+ui_cn.north = "北";
+ui_cn.west = "西";
+ui_cn.south = "南";
+cn_to_en["东"] = "east";
+cn_to_en["北"] = "north";
+cn_to_en["西"] = "west";
+cn_to_en["南"] = "south";
+ui_cn["Unknown orientation for robot."] = "未知的机器人朝向";
+
+ui_cn["Invalid position."] = "{pos}是无效的坐标。";
+ui_cn["Invalid orientation."] = "'{orient}'是未知的朝向。";
+
+ui_cn["World selected"] = "选择了世界：{world}";
+ui_cn["Could not find world"] = "找不到世界：{world}";
+ui_cn["Object names"] = " 库、笑脸、星星、三角形、方块等等。";
+
+ui_cn["Invalid world file."] = "无效的世界文件。";
+ui_cn["PERMALINK"] = "固定链接";
+ui_cn["Could not find link: "] = "找不到链接：";
+
+ui_cn["Click on world to move robot."] = "点击世界里的格子以添加或移除乐跑可能的初始位置。";
+ui_cn["Added robot."] = "添加了乐跑。";
+ui_cn["Click on image to turn robot"] = "点击图片以旋转乐跑。";
+ui_cn["Robot now has tokens."] = "乐跑现在有{x_tokens}个笑脸。";
+ui_cn["Click on world to add object."] = "点击世界里的格子以设置<code>{obj}</code>的数量。";
+ui_cn["Click on desired object below."] = "在下面点击所需的物品。";
+ui_cn["Click on world to toggle walls."] = "点击世界里的格子以添加或移除墙。";
+ui_cn["Click on world to set home position for robot."] = "点击世界里的格子以添加或移除乐跑可能的目的地位置。";
+ui_cn["Click on world to toggle additional walls to build."] = "点击世界里的格子以添加或移除需要砌墙的位置。";
+ui_cn["Click on desired goal object below."] = "在下面点击所需的目标物品。";
+ui_cn["Click on world to set number of goal objects."] = "点击世界里的格子以设置目标<code>{obj}</code>的数量。";
+ui_cn["Enter number of tokens for robot to carry (use inf for infinite number)"] = "输入乐跑所携带的笑脸数量。";
+ui_cn[" is not a valid value!"] = " 不是一个有效的数字！";
+ui_cn["Enter number of objects desired at that location."] = "点击世界里的格子以设置<code>{obj}</code>的数量。";
+ui_cn["Objects found here:"] = "这里的物品有：";
+ui_cn["Description"] = "说明";
+ui_cn["A robot located here carries no objects."] = "座标 (x, y) = ({x}, {y}) 的机器人没有携带物品。";
+ui_cn["Goal to achieve:"] = "需要达成的目标：";
+ui_cn["A robot located here carries:"] = "座标 (x, y) = ({x}, {y}) 的机器人携带有：";
+ui_cn["random location"] = "随机位置";
+ui_cn["Enter number of objects to give to robot."] = "输入给机器人的<code>{obj}</code>的数量。";
+ui_cn["Special information about this location:"] = "这个位置的特别信息：";
+ui_cn["Click on world to toggle tile."] = "点击世界里的格子以添加或移除<code>{obj}</code>贴图。";
+ui_cn["Click on desired tile below."] = "在下面点击所需的贴图。";
+ui_cn["A wall must be built east of this location."] = "在此位置，墙只能砌在东边。";
+ui_cn["A wall must be built north of this location."] = "在此位置，墙只能砌在北边。";
+ui_cn["A wall must be built west of this location."] = "在此位置，墙只能砌在西边。";
+ui_cn["A wall must be built south of this location."] = "在此位置，墙只能砌在南边。";
+ui_cn["The final required position of the robot will be chosen at random."] = "机器人的目的地将会被随机选择。";
+ui_cn["The final position of the robot must be (x, y) = "] = "机器人最后必须停留在坐标 (x, y) = ";
+ui_cn["Click on world to fill with given tile."] = "点击世界里的格子以填充指定的贴图。";
+ui_cn["Enter url of image to use as background."] = "请输入背景图片的链接。";
+ui_cn["Replace editor content"] = "你想把编辑器里的代码替换为这个世界的作者所提供的代码吗？";
+ui_cn["Replace library content"] = "你想把库里的代码替换为这个世界的作者所提供的代码吗？";
+ui_cn["colour"] = "颜色";
+
+ui_cn["Name already exist; confirm that you want to replace its content."] = "该名称已经存在，请确认你想替换其中的内容。";
+ui_cn["No such world!"] = "该世界不存在！";
+ui_cn["Enter world name to save"] = "请输入世界的名称以保存。使用名称：";
+ui_cn["Enter world name to delete"] = "请输入要删除的世界的名称。删除世界";
+ui_cn["Delete "] = "删除";
+
+ui_cn["Error found at or near line {number}."] = "在第{number}行或附近发现错误。";
+ui_cn["<br>Perhaps a missing colon is the cause."] = "<br>可能是由于缺少冒号（“:”）造成的。";
+ui_cn["<br>Perhaps you forgot to add parentheses ()."] = "<br>你可能忘记了加括号（“()”）。";
+ui_cn["<br>Perhaps you misspelled a word or forgot to define a function or a variable."] = "<br>你可能写错了世界的名字、忘记了定义一个函数或变量。";
+ui_cn["I cannot help you with this problem."] = "关于这个错误，我帮不了你。";
+
+ui_cn["I'm stuck in mud."] = "我陷在泥里了。";
+ui_cn["Mud: Reeborg <b>cannot</b> detect this and will get stuck if it moves to this location."] = "泥：乐跑<b>无法</b>发现，来到此位置将被困住。";
+ui_cn["Soil: usually safe, but looks identical to mud."] = "土壤：一般是安全的，但看起来和泥一样。";
+ui_cn["I'm slipping on ice!"] = "我在冰上打滑了！";
+ui_cn["Ice: Reeborg <b>cannot</b> detect this and <em>might</em> slide and move to the next location if it moves to this location."] = "冰：乐跑<b>无法</b>发现，来到此位置将<em>可能</em>会滑到下一格。";
+ui_cn["Grass: usually safe."] = "草：一般是安全的。";
+ui_cn["Gravel: usually safe."] = "砾石：一般是安全的。";
+ui_cn["I'm in water!"] = "我掉水里了！";
+ui_cn["Water: Reeborg <b>can</b> detect this but will get damaged if it moves to this location."] = "水：乐跑<b>可以</b>发现，来到此位置将会损坏。";
+ui_cn["green home tile: Reeborg <b>can</b> detect this tile using at_goal()."] = "绿色基地贴图：乐跑<b>可以</b>用 at_goal() 发现。";
+ui_cn["Crash!"] = "哎呦！";
+ui_cn["brick wall: Reeborg <b>can</b> detect this but will hurt himself if he attemps to move through it."] = "砖墙：乐跑<b>可以</b>发现，试图穿越此位置将会受伤。";
+ui_cn["I hit a fence!"] = "我撞到篱笆了！";
+ui_cn["Fence: Reeborg <b>can</b> detect this but will be stopped by it."] = "篱笆：乐跑<b>可以</b>发现，但无法穿越。";
+ui_cn["Bridge:Reeborg <b>can</b> detect this and will know that it allows safe passage over water."] = "桥：乐跑<b>可以</b>发现，并且知道可以用来安全的渡水。";
+ui_cn["My joints are melting!"] = "我的关节正在融化！";
+ui_cn["A bucket full of water"] = "一桶满满的水。";
+ui_cn["Tulip bulb: might grow into a nice tulip with some water from a bucket."] = "郁金香球茎：浇点桶里的水或许能长成郁金香。";
+
+
+ui_cn["Something is blocking the way!"] = "有东西挡住了路！";
+ui_cn["Reeborg <b>can</b> detect this tile using at_goal()."] = "乐跑<b>可以</b>用 at_goal() 发现此贴图。";
+ui_cn["green home tile:"] = "绿色基地贴图：";
+ui_cn["home:"] = "家：";
+ui_cn["racing flag:"] = "赛车旗帜：";
+ui_cn["house:"] = "房子：";
+
+ui_cn["Local variables"] = "本地变量";
+ui_cn["Global variables"] = "全局变量";
+ui_cn["Watched expressions"] = "查看中的表达式";
+
+ui_cn["move forward"] = "前进";
+ui_cn["turn left"] = "左转";
+ui_cn["take object"] = "拾起物品";
+ui_cn["put object"] = "放下物品";
+ui_cn["Pause the program's execution."] = "暂停执行程序。";
+ui_cn["Build a wall in front of the robot."] = "在机器人前方砌墙。";
+ui_cn["End the program's execution."] = "停止执行程序。";
+ui_cn["True if a wall is blocking the way."] = "当有墙挡住路时，返回“是”";
+ui_cn["True if nothing is blocking the way."] = "当没有东西挡住路时，返回“是”";
+ui_cn["True if desired destination."] = "当到达目的地时，返回“是”";
+ui_cn["True if robot carries at least one object."] = "当机器人携带有物品时，返回“是”";
+ui_cn["True if there is at least one object here."] = "当此处有物品时，返回“是”";
+ui_cn["True if robot is facing North."] = "当机器人朝向北方时，返回“是”";
+ui_cn["Delay between actions; default is 300 ms."] = "操作间的延迟，默认为300毫秒。";
+
+ui_cn["Save world in browser"] = "在浏览器中保存";
+ui_cn["LOAD BLOCKLY"] = "导入到工作区";
+ui_cn["LOAD BLOCKLY EXPLAIN"] = "打开文件并用其内容替换 Blockly 工作区当前的内容。";
+ui_cn["LOAD EDITOR"] = "导入到编辑器";
+ui_cn["LOAD EDITOR EXPLAIN"] = "打开文件并用其内容替换代码编辑器当前的内容。";
+ui_cn["LOAD LIBRARY"] = "导入到库";
+ui_cn["LOAD LIBRARY EXPLAIN"] = "打开文件并用其内容替换库里当前的内容。";
+ui_cn["LOAD WORLD"] = "加载世界";
+ui_cn["LOAD WORLD EXPLAIN"] = "打开文件并导入世界内容。";
+ui_cn["SAVE BLOCKLY"] = "保存工作区";
+ui_cn["SAVE BLOCKLY EXPLAIN"] = "把工作区的内容（blocks）保存到文件。" + mac_user_save_files_cn;
+ui_cn["SAVE EDITOR"] = "保存程序";
+ui_cn["SAVE EDITOR EXPLAIN"] = "把程序保存到文件。" + mac_user_save_files_cn;
+ui_cn["SAVE LIBRARY"] = "保存库";
+ui_cn["SAVE LIBRARY EXPLAIN"] = "把库保存到文件。" + mac_user_save_files_cn;
+ui_cn["SAVE WORLD"] = "保存世界";
+ui_cn["SAVE WORLD EXPLAIN"] = "把世界内容（以 JSON 对象的格式）保存到文件。" + mac_user_save_files_cn;
+
+
+ui_cn["PROGRESS SECTION TITLE"] = "持续跟踪已解决的任务";
+ui_cn["PROGRESS EXPLAIN"] = "已解决的任务在世界菜单里有" + RUR.CHECKMARK +
+    "标识，该信息保存在浏览器里。当切换到不同的浏览器，该信息不会被同步。" +
+    "如果你点击下面的保存按钮，当前浏览器里的任务进度信息将被保存为名为“progress.json”的文件。" +
+    "你可以在别的浏览器里导入该文件以同步任务进度。";
+ui_cn["SAVE PROGRESS"] = "保存";
+ui_cn["IMPORT PROGRESS"] = "导入";
+ui_cn["RETRIEVE SOLUTION"] = "检索解决方案";
+ui_cn["RETRIEVE SOLUTION EXPLAIN"] = "如果这个世界的解决方案（blocks、代码和库里的代码）在当前的编程模式下有保存过，则该解决方案将被检索并替换当前的内容。";
+
+ui_cn["ADD CONTENT TO WORLD"] = "从下面选择物品并添加到世界里。";
+ui_cn["ADD BLOCKLY TEXT"] = "代码块";
+ui_cn["ADD EDITOR TEXT"] = "编辑器里的代码";
+ui_cn["ADD LIBRARY TEXT"] = "库里的代码";
+ui_cn["ADD PRE TEXT"] = "Pre";
+ui_cn["ADD POST TEXT"] = "Post";
+ui_cn["ADD DESCRIPTION TEXT"] = "说明";
+ui_cn["ADD ONLOAD TEXT"] = "Onload";
+
+ui_cn["KEYBOARD BUTTON"] = "乐跑键盘";
+ui_cn["ADDITIONAL OPTIONS"] = "其它选项";
+
+ui_cn["BASIC COMMANDS"] = "基本指令";
+ui_cn["DEFINING"] = "定义";
+ui_cn["LOOPS"] = "循环";
+ui_cn["DECISIONS"] = "判断";
+ui_cn["CONDITIONS"] = "条件";
+ui_cn["USING VARIABLES"] = "使用变量";
+ui_cn["COMMANDS"] = "注释";
+ui_cn["OTHER"] = "其它";
+ui_cn["OBJECTS"] = "物品";
+
+ui_cn["Python Code"] = "Python 代码";
+ui_cn["Javascript Code"] = "JavaScript 代码";
+ui_cn["LIBRARY"] = "库";
+ui_cn["EXTRA"] = "更多";
+ui_cn["PRE"] = "Pre";
+ui_cn["POST"] = "Post";
+ui_cn["DESCRIPTION"] = "说明";
+ui_cn["ONLOAD"] = "Onload";
+
+ui_cn["HIGHLIGHT IMPOSSIBLE"] = "代码中的问题导致我关闭了代码高亮。";
+ui_cn["COMMAND RESULT"] = "从下面的菜单中选择一个操作执行。";
+
+ui_cn["DELETE WORLD TEXT"] = "以下是当前存储在你的浏览器里并且可以删除的世界：";
+ui_cn["PYTHON ONLY"] = "Python";
+ui_cn["COLLABORATION"] = "合作";
+ui_cn["TOGETHERJS EXPLAIN"] = "允许和另外一个或多个协作者使用 Mozilla 的 TogetherJS 进行合作的工具。不适用于 Blockly。";
+ui_cn["WORLD CREATION TITLE"] = "世界：创建、编辑、……";
+ui_cn["EDIT WORLD"] = "编辑世界";
+ui_cn["EDIT WORLD EXPLAIN"] = "你可以通过编辑当前的世界来创建一个你自己的世界。";
+ui_cn["PROGRAM IN EDITOR"] = "编辑器里的程序";
+ui_cn["PROGRAM IN BLOCKLY WORKSPACE"] = "Blockly 工作区里的程序";
+ui_cn["CONTACT"] = "电邮（英语或法语）：";
+ui_cn["ISSUES"] = "提交错误报告、建议、其它问题等等（英语或法语）。";
+ui_cn["FORUM"] = "论坛（英语或法语）";
+ui_cn["HELP"] = "帮助";
+ui_cn["DOCUMENTATION"] = '<a href="http://reeborg.ca/docs/en" target="_blank" rel="noopener">文档</a>';
+ui_cn["PYTHON HELP"] = "使用 Python，如果执行<code>help()</code>可以得到一个指令列表；如果执行比如<code>help(move)</code>可以得到<code>move()</code>函数的说明。";
+ui_cn["KEYBOARD HELP"] = "点击乐跑键盘可以看到可用的函数、Python 关键字等的列表。";
+
+ui_cn["WORLD EDITOR"] = "世界编辑器";
+ui_cn["m-east"] = "东";
+ui_cn["m-north"] = "北";
+ui_cn["m-west"] = "西";
+ui_cn["m-south"] = "南";
+ui_cn["m-random"] = "随机";
+ui_cn["m-dimensions"] = "世界的尺寸";
+ui_cn["m-add"] = "添加";
+ui_cn["m-add-robot"] = "添加机器人";
+ui_cn["m-robot"] = "机器人";
+ui_cn["m-position"] = "坐标";
+ui_cn["m-turn"] = "方向";
+ui_cn["m-objects"] = "物品";
+ui_cn["m-walls"] = "墙";
+ui_cn["m-objects2"] = "物品";
+ui_cn["m-tiles"] = "标题";
+ui_cn["m-fill"] = "填充";
+ui_cn["m-solid"] = "障碍物";
+ui_cn["m-decorative"] = "装饰物";
+ui_cn["m-background"] = "背景图片";
+ui_cn["m-goal"] = "目标";
+ui_cn["mg-robot"] = "机器人";
+ui_cn["mg-walls"] = "墙";
+ui_cn["mg-objects"] = "物体";
+
+ui_cn["Reeborg says: I'm done!"] = "乐跑说：我完成了！";
+ui_cn["Reeborg writes:"] = "乐跑写：";
+ui_cn["Reeborg shouts: Something is wrong!"] = "乐跑喊：有什么地方出错了！";
+ui_cn["Reeborg explores some Javascript code"] = "乐跑探索了一些 JavaScript 代码";
+ui_cn["Reeborg states:"] = "乐跑宣布：";
+ui_cn["Reeborg watches some variables!"] = "乐跑查看了一些变量！";
+ui_cn["Click on the world to get some additional information."] = "点击世界以得到更多的信息。";
+
+ui_cn["Reeborg's basic keyboard"] = "乐跑的基本键盘";
+ui_cn["kbd-command-btn"] = "指令";
+ui_cn["kbd-condition-btn"] = "条件";
+ui_cn["kbd-python-btn"] = "Python";
+ui_cn["kbd-py-console-btn"] = "Python";
+ui_cn["kbd-javascript-btn"] = "JavaScript";
+ui_cn["kbd-objects-btn"] = "物品";
+ui_cn["kbd-special-btn"] = "特殊";
+
+ui_cn["UNDO"] = "撤销";
+ui_cn["REDO"] = "重做";
+ui_cn["tab"] = "TAB";
+ui_cn["shift-tab"] = "Shift-TAB";
+ui_cn["enter"] = "\u23CE";
+ui_cn["<code>repeat</code> is not a true Python keyword."] = "<code>repeat</code>不是一个真正的 Python 关键字。";
+
+ui_cn["Colour:"] = "颜色：";
+ui_cn["Enter a colour"] = "输入一个颜色";
+
+ui_cn["Background image"] = "背景图片";
+
+ui_cn["NAME:"] = "名称：";
+
+
+ui_cn["Set the world's dimensions"] = "设置世界的尺寸";
+ui_cn["set-dimensions-explain"] = "如果需要，你可以更改默认的尺寸。请记得低解析度的显示器不能显示非常大的世界。";
+ui_cn["Maximum x value:"] = "x 坐标的最大值";
+ui_cn["Maximum y value:"] = "y 坐标的最大值";
+ui_cn["Use small tiles"] = "使用小贴图";
+
+ui_cn["Set goal number for object"] = "设置物品的目标数量";
+ui_cn["dialog-goal-object-explain"] = "如果想使用该物品在世界中的总数，则勾选复选框。";
+ui_cn["Number of objects"] = "物品数量";
+ui_cn["All such objects"] = "使用物品总数";
+
+ui_cn["Number of objects:"] = "物品数量：";
+ui_cn["Maximum:"] = "最大值：";
+ui_cn["Add object in the world"] = "设置物品数量";
+ui_cn["ADD OBJECT EXPLAIN"] = "设置0可以移除该物品。如果<code>最大值</code>大于<code>物品数量</code>，那么物品数量会是一个在两个数值之间的随机数，该随机数在每次运行程序时被生成。";
+
+ui_cn["Unlimited:"] = "无限";
+ui_cn["Give object to robot"] = "把物品给机器人";
+ui_cn["GIVE OBJECT EXPLAIN"] = "设置机器人所携带的物品数量。如果想设置数量为无线，则勾选复选框。";
+
+ui_cn["UPDATE BLOCKLY CONTENT"] = "这个世界里有一些默认的工作区内容。想要替换掉当前的内容，请点击按钮。";
+ui_cn["UPDATE BLOCKLY BUTTON"] = "替换当前内容";
+ui_cn["Contents from World"] = "世界里的内容";
+
+ui_cn["WARNING: Do not change this comment."] = "警告：不要更改这条注释。";
+ui_cn["Library Code is below."] = "以下是库里的代码。";
+ui_cn["No solution can be saved when using REPL (Py)."] = "使用 REPL（Py）模式时不能保存。";
+ui_cn["No solution can be loaded when using REPL (Py)."] = "使用 REPL（Py）模式时不能加载。";
+
+ui_cn["You are not allowed to use <code>done</code> in this world!"] = "在这个世界里，不允许使用<code>done()</code>！";
+ui_cn["Execution ended before the <em>Post</em> code was executed."] = "在<em>Post</em>代码之前，执行已经结束。";
+
+ui_cn["Difficulty level"] = "难度等级";
+
+ui_cn["Expected result"] = "期望结果";
+ui_cn["Differences highlighted"] = "不同点已高亮显示";
+ui_cn["Actual result"] = "实际结果";
+
+ui_cn["Cannot parse progress file."] = "无法分析进度文件。";
+ui_cn["Cannot merge progress."] = "无法合并进度。";
+ui_cn["No solution found for this world."] = "找不到这个世界的解决方案。";
+
+ui_cn["THINKING"] = "思考中……";
+
+},{}],89:[function(require,module,exports){
 // the following is used in a few places below
 var mac_user_save_files_en = ' <b>Mac users:</b> please see <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Known problems</a>.';
 
@@ -16571,7 +17287,7 @@ ui_en["No solution found for this world."] = "No solution found for this world."
 
 ui_en["THINKING"] = "Thinking ...";
 
-},{}],87:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 // the following is used in a few places below
 var mac_user_save_files_fr = ' <b>Utilisateurs Mac:</b> consultez <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Problèmes connus</a>.';
 
@@ -16979,7 +17695,7 @@ ui_fr["No solution found for this world."] = "Pas de solution trouvée pour ce m
 
 ui_fr["THINKING"] = "Je pense ...";
 
-},{}],88:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 // the following is used in a few places below
 var mac_user_save_files_ko = ' <b>Mac users:</b> please see <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Known problems</a>.';
 
@@ -17390,7 +18106,7 @@ ui_ko["No solution found for this world."] = "No solution found for this world."
 
 ui_ko["THINKING"] = "Thinking ...";
 
-},{}],89:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 // the following is used in a few places below
 var mac_user_save_files_en = ' <b>Mac users:</b> please see <a href="https://github.com/aroberge/reeborg/blob/master/dev_tools/known_problems.md" target="_blank" rel="noopener">Known problems</a>.';
 
