@@ -1,0 +1,88 @@
+{
+  "robots": [
+    {
+      "x": 9,
+      "y": 4,
+      "_prev_x": 9,
+      "_prev_y": 4,
+      "_prev_orientation": -1,
+      "objects": {},
+      "_orientation": -1,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 16,
+      "model": "classic",
+      "possible_initial_positions": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          9,
+          5
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "description": [
+    "<p>It's time for Reeborg to clean up its toys!",
+    "There is a shelf where the toys should be stored, but it's pretty full!",
+    "The one drawer that has space in it has been opened for Reeborg to use.</p>",
+    "<p>Direct Reeborg to pick up all the toys (squares) from the corners of the",
+    "room and put them away into the opened drawer in the center of the room.",
+    "</p><p>Write a <code>gather_toys()</code> function, which when called",
+    "should result in Reeborg picking up the toys from all four corners.",
+    "<ul><li>This function should not be related to putting the toys away.",
+    "</li></ul>",
+    "DIFFICULTY5"
+  ],
+  "small_tiles": false,
+  "rows": 6,
+  "cols": 10,
+
+  
+  
+  
+
+  "onload": [
+    "var o1, o2, o3, o4, door, width, height,total;",
+    "",
+    "width = RUR.randint(7, 13);",
+    "o1 = RUR.randint(2, 6);",
+    "o2 = RUR.randint(2, 6);",
+    "o3 = RUR.randint(2, 6);",
+    "o4 = RUR.randint(2, 6);",
+    "total=o1+o2+o3+o4",
+    "door = RUR.randint(3, width-2);",
+    "height = 6;",
+    "RUR.set_world_size(width, height);",
+    "// bottom row",
+    "for(x=3; x<=width-2; x++) {",
+    "    RUR.add_wall('north',x, 4);",
+    "    RUR.add_wall('west',x, 4);",
+    "    if(door !== x){",
+    "       RUR.add_wall('south',x, 4);",
+    "    }",
+    "}",
+    "// left and right side wall",
+    "RUR.add_wall('east',width-2, 4);",
+    "",
+    "RUR.add_object('square',1,1,{'min':o1});",
+    "RUR.add_object('square',1,height,{'min':o2});",
+    "RUR.add_object('square',width,height,{'min':o3});",
+    "RUR.add_object('square',width,1,{'min':o4});",
+    "RUR.add_object('square',door,4,{'goal': true, 'min':total});"
+  ]
+
+}

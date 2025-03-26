@@ -1,0 +1,75 @@
+{
+  "robots": [
+    {
+      "x": 1,
+      "y": 1,
+      "_prev_x": 1,
+      "_prev_y": 1,
+      "_prev_orientation": 0,
+      "objects": {},
+      "_orientation": 0,
+      "_is_leaky": true,
+      "_trace_history": [],
+      "_trace_style": "default",
+      "_trace_color": "seagreen",
+      "__id": 4,
+      "model": "classic",
+      "initial_position": [
+        1,
+        1
+      ],
+      "possible_initial_positions": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "walls": {},
+  "small_tiles": false,
+  "rows": 6,
+  "cols": 6,
+  
+  "description": [
+    "<p>Use this world to lead students through an example of using <code>if/elif/else</code> syntax</p>",
+    "<p>Will need to introduce adding an argument to <code>object_here()</code> to allow for checking which type of object is on the current tile.",
+    "(example: <code>object_here(\"triangle\")</code>)</p>",
+    "",
+    "<p>Movement scheme: <ul><li>Banana → Go Left</li>",
+    "<li>Triangle → Go Right</li><li>Square → Go Straight</li></ul>"
+  ],
+  "onload": [
+    "var height, width, choice, items, finish_x, finish_y, finish;",
+    "",
+    "width = 6;",
+    "height = 6;",
+    "choice = 2;//RUR.randint(0, 2);",
+    "",
+    "RUR.set_world_size(width, height);",
+    "",
+    "if (choice === 0) {",
+    "  items = [[0, 0, 0, 0, 0, 2],[1, 0, 0, 0, 0, 2], [1, 0, 0, 0, 0, 2], [1, 0, 0, 0, 0, 2], [1, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, 0]];",
+    "  finish_x = 3",
+    "  finish_y = 6}",
+    " else if (choice == 1) {",
+    "  items = [[0, 0, 0, 0, 2, 0],[0, 2, 0, 2, 0, 0], [0, 0, 3, 0, 0, 0], [0, 0, 2, 2, 0, 0], [0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 2, 0]];",
+    "  finish_x = 3",
+    "  finish_y = 6",
+    "} else if (choice === 2) {",
+    "  items = [[0, 2, 0, 0, 2, 2],[0, 0, 0, 2, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 0, 1, 0, 0], [0, 1, 0, 0, 0, 2], [0, 3, 0, 0, 0, 0]];",
+    "  finish_x = 3",
+    "  finish_y = 6",
+    "}",
+    "",
+    "for (let x=0; x<width;x++) {",
+    "    for (let y=0; y<height;y++) {",
+    "        if(items[y][x]===0)RUR.add_object(\"square\", x+1, y+1);",
+    "        if(items[y][x]===1)RUR.add_object(\"triangle\", x+1, y+1);",
+    "        if(items[y][x]===2)RUR.add_object(\"banana\", x+1, y+1);",
+    "        if(items[y][x]===3)RUR.add_final_position(\"racing_flag\", x+1, y+1);",
+    "    }",
+    "}",
+    ""
+  ]
+}
