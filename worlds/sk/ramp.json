@@ -1,0 +1,41 @@
+{
+  "walls": {},
+  "description": [
+    "<h1>Ramp Building</h1>",
+    "<p>Reeborg can start in any location in the world, ",
+    "  and your job is to return Reeborg to the bottom left ",
+    "  corner of the world (1, 1). Note that Reeborg can be ",
+    "  facing in any direction at the start of the program. ",
+    "  After returning Reeborg to the bottom left corner, you ",
+    "  need to build a ramp of stars, which could be of any length. ",
+    "  The star ramp will always be the same slope (two across and ",
+    "  one up), and will end whenever it would go outside the walls.</p>",
+    "DIFFICULTY3"
+  ],
+  "small_tiles": false,
+  "onload": [
+    "let height, width, x, y;",
+    "",
+    "width = RUR.randint(3, 12);",
+    "height = RUR.randint(3, 12);",
+    "RUR.set_world_size(width, height);",
+    "RUR.fill_background(\"pale_grass\");",
+    "",
+    "// add robot",
+    "x = RUR.randint(1, width);",
+    "y = RUR.randint(1, height);",
+    "r = new UsedRobot(x, y);",
+    "RUR.set_random_orientation();",
+    "RUR.give_object_to_robot(\"star\", 10000);",
+    "",
+    "// add stars",
+    "let options = {'goal' : true};",
+    "let j = 1;",
+    "for (let i = 1; i <= width; i += 2) {",
+    "    if (j <= height) {",
+    "        RUR.add_object(\"star\", i, j, options);",
+    "    }",
+    "    j += 1;",
+    "}"
+  ]
+}
