@@ -1,38 +1,6 @@
 {
   "robots": [
-    {
-      "x": 9,
-      "y": 4,
-      "_prev_x": 9,
-      "_prev_y": 4,
-      "_prev_orientation": -1,
-      "objects": {},
-      "_orientation": -1,
-      "_is_leaky": true,
-      "_trace_history": [],
-      "_trace_style": "default",
-      "_trace_color": "seagreen",
-      "__id": 16,
-      "model": "classic",
-      "possible_initial_positions": [
-        [
-          2,
-          2
-        ],
-        [
-          3,
-          5
-        ],
-        [
-          6,
-          1
-        ],
-        [
-          9,
-          5
-        ]
-      ]
-    }
+    
   ],
   "walls": {},
   "description": [
@@ -45,7 +13,7 @@
     "should result in Reeborg picking up the toys from all four corners.",
     "<ul><li>This function should not be related to putting the toys away.",
     "</li></ul>",
-    "DIFFICULTY5"
+    "DIFFICULTY6"
   ],
   "small_tiles": false,
   "rows": 6,
@@ -82,7 +50,16 @@
     "RUR.add_object('square',1,height,{'min':o2});",
     "RUR.add_object('square',width,height,{'min':o3});",
     "RUR.add_object('square',width,1,{'min':o4});",
-    "RUR.add_object('square',door,4,{'goal': true, 'min':total});"
+    "RUR.add_object('square',door,4,{'goal': true, 'min':total});",
+    "// add robot",
+    "x = RUR.randint(1, width);",
+    "y = 4;",
+    "while(y===4){",
+    "y = RUR.randint(1, height);",
+    "};",
+    "r = new UsedRobot(x, y);",
+    "RUR.set_random_orientation();",
+    ""
   ]
 
 }
