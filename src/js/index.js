@@ -262,7 +262,7 @@ function set_editor() {
     if (code !== null) {
         editor.setValue(code);
     } else {
-        editor.setValue("");
+        editor.setValue(RUR.translate("move") + "()");
     }
 }
 window.set_editor = set_editor;
