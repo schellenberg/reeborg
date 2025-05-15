@@ -257,12 +257,15 @@ function _restore_blockly () {
 
 function set_editor() {
     "use strict";
-    if (localStorage.getItem("editor")){
-        editor.setValue(localStorage.getItem("editor"));
+    var key = RUR.state.world_name ? "editor:" + RUR.state.world_name : null;
+    var code = key ? localStorage.getItem(key) : null;
+    if (code !== null) {
+        editor.setValue(code);
     } else {
-        editor.setValue(RUR.translate("move") + "()");
+        editor.setValue("");
     }
 }
+window.set_editor = set_editor;
 
 function set_library() {
     if (localStorage.getItem("library")){

@@ -167,17 +167,25 @@ _retrieve_progress();
 
 
 function _retrieve_user_solutions () {
-    solutions = localStorage.getItem("user-solutions");
+    var solutions = localStorage.getItem("user-solutions");
     if (solutions) {
         try {
             solutions = JSON.parse(solutions);
+            if (typeof solutions !== "object" || solutions === null || Array.isArray(solutions)) {
+                solutions = {};
+            }
         } catch (e) {
             solutions = {};
         }
-        
     } else {
         solutions = {};
     }
+    // Ensure all top-level keys are objects
+    ["python", "javascript", "blockly"].forEach(function(method) {
+        if (solutions[method] !== undefined && (typeof solutions[method] !== "object" || solutions[method] === null || Array.isArray(solutions[method]))) {
+            solutions[method] = {};
+        }
+    });
     RUR.state.user_solutions = solutions;
 }
 _retrieve_user_solutions();

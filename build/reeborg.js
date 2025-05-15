@@ -3824,12 +3824,15 @@ function _restore_blockly () {
 
 function set_editor() {
     "use strict";
-    if (localStorage.getItem("editor")){
-        editor.setValue(localStorage.getItem("editor"));
+    var key = RUR.state.world_name ? "editor:" + RUR.state.world_name : null;
+    var code = key ? localStorage.getItem(key) : null;
+    if (code !== null) {
+        editor.setValue(code);
     } else {
-        editor.setValue(RUR.translate("move") + "()");
+        editor.setValue("");
     }
 }
+window.set_editor = set_editor;
 
 function set_library() {
     if (localStorage.getItem("library")){
@@ -8391,7 +8394,6 @@ assign_id = function () {
 };
 
 },{"./../programming_api/exceptions.js":28,"./../rur.js":39,"./../translator.js":41,"./../utils/validator.js":68}],37:[function(require,module,exports){
-
 require("./../rur.js");
 require("./../translator.js");
 require("./../drawing/visible_world.js");
@@ -8449,7 +8451,9 @@ RUR.runner.run = function (playback) {
         // save program so that it a new browser session can use it as
         // starting point.
         try {
-            localStorage.setItem("editor", editor.getValue());
+            if (RUR.state.world_name) {
+                localStorage.setItem("editor:" + RUR.state.world_name, editor.getValue());
+            }
             localStorage.setItem("library", library.getValue());
         } catch (e) {}
         // "playback" is a function called to play back the code in a sequence of frames
@@ -11110,17 +11114,25 @@ _retrieve_progress();
 
 
 function _retrieve_user_solutions () {
-    solutions = localStorage.getItem("user-solutions");
+    var solutions = localStorage.getItem("user-solutions");
     if (solutions) {
         try {
             solutions = JSON.parse(solutions);
+            if (typeof solutions !== "object" || solutions === null || Array.isArray(solutions)) {
+                solutions = {};
+            }
         } catch (e) {
             solutions = {};
         }
-        
     } else {
         solutions = {};
     }
+    // Ensure all top-level keys are objects
+    ["python", "javascript", "blockly"].forEach(function(method) {
+        if (solutions[method] !== undefined && (typeof solutions[method] !== "object" || solutions[method] === null || Array.isArray(solutions[method]))) {
+            solutions[method] = {};
+        }
+    });
     RUR.state.user_solutions = solutions;
 }
 _retrieve_user_solutions();
@@ -11379,6 +11391,9 @@ RUR.listeners['select-world.change'] = function() {
     RUR.state.world_url = url;
     RUR.state.world_name = name;
     RUR.permalink.update_URI();
+    if (typeof set_editor === "function") {
+        set_editor();
+    }
 };
 
 

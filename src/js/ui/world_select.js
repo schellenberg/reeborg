@@ -27,6 +27,9 @@ RUR.listeners['select-world.change'] = function() {
     RUR.state.world_url = url;
     RUR.state.world_name = name;
     RUR.permalink.update_URI();
+    if (typeof set_editor === "function") {
+        set_editor();
+    }
 };
 
 

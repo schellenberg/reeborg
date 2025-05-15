@@ -1,4 +1,3 @@
-
 require("./../rur.js");
 require("./../translator.js");
 require("./../drawing/visible_world.js");
@@ -56,7 +55,9 @@ RUR.runner.run = function (playback) {
         // save program so that it a new browser session can use it as
         // starting point.
         try {
-            localStorage.setItem("editor", editor.getValue());
+            if (RUR.state.world_name) {
+                localStorage.setItem("editor:" + RUR.state.world_name, editor.getValue());
+            }
             localStorage.setItem("library", library.getValue());
         } catch (e) {}
         // "playback" is a function called to play back the code in a sequence of frames
