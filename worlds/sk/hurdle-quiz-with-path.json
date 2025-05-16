@@ -133,5 +133,7 @@
       "x": 13,
       "y": 1
     }
-  }
+  },
+  "quiz": true,
+  "quizName": "Hurdle Quiz"
 }

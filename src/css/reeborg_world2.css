@@ -995,3 +995,10 @@ p#thought img {
     position: relative;
     top: 20px;
 }
+
+#quiz-title-label {
+    /* font-weight: bold; */
+    /* margin-left: 10px; */
+    color: white;
+    margin-right: 20px;
+}

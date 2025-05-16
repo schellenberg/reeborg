@@ -37,5 +37,7 @@
     "    }",
     "    j += 1;",
     "}"
-  ]
+  ],
+  "quiz": true,
+  "quizName": "Ramp Building"
 }

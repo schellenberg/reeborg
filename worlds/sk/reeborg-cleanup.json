@@ -60,6 +60,7 @@
     "r = new UsedRobot(x, y);",
     "RUR.set_random_orientation();",
     ""
-  ]
-
+  ],
+  "quiz": true,
+  "quizName": "Cleanup Time"
 }
