@@ -58,7 +58,10 @@ RUR.runner.run = function (playback) {
             if (RUR.state.world_name) {
                 localStorage.setItem("editor:" + RUR.state.world_name, editor.getValue());
             }
-            localStorage.setItem("library", library.getValue());
+            // Only save library if not a quiz world
+            if (!(RUR.CURRENT_WORLD && RUR.CURRENT_WORLD.quiz === true)) {
+                localStorage.setItem("library", library.getValue());
+            }
         } catch (e) {}
         // "playback" is a function called to play back the code in a sequence of frames
         // or a "null function", f(){} can be passed if the code is not

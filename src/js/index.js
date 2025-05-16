@@ -268,8 +268,13 @@ function set_editor() {
 window.set_editor = set_editor;
 
 function set_library() {
-    if (localStorage.getItem("library")){
-        library.setValue(localStorage.getItem("library"));
+    // If the current world is a quiz, clear the library tab (but do not erase localStorage)
+    if (window.RUR && RUR.CURRENT_WORLD && RUR.CURRENT_WORLD.quiz === true) {
+        library.setValue("");
+    } else {
+        if (localStorage.getItem("library")){
+            library.setValue(localStorage.getItem("library"));
+        }
     }
 }
 

@@ -58,6 +58,10 @@ RUR.world_utils.import_world = function (json_string) {
     RUR.set_world_size(RUR.CURRENT_WORLD.cols, RUR.CURRENT_WORLD.rows);
 
     RUR.update_editors(RUR.CURRENT_WORLD);
+    // Ensure library tab is set correctly for quiz/non-quiz worlds
+    if (typeof set_library === "function") {
+        set_library();
+    }
 
     if (RUR.state.editing_world) {
         edit_robot_menu.toggle();

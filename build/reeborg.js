@@ -3835,8 +3835,13 @@ function set_editor() {
 window.set_editor = set_editor;
 
 function set_library() {
-    if (localStorage.getItem("library")){
-        library.setValue(localStorage.getItem("library"));
+    // If the current world is a quiz, clear the library tab (but do not erase localStorage)
+    if (window.RUR && RUR.CURRENT_WORLD && RUR.CURRENT_WORLD.quiz === true) {
+        library.setValue("");
+    } else {
+        if (localStorage.getItem("library")){
+            library.setValue(localStorage.getItem("library"));
+        }
     }
 }
 
@@ -8454,7 +8459,10 @@ RUR.runner.run = function (playback) {
             if (RUR.state.world_name) {
                 localStorage.setItem("editor:" + RUR.state.world_name, editor.getValue());
             }
-            localStorage.setItem("library", library.getValue());
+            // Only save library if not a quiz world
+            if (!(RUR.CURRENT_WORLD && RUR.CURRENT_WORLD.quiz === true)) {
+                localStorage.setItem("library", library.getValue());
+            }
         } catch (e) {}
         // "playback" is a function called to play back the code in a sequence of frames
         // or a "null function", f(){} can be passed if the code is not
@@ -16163,6 +16171,10 @@ RUR.world_utils.import_world = function (json_string) {
     RUR.set_world_size(RUR.CURRENT_WORLD.cols, RUR.CURRENT_WORLD.rows);
 
     RUR.update_editors(RUR.CURRENT_WORLD);
+    // Ensure library tab is set correctly for quiz/non-quiz worlds
+    if (typeof set_library === "function") {
+        set_library();
+    }
 
     if (RUR.state.editing_world) {
         edit_robot_menu.toggle();
