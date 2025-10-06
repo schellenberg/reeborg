@@ -3,6 +3,7 @@
     function updateWorldSelectorForQuiz() {
         var world = window.RUR && RUR.CURRENT_WORLD;
         var selectWorld = document.getElementById('select-world');
+        var libraryTab = document.getElementById('library-tab');
         var headerChild = document.getElementById('header-child');
         var quizTitleId = 'quiz-title-label';
         var quizTitleElem = document.getElementById(quizTitleId);
@@ -10,6 +11,8 @@
         if (world && world.quiz === true) {
             // Hide the world selector
             if (selectWorld) selectWorld.style.display = 'none';
+            // Hide the library tab
+            if (libraryTab) libraryTab.style.display = 'none';
             // Show the quiz title
             var title = 'Quiz';
             if (typeof world.quizName === 'string' && world.quizName.trim().length > 0) {
@@ -28,6 +31,8 @@
         } else {
             // Show the world selector
             if (selectWorld) selectWorld.style.display = '';
+            // Show the library tab
+            if (libraryTab) libraryTab.style.display = '';
             if (quizTitleElem) quizTitleElem.remove();
         }
     }
