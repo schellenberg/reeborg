@@ -1,0 +1,36 @@
+{
+  "walls": {},
+  "description": [
+    "Reeborg needs to pick up all of the carrots from the row, then deposit them all back at the goal/start."
+  ],
+  "small_tiles": false,
+  "onload": [
+    "var height, width, nb_carrots, total_nb, x, y;",
+    "",
+    "width = RUR.randint(8, 16);",
+    "height = 5;",
+    "total_nb = 0;",
+    "RUR.set_world_size(width, height);",
+    "RUR.fill_background(\"pale_grass\");",
+    "",
+    "y = 3;",
+    "for (x=2; x<=width; x++) {",
+    "    if (RUR.randint(1, 10) >= 3){",
+    "        if (total_nb < 100) {",
+    "            nb_carrots = RUR.randint(1, 6);",
+    "            total_nb += nb_carrots;",
+    "            RUR.add_object(\"carrot\", x, y, {'number': nb_carrots});",
+    "        }",
+    "    }",
+    "}",
+    "",
+    "RUR.add_object(\"carrot\", 1, 3, {'goal': true, 'number': total_nb});",
+    "",
+    "// add robot",
+    "x = RUR.randint(1, width);",
+    "y = RUR.randint(1, height);",
+    "r = new UsedRobot(x, y);",
+    "RUR.set_random_orientation();",
+    ""
+  ]
+}
