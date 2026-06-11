@@ -1,7 +1,7 @@
 {
   "walls": {},
   "quiz": true,
-  "quizName": "Carot Picking Quiz",
+  "quizName": "Carrot Picking Quiz",
   "description": [
     "Reeborg needs to pick up all of the carrots from the row, then deposit them all back at the goal/start."
   ],
