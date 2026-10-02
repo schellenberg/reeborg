@@ -10,10 +10,21 @@ var record_id = require("./../../lang/msg.js").record_id;
 record_id("select-world");
 
 
+// Name of the world whose code is currently loaded in the editor;
+// undefined until the first world has been selected (nothing to save yet).
+var editor_world_name;
+
 RUR.listeners['select-world.change'] = function() {
     var url, name;
     if (RUR.state.creating_menu){
         return;
+    }
+
+    // Save the current code before loading the new world.
+    if (editor_world_name) {
+        try {
+            localStorage.setItem("editor:" + editor_world_name, editor.getValue());
+        } catch (e) {}
     }
 
     url = $("#select-world").val();
@@ -30,6 +41,7 @@ RUR.listeners['select-world.change'] = function() {
     if (typeof set_editor === "function") {
         set_editor();
     }
+    editor_world_name = name;
 };
 
 
